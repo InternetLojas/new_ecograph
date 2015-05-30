@@ -41,3 +41,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+/public/uploads/.
+/bootstrap/compiled.php
+/vendor
+composer.phar
+composer.lock
+.env.*
+.env.php
+.DS_Store
+Thumbs.db
+/nbproject/private/
+/nbproject
+/app/*.bak
+
+ # Arquivos do photoshop
+ *.psd
