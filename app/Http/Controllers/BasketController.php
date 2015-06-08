@@ -50,7 +50,7 @@ class BasketController extends Controller {
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
-        //dd($post_inputs);
+
         $item = (array('id' => $post_inputs['produto_id'],
             'name' => Fichas::nomeProduto($post_inputs['produto_id']),
             'price' => str_replace('R$ ', '', $post_inputs['orc_pacote_valor']),
@@ -112,14 +112,12 @@ class BasketController extends Controller {
     public function Listar(Request $request) {
         //Cart::destroy();
         $post_inputs = $request->except('_token');
-
         $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
         $contents = Cart::content();
-        //dd($contents);
+
         $userId = \Auth::user()->id;
         $carrinho = Customer::with('basketes')->find($userId);
-        //$carrinho = $this->basket->where('customer_id', Auth::user()->id)->get();
-        //dd($carrinho->basketes->toarray());
+
         if (count($carrinho->basketes->toarray()) > 0) {
             $lista = $carrinho->basketes->toarray();
             //dd($lista);
@@ -132,16 +130,16 @@ class BasketController extends Controller {
                 $item_categoria = $categoria->toArray();
                 $formato = Formato::find($itens[0]['formato_id'])->valor;
                 $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
-                
+
                 $options = array("categoria" => $item_categoria[0]['products_name'],
                     "formato" => $formato,
                     "formato_id" => $itens[0]['formato_id'],
                     "papel" => $formato,
                     "papel_id" => $itens[0]['papel_id'],
                     "acabamento" => $formato,
-                    "acabamento_id" => $itens[0]['acabamento_id'], 
-                    "unidade" =>  $quantidade,
-                    "perfil" =>  $post_inputs['orc_nome_perfil'],
+                    "acabamento_id" => $itens[0]['acabamento_id'],
+                    "unidade" => $quantidade,
+                    "perfil" => $post_inputs['orc_nome_perfil'],
                     "pacote_id" => $itens[0]['pacote_id']);
                 //
                 // Returns an array of rowid(s) of found item(s) or false on failure
@@ -179,14 +177,14 @@ class BasketController extends Controller {
     }
 
     public function Carrinho() {
-
-        $carrinho = $this->basket->where('customer_id', Auth::user()->id)->get();
-
+        $carrinho = $this->basket
+                ->where('customer_id', Auth::user()->id)
+                ->get();
+        //dd(Cart::content()->CartCollection());
         if (count($carrinho->toarray()) > 0) {
             //$options= $this->basket->BasketIten(1);
             //dd($options);
             $lista = $carrinho->toarray();
-
             foreach ($lista as $key => $valor) {
                 $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
                 $option_itens = $basket_option->toarray();
@@ -220,7 +218,7 @@ class BasketController extends Controller {
         // }    
         $contents = Cart::content();
 
-        $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
+        //$parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
         $post_inputs = array();
         $gateways = Gateway::ativos('1')->get();
         $classes = Utilidades::Descontos();
@@ -235,11 +233,79 @@ class BasketController extends Controller {
                         ->with('post_inputs', $post_inputs)
                         ->with('gateways', $gateways)
                         ->with('classes', $classes)
-                        ->with('parent', $parent)
                         ->with('desc_acrescimo_id', $desc_acrescimo_id)
                         ->with('cart_total', Cart::total())
-                        ->with('rota', 'carrinho')
+                        ->with('rota', 'carrinho.html')
                         ->with('layout', $layout);
+    }
+
+    public function Atualizar() {
+        $parans = \Request::all();
+        $content = Cart::content();
+        if ($parans['quantity'] == 0) {
+            return json_encode(array('action' => 'false', 'info' => 'Informe uma quantidade acima de zero.'));
+        }
+        foreach ($content as $item) {
+            if ($parans['product_id'] == $item->id) {
+                Cart::update($item->rowid, array('quatity' => $parans['quantity']));
+                $final_price = $this->basket
+                        ->where('customer_id', Auth::user()->id)
+                        ->where('products_id', $parans['product_id'])
+                        ->get();
+                foreach ($final_price as $items) {
+                    $price = $items->final_price;
+                }
+
+                /* $carrinho = 
+                  $lista = $carrinho->toarray();
+                  $basket_option = $this->basket_item->where('basket_id', $lista[0]['id'])->get(); */
+                $this->basket
+                        ->where('customer_id', Auth::user()->id)
+                        ->where('products_id', $parans['product_id'])
+                        ->update(['quantity' => $parans['quantity'],
+                            'final_price' => $price * $parans['quantity']]);
+                //$carrinho->delete();
+
+                break;
+            }
+        }
+        //Session::put('success', 'Item atualizado com sucesso!');
+        if (Cart::count() > 0) {
+            return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' Atualizado para ' . $parans['quantity']));
+        } else {
+            return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' Atualizado para ' . $parans['quantity'] . ' vamos redirecionar para carrinho vazio.'));
+        }
+    }
+
+    public function Remover() {
+        $parans = \Request::all();
+        $content = Cart::content();
+        foreach ($content as $item) {
+            if ($parans['product_id'] == $item->id) {
+                //Cart::update($item->rowid, array('quatity' => $parans['quantity']));
+                $carrinho = $this->basket
+                        ->where('customer_id', Auth::user()->id)
+                        ->where('products_id', $parans['product_id'])
+                        ->get();
+                // dd($carrinho);
+                foreach ($carrinho as $items) {
+                    $id = $items->id;                    
+                }
+                //elimina os item do carrinho
+                $this->basket_item->where('basket_id', $id)->delete();
+                //elimina a entrada com a linha de produto do carrinho
+                $this->basket
+                        ->where('customer_id', Auth::user()->id)
+                        ->where('products_id', $parans['product_id'])->delete();
+                $rowId = $item->rowid;
+                break;
+            }            
+        }
+        Cart::remove($rowId);
+        //Session::put('success', 'Item atualizado com sucesso!');
+        //if (Cart::count() > 0) {
+        return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
+        //} 
     }
 
 }

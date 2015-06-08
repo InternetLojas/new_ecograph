@@ -36,14 +36,9 @@ class Authenticate {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-                $customer = Customer::find(Auth::user()->id)->customers_firstname;
-                //cria a sessão
-
-                Session::put('customer_name', $customer);
                 return redirect()->guest('auth/login');
             }
         }
-
 
         return $next($request);
     }

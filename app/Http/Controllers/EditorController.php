@@ -35,7 +35,7 @@ class EditorController extends Controller {
     public function index($produto, Request $request) {
         $post_inputs = $request->all();
         $layout = $this->layout->classes(\Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
-        $userId = \Auth::user()->id;
+        //$userId = \Auth::user()->id;
         //$customer = Customer::with('files')->find($userId);
         /*         * *o itens de texto**** */
         //$file_id = $customer->files->toarray();
@@ -66,6 +66,7 @@ class EditorController extends Controller {
           "_token" => "3HOn0RnpSuACXOaFuwYCqt3YUN94v4vJRroov2hh"
           "produto_id" => "462"
           // */
+        
         return view('editor.index')
                         ->with('title', STORE_NAME . ' Editar ' . $produto)
                         ->with('page', 'editor')
@@ -93,6 +94,7 @@ class EditorController extends Controller {
         // $file_id = $customer->files->toarray();
         $file_img = File::with('filemidias')->find($file_id[0]['id']);
         $img = $file_img->filemidias->toarray();
+       // dd(compact('customer'));
         return view('editor.index')
                         ->with('title', STORE_NAME . ' Editar ' . $post_inputs['orc_subcategoria_nome'])
                         ->with('page', 'editor')

@@ -376,13 +376,13 @@ HTML::macro('lista_sub_categorias', function($lista) {
     //print_r($lista);
     $html = '';
     foreach ($lista as $categorias) {
-        $html .= '<td><ul  class="unstyled">';
+        $html .= ' <ul class="list-unstyled list-inline text-center text-muted">';
         foreach ($categorias['prole']['filhos'] as $item) {
             $html .= '<li class="afasta">';
-            $html .= '<a title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a>';
+            $html .= '<a title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a> | ';
             $html .='</li>';
         }
-        $html .= '</ul></td>';
+        $html .= '</ul>';
     }
     return $html;
     //exit;

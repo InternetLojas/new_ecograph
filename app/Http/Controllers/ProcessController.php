@@ -5,7 +5,10 @@ namespace Ecograph\Http\Controllers;
 use Ecograph\Http\Controllers\Controller;
 use Ecograph\Gateway;
 use Ecograph\Libs\Layout;
+use Ecograph\Libs\Checkout;
 use Cart;
+use Session;
+
 
 class ProcessController extends Controller {
 
@@ -99,7 +102,12 @@ class ProcessController extends Controller {
     public function Pedido() {
 
         $post_inputs = \Request::except('_token');
-        dd($post_inputs);
+		$payment = $post_inputs['payment'];
+		$payment_id = Gateway::Id($payment)->get();
+	
+		//gera a pedido especifico e recebe o identificador do novo pedido
+        //ou recebe false quando não foi possivel gerar o pedido
+        $order_id = Checkout::order($payment, $payment_id->toarray()[0]['id']);
         //gera a pedido especifico
         //$order_id = 1; //$this->order($class);
         // //gera os valores totais, descontos e acrescimos
@@ -109,27 +117,26 @@ class ProcessController extends Controller {
         //$this->post_inputs = $post_inputs;
         //identifica a classe a ser utilizada
        // $class = Gateway::where('payment',$post_inputs['payment'])->class;
-        $this->class = $class;
+        //$this->class = $class;
 
         //puxa as configurações necessárias para o processo de pagamento retorna um array
-        $start = $class::start();
-        $this->start = $start;
+        //$start = $class::start();
+        //$this->start = $start;
 
-        //gera a pedido especifico e recebe o identificador do novo pedido
-        //ou recebe false quando não foi possivel gerar o pedido
-        $order_id = Checkout::order($class, $post_inputs['payment']);
+        
         if ($order_id) {
-            $this->order_id = $order_id;
+            
             //prossegue na criacação dos itens do pedido
-            $data = $this->ItemsPedido();
-            if ($data['status'] == 'pass') {
+            $item= Checkout::Item($order_id);
+			//dd($item);
+            if ($item) {
                 //cria um sessão do identificador do pedido utilizado
                 Session::put('neworder_id', $order_id);
-                $data['url_action'] = URL::to('loja/finalizacao');
+                $data['url_action'] = 'loja/finalizacao';
                 //identifica se é um gateway interno ou externo
-                $gateway_externo = Gateway::find($post_inputs['payment'])->gateway_externo;
+                $gateway_externo = Gateway::find($payment_id->toarray()[0]['id'])->gateway_externo;
                 //cria um sessão da classe trabalhada
-                Session::put('newclass', $class);
+                Session::put('newclass', $payment);
                 if ($gateway_externo == 0) {
                     //o formulário n necessita ser submetido
                     $submeter = false;
@@ -147,7 +154,7 @@ class ProcessController extends Controller {
                 //Cart::destroy();
                 return json_encode($data);
             } else {
-                return json_encode($data);
+                //return json_encode($data);
             }
             //return json_encode($data);
         }

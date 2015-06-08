@@ -30,6 +30,10 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'HomeController@index'
     ]);
     Route::get('home', [
+        'as' => 'basket',
+        'uses' => 'HomeController@basket'
+    ]);
+    Route::get('home.html', [
         'as' => '/index',
         'uses' => 'HomeController@index'
     ]);
@@ -50,8 +54,8 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'HomeController@brindes'
     ]);
     Route::get('produtos.html', [
-        'as' => 'produtos',
-        'uses' => 'ProductController@index'
+        'as' => 'produtos.produtos',
+        'uses' => 'ProductController@Produtos'
     ]);
     Route::get('brindes.html', [
         'as' => '/brindes',
@@ -162,7 +166,11 @@ Route::group(['prefix' => 'produtos'], function() {
     ]);
     Route::post('portfolio.html', [
         'as' => 'produtos.portfolio',
-        'uses' => 'ProductController@Portfolio'
+        'uses' => 'ProductController@Listagem'
+    ]);
+    Route::get('portfolio.html', [
+        'as' => 'produtos.index',
+        'uses' => 'ProductController@Index'
     ]);
 });
 
@@ -221,12 +229,20 @@ Route::post('basket', [
     "as" => "basket",
     "uses" => "BasketController@Listar"
 ]);
+Route::get('basket/atualizar', [
+        'as' => 'basket.atualizar',
+        'uses' => 'BasketController@Atualizar'
+    ]);
+Route::get('basket/remover', [
+        'as' => 'basket.remover',
+        'uses' => 'BasketController@Remover'
+    ]);
 Route::group(['prefix' => 'carrinho'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
     Route::get('lista.html', [
         'as' => 'carrinho.lista',
         'uses' => 'BasketController@Carrinho'
-    ]);
+    ]);    
 });
 
 /* ============================================================== */

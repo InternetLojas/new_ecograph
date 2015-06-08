@@ -53,7 +53,7 @@ class PricesController extends Controller {
         //identificando o peso para o pacote 
         $category_peso = Pacpapel::wherein('id', $pacote_papeis)->get();
         $peso = $category_peso->toarray();
-        //$weigth = array();
+       
         foreach ($peso as $k => $valores) {
             $pacote_peso[] = utf8_encode($valores['weight']);
         }
