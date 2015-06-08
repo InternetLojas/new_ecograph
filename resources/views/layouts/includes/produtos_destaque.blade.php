@@ -1,8 +1,8 @@
-@foreach(Utilidades::Agrupa(Banners::ativos('1'), '3','busca') as $row)
+@foreach(Utilidades::Agrupa(Banners::ativos('1'), '4','busca') as $row)
 <div class="row">
     @foreach($row as $palco=>$destaque)
-    <div class="span4">                    
-        <div class="thumb_cat bg-transparent text-center">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">                    
+        <div class="thumb_cat thumbnail bg-transparent text-center">
             <a href="#" class="thumbnail" title="Saiba mais sobre {{ $destaque['categories_name'] }}">
                 <span class="img_destaque destaque{{ $destaque['id_img'] }}" style="background-image:url('{{URL::to('images/banners/destaques/')}}/destaque-00{{ $destaque['id_img'] }}.jpg')"></span>
             </a>

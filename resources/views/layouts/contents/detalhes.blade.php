@@ -1,11 +1,15 @@
-<!--<h1>
-    <a href="javascript:void()"><i class="icon-info fg-darker smaller"></i></a>
-    {!!$ativo!!}<small class="on-right"></small>
-</h1>-->
-@include('layouts.includes.detalhes.intro')  
+<div class="title_content">
+    <h1>
+        <img src="images/icons/calculadora.png" width="35" alt="calculadora.png" />
+        Calculadora Online - 
+        <small><span id="nome_escolhido"></span></small>
+    </h1>
+</div>
+
+<!--tabela de cálculo dos preços-->
 @include('layouts.includes.detalhes.tabela')
 @include('layouts.includes.detalhes.especificacoes')
+@include('layouts.includes.detalhes.logar')
 @include('layouts.includes.detalhes.perfis')
-@include('layouts.includes.detalhes.finalizacao')
-@include('layouts.includes.detalhes.orcamento')   
 @include('layouts.includes.detalhes.portfolio')
+

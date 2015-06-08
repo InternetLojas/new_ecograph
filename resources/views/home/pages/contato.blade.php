@@ -1,7 +1,6 @@
 <!-- CONTATO-->
-
 <div class="page-region-content">
-    <div class="grid fluid">
+    <div class="grid padding5">
         @include('layouts.contents.contato')
     </div>
 </div>

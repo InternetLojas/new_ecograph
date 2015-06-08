@@ -1,4 +1,3 @@
-<!-- PRODUTOS -->
 @foreach ($array_categ as $key => $categorias)
 <div class = "row">
     @foreach ($categorias as $item)

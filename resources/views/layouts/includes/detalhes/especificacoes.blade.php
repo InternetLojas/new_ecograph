@@ -1,36 +1,37 @@
-<section id="especificacoes_selecionada" style="display:none">
-    <div class="grid padding5">
+<div class="section" id="especificacoes_selecionada" style="display:none">
+    <!--============================== content =================================-->
+    <div class="destaque_home">
         <div class="row">
-            <div class="title_pagina">
-                <div class="icone_pagina">
-                </div>
-                <div class="title_content">
-                    <h2>                        
-                        <i class=" icon-tools on-left"></i> Especificações selecionadas:
-                    </h2>                   
-                </div>            
+            <div class="col-md-2">
+                <img id="image_escolhida" src="" alt="" title="" width="100%" class="img-responsive" style="max-width:100px"  />
             </div>
-        </div>
-        <div class="row">
-            <div id="info_especificacoes"></div>
-        </div>
-        <div class="row">                
-            <style>
-                .metro .detalhes:before {content: "detalhes";}
-            </style>                
-            <div class="example detalhes">
-                <table class="table table-bordered">
-                    <thead class="head-itens">
-                        <tr id="especificacoes_head"></tr>
-                    </thead>
-                    <tbody class="striped">
-                        <tr id="especificacoes"></tr>                                
-                    </tbody>
-                </table>
-                <a class="button bg-darkRed fg-white place-right" title="Verifique no portfólio os modelos para seu pacote" id="btn_modelos" href="javascript:EscolhaPerfil();">
-                    <i class="icon-eye on-left"></i>Selecione um modelo para continuar
-                </a>
+            <div class="col-md-4">
+                @include('layouts.includes.boxes.opcoes_finalizacao')
             </div>
+            <div class="col-md-2 text-center">
+                <img src="images/theme/printer.jpg" alt="calculadora.png" class="img-responsive" />
+                <button type="button" class="btn  bg-green fg-white no-radius" title="Crie um orçamento exclusivo" onclick="EditarTemplates(@if (Auth::guest()) '0' @else '1' @endif);"  >
+                    IMPRIMI ORC
+                </button>
+
+            </div>
+            <div class="col-md-4">
+                <ul class="nav nav-stacked nav-tabs">
+                    <li>
+                        <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg"  class="img-responsive" />
+                        <button type="button" class="btn  bg-smallgray btn-lg no-radius" title="Deixe que criamos sua arte" id="btn_comprar" onclick=""  >
+                            Desenvolver arte R$ 50,00
+                        </button>
+                    </li>
+                    <li>
+                        <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
+                        <button type="button" class="btn btn-block bg-smallgray btn-lg no-radius" title="Envie seu arquivo PDF" id="btn_upload" onclick="(@if (Auth::guest()) '0' @else '1' @endif);"  >
+                            Envie seu arquivo PDF.
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            @include('layouts.includes.boxes.forms.form_orcamento')
         </div>
     </div>
-</section>
+</div>

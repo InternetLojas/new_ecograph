@@ -1,8 +1,11 @@
-
-<div class="page-region-content">
-    <div class="grid fluid">
-        <div class="row"> 
-            @include('layouts.contents.listagem')
+<!-- LISTAGEM-->
+<div class="section">
+    <div class="container">
+        <!--============================== content =================================-->
+        <div class="wrapper">
+            <div class="destaque_home">
+                @include('layouts.contents.listagem')
+            </div>
         </div>
     </div>
 </div>

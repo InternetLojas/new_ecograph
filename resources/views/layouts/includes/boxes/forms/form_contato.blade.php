@@ -1,34 +1,43 @@
-{!! Form::open(array(
-'url'=>URL::to('email/contato'),
-'method'=>'post',
-'id' => 'contato',
-'name'=>'contato',
-'role'=>'Form'
-)) 
-!!}  
-<fieldset>
-    <label>Nome</label>
-    <div class="input-control text" data-role="input-control">
-        <input type="text" placeholder="Como gostaria de ser chamado?" id="nome" value="" name="nome" required>                
-        <button class="btn-clear" tabindex="-1"></button>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label for="nome" class="control-label">Nome</label>
+        </div>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" placeholder="Como gostaria de ser chamado?" id="nome" value="" name="nome" required>
+
+        </div>
     </div>
-    <label>Email</label>
-    <div class="input-control email" data-role="input-control">
-        <input type="email" placeholder="Seu email para contato" id="email" value="" name="email" required>
-        <button class="btn-clear" tabindex="-1"></button>
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label for="email" class="control-label">Email</label>
+        </div>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" placeholder="Seu email para contato" id="email" value="" name="email" required>
+
+        </div>
     </div>
-    <label>Telefone</label>
-    <div class="input-control tel" data-role="input-control">
-        <input type="tel" placeholder="Fone principal" id="telefone" value="" name="telefone" required >          
-        <button class="btn-clear" tabindex="-1"></button>
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label for="email" class="control-label">Telefone</label>
+        </div>
+        <div class="col-sm-10">
+            <input type="tel" class="form-control" placeholder="Seu email para contato" id="telefone" value="" name="telefone" required>
+
+        </div>
     </div>
-    <label>Mensagem</label>
-    <div class="input-control textarea " data-role="input-control">
-        <textarea id="mensagem" name="mensagem" rows="3"></textarea>
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label class="control-label">Mensagem</label>
+        </div>
+        <div class="col-sm-10">
+            <textarea id="mensagem" name="mensagem" rows="3" cols="55"></textarea>
+        </div>
+    </div> 
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-default pull-right">Enviar</button>
+        </div>
     </div>
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <button type="submit" class="large bg-orange fg-white place-right" >Enviar</button>
-    <div style="margin-top: 20px">
-    </div>
-</fieldset>
 </form>

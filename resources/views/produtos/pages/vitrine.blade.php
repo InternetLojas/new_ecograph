@@ -1,4 +1,4 @@
-<!-- DETALHES-->
+<!-- VITRINE-->
 <div class="section">
     <div class="container">
         <!--============================== content =================================-->
@@ -8,7 +8,7 @@
                     @include('layouts.includes.sidebar_left')
                 </div>
                 <div class="col-md-9 col-lg-9">
-                    @include('layouts.contents.detalhes')   
+                    @include('layouts.contents.vitrine')  
                 </div>
             </div>
         </div>

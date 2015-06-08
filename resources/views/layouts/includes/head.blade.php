@@ -15,22 +15,15 @@
 <!--meta tags facebook-->
 {{ Metatags::tagsfacebook($descricao, $detalhes) }}
 @endif
-<!-- CSS ================================================== -->
+<!-- Latest compiled and minified CSS & JS -->
+<link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-<!-- web font  --      
-<link href='http://fonts.googleapis.com/css?family=Raleway:300,400,700,800,900' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>-->
-
-<!-- CSS METRO  -->
-<link rel="stylesheet" href="{{ asset('/css/metro-bootstrap.css')}}">
-<link rel="stylesheet" href="{{ asset('/css/metro-bootstrap-responsive.css')}}">
+<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="{{ asset('/css/iconFont.css')}}">
-<link rel="stylesheet" href="{{ asset('/css/custom.css')}}">
-<link rel="stylesheet" href="{{ asset('/uploads/css/jquery.fileupload.css')}}">
+<link rel="stylesheet" href="{{ asset('/css/ecograph.css')}}">
+
 <!-- Favicons-->
 <!--================================================== -->
 <link rel="shortcut icon" href="images/icons/favicon.ico">
 <link rel="icon" href="images/icons/favicon.ico">
-
+<!-- Basic Page Needs ================================================== -->

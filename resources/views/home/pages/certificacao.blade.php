@@ -1,8 +1,2 @@
-
-        <div class="page-region-content">
-            <div class="grid fluid">
-                <div class=""> 
-                    @include('layouts.contents.certificacao')
-                </div>
-            </div>
-        </div>
+<!-- CERTIFICACÃO-->
+@include('layouts.contents.certificacao') 

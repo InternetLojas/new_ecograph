@@ -1,33 +1,47 @@
-<form role="form" method="POST" action="{{ url('/auth/login') }}">
-    <fieldset>
-        <label>E-Mail</label>
-        <div class="input-control text" data-role="input-control" >
-            <input type="email" name="email" value="{{ old('email') }}" placeholder="Seu email"/>
-            <button class="btn-clear"></button>
+<div class="destaque_home">
+    <form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="email" class="control-label">Email</label>
+            </div>
+            <div class="col-sm-10">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Seu email" value="{{ old('email') }}" required>
+            </div>
         </div>
-        <label>Password</label>
-        <div class="input-control text" data-role="input-control" >
-            <input type="password" name="password" placeholder="Seu email"/>
-            <button class="btn-clear"></button>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="password" class="control-label">Password</label>
+            </div>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="password" id="password" placeholder="Sua senha" required>
+                @if (Session::has('facebook_id'))
+                {{$get_me =  Session::get('me')}}
+                {{ Form::hidden('first_name', $get_me['first_name']) }}
+                {{ Form::hidden('last_name', $get_me['last_name']) }}
+                {{ Form::hidden('email', $get_me['email']) }}
+                @endif 
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            </div>
         </div>
-        <div class="input-control checkbox" data-role="input-control" >
-            <label>
-                <input type="checkbox" name="remember" />
-                <span class="check"></span>
-                Lembre-me
-            </label>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label class="badge">
+                        <input type="checkbox"> Remember me
+                    </label>
+                </div>
+            </div>
         </div>
-    </fieldset>
-    <label></label>
-    <div class="input-control">
-        @if (Session::has('facebook_id'))
-        {{$get_me =  Session::get('me')}}
-        {{ Form::hidden('first_name', $get_me['first_name']) }}
-        {{ Form::hidden('last_name', $get_me['last_name']) }}
-        {{ Form::hidden('email', $get_me['email']) }}
-        @endif 
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <button type="submit" class="large inverse" >Logar</button>
-        <a class="button large warning" href="{{ url('/password/email') }}">Esqueceu a senha?</a>
-    </div>
-</form>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-11">
+                <a class="btn btn-link" href="{{ url('/password/email') }}">Esqueceu a senha?</a>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-lg bg-green pull-right no-radius fg-white">Logar</button>
+            </div>
+        </div>
+    </form>
+</div>

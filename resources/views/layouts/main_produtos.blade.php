@@ -3,11 +3,7 @@
     <head>
         @include('layouts.includes.head')
     </head>
-    @if($page == 'checkout')
-    <body class="ecograph" onload="setTimeout(chamar_gateway(), 100 * 1000);">
-        @else
     <body class="ecograph">
-        @endif
         <div class="section">
             <div class="container">
                 <!--============================== header =================================-->
@@ -22,22 +18,9 @@
                 <!--============================== header =================================-->
             </div>
         </div>
-        @if ($page=="home")
-        <div class="section">
-            <div class="container">
-                <!--============================== banner =================================-->
-                <div class="wrapper">                    
-                    <div class="row">
-                        @include('layouts.includes.banner_slider')
-                    </div>
-                </div>
-                <!--============================== banner =================================-->
-            </div>
-        </div>
-        @endif
-         <!--============================== conteúdo  =================================-->
+        <!--============================== conteúdo  =================================-->
         @yield('content')
-         <!--============================== conteúdo =================================-->
+        <!--============================== conteúdo =================================-->
         <!-- ====================    SCRIPTS   ========================== -->
         <footer class="section section-primary">
             @include('layouts.includes.footer')

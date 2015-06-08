@@ -1,14 +1,31 @@
-<!-- Search -->
-{!! Form::open(array(
-'url'=>url::to('loja/busca'), 
-'method' => 'get', 
-'name'=>'search',
-'id'=>'search',
-'onsubmit'=>'return search_verifica()',
-'role'=>'form'))
-!!}
-<div class="ecograph input-control text">
-    <input type="search" name="keyword" class="search" id="btn-buscar" placeholder="Código ou nome do produto" onblur="if (this.value == '') this.value = 'Código ou nome do produto';" onfocus="if (this.value == 'Código ou nome do produto') this.value = '';">
-    <button class="btn-search"></button>
+
+<div class="section">
+    <div class="row">
+        <div class=" col-md-12">
+            <!-- Search -->
+            {!! Form::open(array(
+            'url'=>url::to('loja/busca'), 
+            'method' => 'get', 
+            'name'=>'search',
+            'class'=>'form-horizontal',
+            'id'=>'search',
+            'onsubmit' => 'return search_verifica()',
+            'role'=>'form'))
+            !!}
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="keyword" id="keyword" class="form-control no-radius" placeholder="Código ou nome do produto"  >
+                        <span class="input-group-addon no-radius btn-search" style="">
+                            <a href="javascript:void(0);" onclick="return document.search.submit();">
+                                <i class="fa fa-search"  style="color:#ffffff"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
 </div>
-</form>
+

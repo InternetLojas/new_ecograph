@@ -1,5 +1,9 @@
-<div class="page-region-content">
-    <div class="grid fluid">
-        @include('layouts.contents.login')
+<!-- LOGIN-->
+<div class="section">
+    <div class="container">
+        <!--============================== banner =================================-->
+        <div class="wrapper">  
+            @include('layouts.contents.login')
+        </div>
     </div>
 </div>

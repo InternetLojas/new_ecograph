@@ -1,9 +1,6 @@
 <!-- BRINDES-->
-
-        <div class="page-region-content">
-            <div class="grid fluid">
-                <div class=""> 
-                    @include('layouts.contents.brindes')
-                </div>
-            </div>
-        </div>
+<div class="page-region-content">
+    <div class="grid padding5">              
+        @include('layouts.contents.brindes') 
+    </div>
+</div>

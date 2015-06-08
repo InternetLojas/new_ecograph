@@ -1,27 +1,20 @@
-<ul class="unstyled inline barra">
-    <li class="count">
-        3 resultados                                   
-    </li>
-    <li class="paginador">
-        De 1 at&eacute; 3 - 
-        [ <span>1</span> ]
-    </li>
-    <li class="layout">
-        <span style="display:block;float:right;">Alterar layout:</span>
-        <ul class="unstyled inline">
-            <li>
-                <a href="20/63/listagem/flyer/lista1restaurante.html" >
-                    <span class="icon-grid on-left"></span>
-                    Coluna
-                </a>
-            </li>
-            <li>
-                <a href="20/63/listagem/flyer/lista1restaurante.html" >
-                    <span class="icon-list on-left"></span>
-                    Lista
-                </a>
-            </li>
-        </ul>
+<div class="grid fluid">
+    <div class="row">
+        <nav class="navigation-bar dark text-center">
+            <nav class="navigation-bar-content">
 
-    </li>
-</ul>
+                <item class="element text-center umterco">
+                    Total de Resultados: {!!$total!!}
+                </item>
+                <item class="element text-center umterco">
+                    De 1 até {!!count($products)!!} [{!!\Request::get('page')!!}]
+                </item>
+                <item class="element text-center umterco">
+                    Alterar layout:
+                    <i class="icon-list on-left"></i><a class="activedefault" href="advanced_search_result.php?busca=acougue&filtro=" > Lista</a>
+                    <i class="icon-grid on-left"></i><a href="advanced_search_result.php?busca=acougue&filtro=" > Coluna</a>
+                </item>
+            </nav>
+        </nav>
+    </div>
+</div>

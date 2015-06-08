@@ -1,7 +1,8 @@
-
-<div class="page-region-content">
-    <div class="grid fluid">
-        <div class="row"> 
+<!-- EDIÇÃO-->
+<div class="section">
+    <div class="container">
+        <!--============================== banner =================================-->
+        <div class="wrapper">  
             @include('layouts.contents.edicao')
         </div>
     </div>

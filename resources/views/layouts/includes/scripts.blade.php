@@ -18,22 +18,13 @@
     ga('send', 'pageview');</script>
 @endif
 
-<script src="{{ asset('/js/jquery/jquery.min.js')}}"></script>
-<script src="{{ asset('/js/jquery/jquery.widget.min.js')}}"></script>
-<script src="{{ asset('/js/jquery/jquery.mousewheel.js')}}"></script>
-<script src="{{ asset('/js/prettify/prettify.js')}}"></script>
-<script src="{{ asset('/js/metro/metro.min.js')}}"></script>
-<script src="{{ asset('/js/metro/metro-progressbar.js')}}"></script>
-<!-- Metro UI CSS JavaScript plugins -->
-<script src="js/load-metro.js"></script>
 <!-- Local JavaScript -->
-<script src="{{ asset('/js/docs.js')}}"></script>
-<!--Script exclusiva para internetlojas -->
-<script src="{{ asset('/js/geolocalizacao.js') }}"></script>
-<script src="{{ asset('/js/geral.js') }}"></script>
 
-<script src="{{ asset('/uploads/js/vendor/jquery.ui.widget.js') }}"></script>
-<script src="{{ asset('/uploads/js/jquery.fileupload.js') }}"></script>
+<!--Script exclusiva para internetlojas -->
+<script src="{{ asset('//code.jquery.com/jquery.js')}}"></script>
+<script src="{{ asset('//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')}}"></script>
+<script src="{{ asset('js/geolocalizacao.js') }}"></script>
+<script src="{{ asset('js/geral.js') }}"></script>
 <script src="{{ asset('js/jquery.maskedinput.js') }}"></script>
 @if($page=='contato')
 {!! HTML::script('js/jquery.ui.map.full.min.js') !!}
@@ -45,20 +36,4 @@
 <!-- Javascript para abrir o gateway de pagamento ============================================= -->
 {!! HTML::html_gateway($html) !!}
 <!-- Fim Javascript para o gateway de pagamento =============================================== -->
-@endif
-
-@if($page =='carrinho') 
-<script>
-    function atualizar(product)
-    {
-        var qtd = document.getElementById(product).value;
-        var formulario = document.getElementById('quantidade' + product);
-        if (qtd === 0)
-        {
-            alert('Por favor informe uma quantidade maior que zero');
-            exit;
-        }
-        formulario.submit();
-    }
-</script> 
 @endif

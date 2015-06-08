@@ -27,5 +27,5 @@
     </div>
 </div> 
 <div class="row">
-    include('layouts.includes.boxes.paginador')
+    @include('layouts.includes.boxes.paginador')
 </div>

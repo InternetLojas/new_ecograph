@@ -1,42 +1,33 @@
-<!-- EDICAO-->
-<div class="title_pagina">
-    <div class="icone_pagina">
-        <img src="images/icons/icone-box-acabamento.jpg" width="100%" alt="" />
-    </div>
-    <div class="title_content">
-        @include('layouts.includes.boxes.breadcrumbs')               
-        <h3>Edição</h3>
+<div class="section">
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+
+        @include('layouts.includes.boxes.breadcrumbs')
+
+        <p class="bg-smallgray" >
+            Preencha os campos abaixo com as informações que deverá conter o seu produto.
+        </p>
     </div>
 </div>
-<div class="clearfix"></div>
 <div class="row">
-    <p class="fg-white" style="text-align:center;padding: 3px 0;background-color:{!!$layout['back_menu']!!}">
-        Preencha os campos abaixo com as informações que deverá conter o seu produto.
-    </p>
-    <div id="progress"  class="progress-bar ribbed-red fg-white padding10" data-role="progress-bar" data-value="50" ></div>
-    @if(Session::has('success'))
-    <div class="alert alert-success">
-        {!! Session::get('success') !!}
-    </div>
-    @endif
-
-    <div class="alert alert-success hide" id="upload-success">
-        Upload realizado com sucesso!
-    </div>
-</div>
-<style>
-    .metro .editor:before {content: ""}
-    .metro .example {border:none}
-</style>
-<div class="example editor">
-    <div class="row">
-        <div class="span7">     
-            @include('layouts.includes.boxes.forms.form_edicao')  
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+        <div class="col-md-6">
+            <p class="legend-editor bg-gray fg-white" >Inserir Texto</p>
+            @include('layouts.includes.boxes.forms.form_edicao') 
         </div>
-        <div class="span5">
+        <div class="col-md-6">
+            <p class="legend-editor bg-gray fg-white" >Inserir Imagem</p>
             @include('layouts.includes.boxes.uploads_files')
+            <div class="row">
+                <img class="polaroid" src="images/{!!$img_categoria!!}" classe="img-responsive" />
+                <button type="button" name="comprar" id="btn_upload" class="btn btn-lg bg-green fg-white pull-right no-radius">
+                    Finalizar compra
+                </button>
+                <p class="tex-muted text-center">
+                    *No prazo de até 48 horas enviamos o layout do seu produto para conferência.
+                </p>
+            </div>
         </div>
-        <div id="files" class="files"></div>
     </div>
 </div>
-
