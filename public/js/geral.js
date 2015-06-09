@@ -54,7 +54,6 @@ function EnderecoCEP() {
             ValidaTipoConta(whoo, url);
         });
     } else {
-
         $('#mensagem_' + whoo).addClass('errormsg alert');
         $('#mensagem_' + whoo).html('ERRO!');
         $('#mensagem_' + whoo).delay(2000).fadeOut(500);
@@ -234,8 +233,6 @@ function Calculadora(current_id, categoria) {
     $.post(URL, formulario, function(data) {
         var obj = JSON.parse(data);
         console.log(obj);
-        // var back_menu = '';
-        //var image = '';
         $('#lista_formato').html();
         $('#lista_cores').html();
         $('#lista_papel').html();
@@ -250,19 +247,15 @@ function Calculadora(current_id, categoria) {
                 $('#nome_escolhido').html(categoria);
                 $('#img_escolhida_thumb').html(categoria);
                 var imagem = obj.imagem.image;
-
                 if (obj.processamento.erro !== '') {
                     $('#info_calculadora').addClass('notice marker-on-bottom bg-crimson fg-white');
                     $('#info_calculadora').html(obj.informacao.info);
                     $('#info_calculadora').delay(4000).fadeOut(400);
                     $('#tabela').css('display', 'none');
-
                 } else {
                     $('.listview .list.fg-white').each(function(i) {
                         $(this).attr('class', 'list bg-gray fg-white btn-detalhes');
-                        //$(this).addClass('');
-                        // $(this).addClass('list fg-white btn-detalhes active' + obj.active_a.style_a);
-                    });
+                   });
                     $.each(obj, function(key, val) {
                         /*if (key === 'informacao' && val.info !== '') {
                          $('#info_calculadora').addClass('notice marker-on-bottom bg-cyan fg-white');
@@ -317,7 +310,6 @@ function Calculadora(current_id, categoria) {
  /*-----------------------------------------------------------------------------------*/
 function GeraLista(parametros, category_id) {
     var cat_id = $('#orc_categoria_id').val();
-
     $.each(parametros, function(tipo, parans) {
         var radio = '';
         if (cat_id === '5') {
@@ -587,15 +579,16 @@ function EscolhaPerfil() {
                 var button = '';
                 if (data.info !== 'erro') {
                     $.each(data, function(key, val) {
-                        div += '<div class="row">';
+                        div += '<div class="row fluid">';
                         $.each(val, function(k, item) {
                             //alert(item.nome_perfil);
-                            button += '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><button type="button" class="btn btn-lg bg-dark fg-white no-radius" onclick="VerTemplate(\'' + item.id_perfil + '\', \'' + item.nome_perfil + '\')"  title="Escolher o template para ' + item.nome_perfil + '">\n\
-                                <img title="' + item.nome_perfil + '" src="' + item.logo_perfil + '" class="img-responsive pull-left">\n\
-                                <span class="pull-lef text-medio">' + item.nome_perfil + '</span>\n\
+                            button += '<div class="umquarto bg-dark">\n\
+                                        <button type="button" class=" btn bg-dark fg-white no-radius" onclick="VerTemplate(\'' + item.id_perfil + '\', \'' + item.nome_perfil + '\')"  title="Escolher o template para ' + item.nome_perfil + '">\n\
+                                        <img title="' + item.nome_perfil + '" src="' + item.logo_perfil + '" class="img-responsive pull-left">\n\
+                                        <span class="pull-lef text-medio">' + item.nome_perfil + '</span>\n\
                                 </button></div>';
                         });
-                        div += button + '</div>';
+                        div += button + '</div><div class="clearfix"></div>';
                         button = '';
                     });
                     $('#listview').html(div);
@@ -730,9 +723,9 @@ function AdicionarCarrinho(produto_id) {
     var formulario = $('#basket').serializeArray();
     $.post(URL, formulario, function(data) {
         console.log(data);
-    
 
-    $('#modalAdicionando').modal('show');
+
+        $('#modalAdicionando').modal('show');
     });
     /*$.Dialog({
      overlay: true,
@@ -797,9 +790,9 @@ function BasketSubmeter() {
 //     $('#basket').submit();
 // });
     //$.Dialog.close();
-    $('#info_basket').addClass('notice marker-on-bottom bg-orange fg-black');
-    $('#info_basket').html('<p class="tertiary-text fg-white"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o carrinho. Aguarde...</p>');
-    $('#info_basket').delay(2000).fadeOut(800, function() {
+    $('#info_basket').addClass('alert alert-success');
+    $('#info_basket').html('<p class="fg-white"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o carrinho. Aguarde...</p>');
+    $('#info_basket').fadeOut(800, function() {
         $('#basket').submit();
     });
 }
@@ -1256,6 +1249,9 @@ function CriarConta(token) {
 function chamar_gateway() {
     GerarPedido('formpedido');
 }
+/*-----------------------------------------------------------------------------------*/
+/*  controla A GERAÇÃO DE UM NOVO PEDIDO
+ /*-----------------------------------------------------------------------------------*/
 function GerarPedido(whoo) {
     var payment = $('#payment').val();
     var discount_cupom = $('#discount_cupom').val();
@@ -1314,9 +1310,11 @@ function GerarPedido(whoo) {
         });
     }
 }
-
+/*-----------------------------------------------------------------------------------*/
+/*  VERIFICA SE O GATEWAY USADO NECESSITA USAR URL EXTERNA
+ /*-----------------------------------------------------------------------------------*/
 function CheckoutNao_Submeter(obj, whoo, form_externo, payment) {
-    var metodo = obj.metodo;
+    //var metodo = obj.metodo;
     var $btn_boleto = $('#btn_boleto');
     $btn_boleto.on('click', function() {
         window.location = url_interna;

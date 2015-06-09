@@ -1638,6 +1638,14 @@ span.afasta{
     font-weight: 600;
     font-size: 88.88888888888889%;
 }
+
+.umquarto {
+    display: block;
+    float: left;
+    text-align: center;
+    padding-top: 10px;
+    width: 24.5%;
+}
 /*
  =======================================================================
  CUSTOMIZAÇÃO HEADER E PRE-HEADER
@@ -1712,16 +1720,32 @@ span.element-divider-end:before{
  CUSTOMIZAÇÃO PARA TÍTULOS
  =======================================================================
 */
-.title_content {
-    padding:0 5px;
+.title_pagina {
+    display:block;
+    width:100%;
+    margin: 2px auto;
+    padding:0;
+    max-height: 60px;
 }
 
-.title_content h3 {
-    font-size: 1.7em;
-    line-height: 35px;
-    margin-left: 15px;
-    text-transform: uppercase;
+.icone_pagina{
+    display:block;
+    float:left;
+    max-width: 80px;
 }
+
+.title_content {
+    display:block;
+    text-align:left;
+}
+
+.title_content h3{
+    font-size:0.99em;
+    line-height:35px;
+    margin-left:15px;
+    text-transform:uppercase;
+}
+
 h3.title-cadastro, h3.title-orcamento {
     display: block;
     float: none !important;
@@ -1758,38 +1782,49 @@ h4.title a:hover {
     text-decoration: none;
 }
 /*
- =======================================================================
- PRE-HEADER
- =======================================================================
+=======================================================================
+        ESTILO PARA Pï¿½GINA CESTA.HTML
+=======================================================================
 */
-/*
-.metro .container .page-container {
-    width: 100%;
-    max-width: 1024px;
-    background-color: #FFFFFF;
-    display: block !important;
-    float: left !important;
+.head_carrinho{ 
+    height:40px;
+    margin-top:25px
 }
-div.element.menu-top {
-    padding: 0 !important;
+td.col-cesta-title{
+    width: 10.8%;
 }
-.umterco {
-    display: block;
-    float: left;
-    text-align: center;
-    padding-top: 10px;
-    width: 33%;
+.content_carrinho{
+    display:block;
+    margin-top:5px;
+    padding-left:5px;
+    width:100%;
+    float:left;
 }
-.umterco span a {
-    color: #ffffff;
-    text-align: left
+.col-cesta-title-img{
+    display:block;
+    float:left;
+    width: 35px;
+    min-height: 31px;
+    background-image: url('../images/icons/icone-box-tri.jpg');
+    background-position:left top;
+    background-repeat: no-repeat;
 }
-.umterco p {
-    text-align: left;
-    font-weight: 500;
-    font-size: 0.9em;
-    margin-left: 15%;
-}*/
+.carrinho{
+    margin-left:0;   
+    border:1px solid #bbbbbb;
+    text-align:left;
+    float:left;
+    width:100%;
+}
+
+
+.cesta_title{
+    background-color: #333333;
+    
+    padding:14px 8px;
+    font-size:1.1em;
+}
+
 img .logo {
     margin: auto !important;
 }
