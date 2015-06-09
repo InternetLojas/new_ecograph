@@ -108,6 +108,11 @@ Route::group(['prefix' => '/'], function() {
         "as" => "/carrinho",
         "uses" => "BasketController@Carrinho"
     ]);
+    //retorna a view do carrinho de compras
+    Route::post('carrinho.html', [
+        "as" => "carrinho",
+        "uses" => "BasketController@Carrinho"
+    ]);
 });
 
 

@@ -108,12 +108,12 @@ class BasketController extends Controller {
             $this->basket_item->pacote_id = '23';
             $this->basket_item->save();
         }
-        return json_encode(array('action'=>true,
-          'info'=>'Item adicionado no carrinho com sucesso'));
+        return json_encode(array('action' => true,
+            'info' => 'Item adicionado no carrinho com sucesso'));
     }
 
     public function Listar(Request $request) {
-        //Cart::destroy();
+        //dd($request);
         $cart = Cart::content();
         //$userId = \Auth::user()->id;
         //$carrinho = Customer::with('basketes')->find($userId);
@@ -142,10 +142,10 @@ class BasketController extends Controller {
           } */
         foreach ($cart->toarray() as $row) {
             foreach ($row as $item) {
-            $contents[] = $row;
+                $contents[] = $row;
             }
         }
-       //dd($contents);
+        //dd($contents);
         $gateways = Gateway::ativos('1')->get();
         $classes = Utilidades::Descontos();
         $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
@@ -229,7 +229,8 @@ class BasketController extends Controller {
           ->with('layout', $layout); */
     }
 
-    public function Carrinho() {
+    public function Carrinho(Request $request) {
+        
         $carrinho = $this->basket
                 ->where('customer_id', Auth::user()->id)
                 ->get();
@@ -238,6 +239,7 @@ class BasketController extends Controller {
             //$options= $this->basket->BasketIten(1);
             //dd($options);
             $lista = $carrinho->toarray();
+            //dd($lista);
             foreach ($lista as $key => $valor) {
                 $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
                 $option_itens = $basket_option->toarray();
@@ -362,5 +364,3 @@ class BasketController extends Controller {
     }
 
 }
-
-

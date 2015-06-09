@@ -57,7 +57,7 @@ Class Fichas {
     }
 
     public static function Thumbs($id) {
-        $li .= '<a href="' . URL::to('produtos/') . '/' . $product->id . '">' . HTML::image('images/' . Product::find($product->id)->products_image, Product::find($product->id)->cod, array('class' => 'img-ficha', 'width' => '100%')) . '</a>';
+        $li .= '<a href="' . URL::to('produtos/') . '/' . $id . '">' . HTML::image('images/' . Product::find($id)->products_image, Product::find($id)->cod, array('class' => 'img-ficha', 'width' => '100%')) . '</a>';
     }
 
     public static function TrataImg($id) {
