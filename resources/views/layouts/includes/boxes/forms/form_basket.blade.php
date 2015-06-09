@@ -1,5 +1,5 @@
 
-<form name="basket" id="basket" action="basket" method="post"> 
+<form name="basket" id="basket" action="carrinho.html" method="post"> 
     <div class="form-group text">
         @foreach($post_inputs as $key=>$valor)                                
         <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">

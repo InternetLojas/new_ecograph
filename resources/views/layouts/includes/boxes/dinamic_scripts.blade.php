@@ -65,7 +65,7 @@
             Encerrar('orcar');
             });
                     $('#btn_portfolio').click(function() {
-            $('#form_orcamento').attr('action', 'produtos/portfolio.html');
+                    $('#form_orcamento').attr('action', 'produtos/portfolio.html');
                     $('#form_orcamento').submit();
             });
                     $('#btn_comprar').click(function()
