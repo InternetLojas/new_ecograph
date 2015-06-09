@@ -3,765 +3,710 @@
 
 /* ------------ Reset ------------ */
 @font-face {
-	font-family: '../fonts/swis721_btroman';
-	src: url('../fonts/swiss_721_bt-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/swiss_721_bt-webfont.woff') format('woff'), url('../fonts/swiss_721_bt-webfont.ttf') format('truetype'), url('../fonts/swiss_721_bt-webfont.svg#svgFontName') format('svg');
-	font-weight: normal;
-	font-style: normal;
-	line-height: normal;
+    font-family: '../fonts/swis721_btroman';
+    src: url('../fonts/swiss_721_bt-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/swiss_721_bt-webfont.woff') format('woff'), url('../fonts/swiss_721_bt-webfont.ttf') format('truetype'), url('../fonts/swiss_721_bt-webfont.svg#svgFontName') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    line-height: normal;
 }
 body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	font-size: 16px;
-	font-family: 'swis721_btroman', TrueType, sans-serif;
-	background: url('../images/theme/bg.png') repeat 0 0 fixed;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-family: 'swis721_btroman', TrueType, sans-serif;
+    background: url('../images/theme/bg.png') repeat 0 0 fixed;
 }
 
 .metro .page {
-	margin: 0 auto;
-	padding: 0 20px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .metro .container {
-	background-color: #FFFFFF;
+    background-color: #FFFFFF;
 }
 .metro .container.header {
-	text-align: center
+    text-align: center
 }
 .description {
-	margin: 10px 0;
+    margin: 10px 0;
 }
 .show-grid .row [class*="span"] {
-	line-height: 40px;
-	background: rgba(193, 179, 123, 0.52);
-	text-align: center;
-	min-height: 10px !important;
+    line-height: 40px;
+    background: rgba(193, 179, 123, 0.52);
+    text-align: center;
+    min-height: 10px !important;
 }
 .color-stack li, #icon-list li {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 .example > img {
-	margin: 5px;
-	display: inline-block;
+    margin: 5px;
+    display: inline-block;
 }
 .example .image-container {
-	margin: 10px;
-	display: inline-block;
-	vertical-align: middle;
+    margin: 10px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .layout {
-	min-height: 100%;
-	position: relative;
+    min-height: 100%;
+    position: relative;
 }
 header {
-	height: 45px;
-	position: relative;
+    height: 45px;
+    position: relative;
 }
 footer {
-	width: 100%;
-	height: 25px;
+    width: 100%;
+    height: 25px;
 }
-@media only screen and (max-width: 640px) {
-	.prettyprint, .example {
-		display: none;
-	}
-}
-
 /*TELAS GRANDES.*/
 @media only screen and (min-width: 1024px) {
 
-	.metro .container {
+    .metro .container {      
+        width: 100%;
+        text-align: center;
+        margin: 4px auto;
+        padding: 5px 4px;
+    }
+     .metro .container .page-container{   
+         max-width: 1020px!important;
+     }
+    .umterco {
+        margin: auto;
+    }
+    .listview button.btn-detalhes {
+        display: block;
+        float: left;
+        width: 25% !important
+    }
+    .umterco ul > li {
+        padding: 6px 2px;
+        height: 40px
+    }
+    .umterco span a {
+        color: #ffffff
+    }
 
-		width: 100%;
-		text-align: center;
-		max-width: 1024px;
-		margin: 4px auto;
-		padding: 5px 4px;
-	}
-	.umterco {
-		margin: auto;
-	}
-	.listview button.btn-detalhes {
-		display: block;
-		float: left;
-		width: 25% !important
-	}
-	.umterco ul > li {
-		padding: 6px 2px;
-		height: 40px
-	}
-	.umterco span a {
-		color: #ffffff
-	}
-
-	a.botoes-topo {
-		display: block;
-		width: auto;
-		text-align: center;
-		padding: 2px 0;
-		margin: auto;
-		line-height:16px;
-		height: 30px;
-		
-	}
-	a.botoes-topo:hover{
-		background-color: #0067B0!important;
-	}
+    a.botoes-topo {
+        display: block;
+        width: auto;
+        text-align: center;
+        padding: 2px 0;
+        margin: auto;
+        line-height:16px;
+        height: 30px;
+    }
+    a.botoes-topo:hover{
+        background-color: #0067B0!important;
+    }
 }
+
 /*DESKTOPS ANTIGOS COM TELAS GRANDES.*/
 @media only screen and (min-width: 990px) and (max-width: 1023px) {
 
-	.metro .container .page-container {
-
-		width: 100%;
-		max-width: 1020px;
-		margin: 4px auto;
-		padding: 5px 4px;
-	}
-	.listview button.btn-detalhes {
-		display: block;
-		float: left;
-		width: 25% !important
-	}
-	.umterco {
-		display: block;
-		float: left;
-		width: 33%;
-		text-align: center;
-		padding-top: 8px;
-	}
+    .metro .container .page-container {  
+       width: 100%;
+        text-align: center;
+        max-width: 1020px;
+        margin: 4px auto;
+        padding: 5px 1px;
+    }
+    .listview button.btn-detalhes {
+        display: block;
+        float: left;
+        width: 25% !important
+    }
+    .umterco {
+        display: block;
+        float: left;
+        width: 33%;
+        text-align: center;
+        padding-top: 8px;
+    }
 }
-/*DESKTOPS ANTIGOS COM TELAS GRANDES.*/
-@media only screen and (min-width: 801px) and (max-width: 989px) {
-	.metro .container .page-container {
-		background-color: #673332 !important;
-		width: 100%;
-		max-width: 980px;
-		margin: 4px auto;
-		padding: 5px 4px;
-	}
-	.metro .container {
-		max-width: 980px;
-	}
-	.listview button.btn-detalhes {
-		display: block;
-		float: left;
-		width: 24% !important
-	}
-	.umterco {
-		display: block;
-		float: left;
-		width: 32% !important;
-		text-align: center;
-		padding: 5px 2px 5px 3px;
-		margin: auto;
-	}
-	.carrinho {
-		width: 30% !important
-	}
-	.carrinho ul > li {
-		width: 45% !important;
-	}
-	.carrinho li.btn-carrinho {
-		display: none !important;
-	}
+/* -- CELULARES. Smartphone em modo retrato -- */
+@media only screen and (min-width: 0) and (max-width: 479px) {
+    .umterco {
+        display: block;
+        float: left;
+        width: 99.5% !important;
+        text-align: center;
+        padding: 5px 2px;
+        margin: auto;
+    } 
 }
-/*DESKTOPS ANTIGOS.*/
-@media only screen and (min-width: 701px) and (max-width: 800px) {
-	.metro .container .page-container {
-
-		width: 100%;
-		max-width: 790px;
-		margin: 4px auto;
-		padding: 5px 2px;
-	}
-
-	.listview button.btn-detalhes {
-		display: block;
-		float: left;
-		width: 24% !important
-	}
-	.umterco {
-		display: block;
-		float: left;
-		width: 32% !important;
-		text-align: center;
-		padding-top: 5px;
-		margin: auto;
-	}
-	.carrinho {
-		width: 30% !important
-	}
-	.carrinho li {
-		width: 48% !important;
-	}
-	.carrinho li.btn-carrinho {
-		display: none !important;
-	}
-}
-
 /*
  =======================================================================
- CUSTUMIZAÇÃO PARA TÍTULOS
+ CUSTOMIZAÇÃO PARA TÍTULOS
  =======================================================================
- */
+*/
 .title_content {
-	display: block;
-	float: left;
-	text-align: left;
+    display: block;
+    float: left;
+    text-align: left;
 }
 
 .title_content h3 {
-	font-size: 1.7em;
-	line-height: 35px;
-	margin-left: 15px;
-	text-transform: uppercase;
+    font-size: 1.7em;
+    line-height: 35px;
+    margin-left: 15px;
+    text-transform: uppercase;
 }
 h3.title-cadastro, h3.title-orcamento {
-	display: block;
-	float: none !important;
-	margin-left: 15px !important;
-	width: 19%;
-	padding: 12px 5px;
-	color: #ffffff;
-	line-height: 18px;
-	background-color: #323232;
-	background-image: url('../images/theme/bullet-white.png');
-	background-position: left 5px;
-	background-repeat: no-repeat;
-	text-align: center;
-	font-size: 14px !important;
+    display: block;
+    float: none !important;
+    margin-left: 15px !important;
+    width: 19%;
+    padding: 12px 5px;
+    color: #ffffff;
+    line-height: 18px;
+    background-color: #323232;
+    background-image: url('../images/theme/bullet-white.png');
+    background-position: left 5px;
+    background-repeat: no-repeat;
+    text-align: center;
+    font-size: 14px !important;
 }
 h4.title {
-	padding: 0;
-	margin: 0 0 19px 0;
-	line-height: 28px;
-	text-transform: uppercase;
-	color: #313131;
-	font-family: 'swis721_btroman', TrueType;
-	font-weight: 800;
+    padding: 0;
+    margin: 0 0 19px 0;
+    line-height: 28px;
+    text-transform: uppercase;
+    color: #313131;
+    font-family: 'swis721_btroman', TrueType;
+    font-weight: 800;
 }
 h4.title a {
-	font-size: 21px;
-	color: #313131;
-	font-family: 'swis721_btroman', TrueType;
-	font-weight: 800;
-	text-transform: uppercase;
+    font-size: 21px;
+    color: #313131;
+    font-family: 'swis721_btroman', TrueType;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 h4.title a:hover {
-	color: #d00b01;
-	text-decoration: none;
+    color: #d00b01;
+    text-decoration: none;
 }
 /*
  =======================================================================
  PRE-HEADER
  =======================================================================
- */
+*/
 .metro .container .page-container {
-	width: 100%;
-	max-width: 1024px;
-	background-color: #FFFFFF;
-	display: block !important;
-	float: left !important;
+    width: 100%;
+    max-width: 1024px;
+    background-color: #FFFFFF;
+    display: block !important;
+    float: left !important;
 }
 div.element.menu-top {
-	padding: 0 !important;
+    padding: 0 !important;
 }
 .umterco {
-	display: block;
-	float: left;
-	text-align: center;
-	padding-top: 10px;
-	width: 33%;
+    display: block;
+    float: left;
+    text-align: center;
+    padding-top: 10px;
+    width: 33%;
 }
 .umterco span a {
-	color: #ffffff;
-	text-align: left
+    color: #ffffff;
+    text-align: left
 }
 .umterco p {
-	text-align: left;
-	font-weight: 500;
-	font-size: 0.9em;
-	margin-left: 15%;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.9em;
+    margin-left: 15%;
 }
 img .logo {
-	margin: auto !important;
+    margin: auto !important;
 }
 input.search {
-	padding: 21px 0;
-	color: #3c3c3c;
+    padding: 21px 0;
+    color: #3c3c3c;
 }
 .ecograph.input-control.text .btn-search{
-	background: #343434;
-	position: absolute;
-	margin-right:-15px;
-	margin-top: -4px;
-	z-index: 2;
-	border: 0;
-	width: 42px;
-	height: 44px;
-	min-height: 1px;
-	min-width: 1px;
-	padding: 0;
-	color:#FFFFFF;
+    background: #343434;
+    position: absolute;
+    margin-right:-15px;
+    margin-top: -4px;
+    z-index: 2;
+    border: 0;
+    width: 42px;
+    height: 44px;
+    min-height: 1px;
+    min-width: 1px;
+    padding: 0;
+    color:#FFFFFF;
 }
 /*
  =======================================================================
  ESTILO PARA Pï¿½GINA ACABAMENTO.HTML
  =======================================================================
- */
+*/
 
 .title_pagina {
-	display: block;
-	width: 100%;
-	margin: 2px auto;
-	padding: 0;
-	max-height: 60px;
+    display: block;
+    width: 100%;
+    margin: 2px auto;
+    padding: 0;
+    max-height: 60px;
 }
 
 .icone_pagina {
-	display: block;
-	float: left;
-	max-width: 80px;
+    display: block;
+    float: left;
+    max-width: 80px;
 }
 
 /*
  =======================================================================
  PAINEL DE DESTAQUES NO INDEX
  =======================================================================
- */
+*/
 .thumb_cat {
-	display: block;
-	padding: 0;
-	margin: 5px auto;
-	height: 100%;
+    display: block;
+    padding: 0;
+    margin: 5px auto;
+    height: 100%;
 }
 .thumb_cat a.img-ficha {
-	display: inline-block;
-	
-	
+    display: inline-block;
+
+
 }
 a.title-destaque {
-	display: block;
-	color: #FFFFFF;
-	max-width: 302px;
-	height: 60px;
-	padding: 10px 0;
-	line-height: 40px;
-	margin: auto;
-	background-color: #32383d;
+    display: block;
+    color: #FFFFFF;
+    max-width: 302px;
+    height: 60px;
+    padding: 10px 0;
+    line-height: 40px;
+    margin: auto;
+    background-color: #32383d;
 }
 a.title-destaque:hover {
-	color: #FFFFFF;
-	background-color: #1A45A1;
+    color: #FFFFFF;
+    background-color: #1A45A1;
 }
 a span.img_destaque {
-	display: block;
-	max-width: 302px;
-	height: 247px;
-	margin: auto;
+    display: block;
+    max-width: 302px;
+    height: 247px;
+    margin: auto;
 }
 
 .thumb_cat p {
-	color: #919496 !important;
-	display: block;
-	font-weight: 500;
-	text-align: left;
-	margin-top: 8px;
-	padding: 1px 2px;
-	max-width: 298px;
+    color: #919496 !important;
+    display: block;
+    font-weight: 500;
+    text-align: left;
+    margin-top: 8px;
+    padding: 1px 2px;
+    max-width: 298px;
 }
 a span.destaque1, a span.destaque2, a span.destaque3, a span.destaque4, a span.destaque5, a span.destaque6 {
-	background-image: url(../images/banners/destaques/destaque-001.jpg);
-	background-position: left top;
-	background-repeat: no-repeat;
+    background-image: url(../images/banners/destaques/destaque-001.jpg);
+    background-position: left top;
+    background-repeat: no-repeat;
 }
 
 a:hover span.destaque1, a:hover span.destaque2, a:hover span.destaque3, a:hover span.destaque4, a:hover span.destaque5, a:hover span.destaque6 {
-	background-position: left bottom;
+    background-position: left bottom;
 }
 
 a span.destaque2 {
-	background-image: url(../images/banners/destaques/destaque-002.jpg);
+    background-image: url(../images/banners/destaques/destaque-002.jpg);
 }
 a span.destaque3 {
-	background-image: url(../images/banners/destaques/destaque-003.jpg);
+    background-image: url(../images/banners/destaques/destaque-003.jpg);
 }
 a span.destaque4 {
-	background-image: url(../images/banners/destaques/destaque-004.jpg);
+    background-image: url(../images/banners/destaques/destaque-004.jpg);
 }
 a span.destaque5 {
-	background-image: url(../images/banners/destaques/destaque-005.jpg);
+    background-image: url(../images/banners/destaques/destaque-005.jpg);
 }
 a span.destaque6 {
-	background-image: url(../images/banners/destaques/destaque-006.jpg);
+    background-image: url(../images/banners/destaques/destaque-006.jpg);
 }
 
 .thumb_novidades {
-	display: block;
-	padding: 0;
-	clear: left;
-	margin: auto;
+    display: block;
+    padding: 0;
+    clear: left;
+    margin: auto;
 }
 .thumb_novidades img {
-	width: 100%;
+    width: 100%;
 }
 
 table.lista_produtos th span.afasta {
-	height: 16px;
-	color: #ffffff;
-	display: block;
-	padding: 0;
-	margin-left: 8px;
+    height: 16px;
+    color: #ffffff;
+    display: block;
+    padding: 0;
+    margin-left: 8px;
 }
 
 li.afasta a {
-	color: #999 !important;
+    color: #999 !important;
 }
 
 ul.recent_post li {
-	padding: 0 0 4px 0;
-	margin-bottom: 10px;
-	color: #313131;
+    padding: 0 0 4px 0;
+    margin-bottom: 10px;
+    color: #313131;
 }
 ul.recent_post li:last-child {
-	border-bottom: 0;
-	margin-bottom: 18px;
+    border-bottom: 0;
+    margin-bottom: 18px;
 }
 
 /*
  =======================================================================
  PAINEL DETALHES
  =======================================================================
- */
+*/
 
 #tabela .striped td, #especificacoes_selecionada .striped td {
-	border: 1px solid #dcdcdc;
-	border-top: none
+    border: 1px solid #dcdcdc;
+    border-top: none
 }
 button.list.btn-detalhes {
-	float: left;
-	width: 25%
+    float: left;
+    width: 25%
 }
-
+.head-itens{background-color: #d3d0ce}
 /*-----------------------------------------------------------------------------------*/
 /*  LISTAGEM DE PRODUTOS
  /*-----------------------------------------------------------------------------------*/
 .breadcrumb {
-	padding: 2px 30px;
-	margin: 0;
-	text-align: left;
-	list-style: none;
-	background-color: #fcfcfc;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+    padding: 2px 30px;
+    margin: 0;
+    text-align: left;
+    list-style: none;
+    background-color: #fcfcfc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 
 .breadcrumb li {
-	display: inline-block;
-	*display: inline;
-	text-shadow: 0 1px 0 #ffffff;
-	*zoom: 1;
+    display: inline-block;
+    *display: inline;
+    text-shadow: 0 1px 0 #ffffff;
+    *zoom: 1;
 }
 
 .breadcrumb .divider {
-	padding: 0 5px;
-	color: #ccc;
+    padding: 0 5px;
+    color: #ccc;
 }
 
 .breadcrumb span {
-	color: #1e1e1e;
-	padding: 0 3px;
+    color: #1e1e1e;
+    padding: 0 3px;
 }
 
 .breadcrumb a {
-	color: #1e1e1e;
-	font-family: 'swis721_btroman', TrueType;
-	*font-family: 'HelveticaNeueLTCom', truetype;
-	font-weight: 400;
-	font-size: 1em;
+    color: #1e1e1e;
+    font-family: 'swis721_btroman', TrueType;
+    *font-family: 'HelveticaNeueLTCom', truetype;
+    font-weight: 400;
+    font-size: 1em;
 }
 
 .breadcrumb .active {
-	color: #999999;
+    color: #999999;
 }
 ul.barra {
-	margin: 3px 0 10px 0;
-	height: 50px;
-	padding: 10px 0;
-	color: #ffffff;
-	background-color: #343434;
+    margin: 3px 0 10px 0;
+    height: 50px;
+    padding: 10px 0;
+    color: #ffffff;
+    background-color: #343434;
 }
 ul.barra > li {
-	font-size: 0.85em;
-	text-align: center;
+    font-size: 0.85em;
+    text-align: center;
 }
 ul.barra li.count {
-	width: 18.6%;
+    width: 18.6%;
 }
 ul.barra li.paginador {
-	width: 54%;
-	color: #ffffff;
+    width: 54%;
+    color: #ffffff;
 }
 ul.barra li.layout {
-	width: 26, 6%;
+    width: 26, 6%;
 }
 .banner-templates, .banner-infos {
-	display: block;
-	float: left;
+    display: block;
+    float: left;
 }
 
 .banner-templates {
-	width: 100%;
+    width: 100%;
 }
 
 .banner-infos {
-	*width: 51.8421053%;
-	padding: 0;
+    *width: 51.8421053%;
+    padding: 0;
 }
 
 .banner-infos > p {
-	color: #ffffff;
-	font-size: 16px;
-	position: relative;
-	* min-width: 382px;
-	max-width: 382px;
-	padding-left: 3.14136126%;
-	margin: 0;
+    color: #ffffff;
+    font-size: 16px;
+    position: relative;
+    /*min-width: 382px;*/
+    max-width: 382px;
+    padding-left: 3.14136126%;
+    margin: 0;
 }
 .banner-infos p.nome_categ {
-	padding-top: 11.4457831%;
-	padding-bottom: 11.4457831%;
-	line-height: 7.22891566%;
+    padding-top: 11.4457831%;
+    padding-bottom: 11.4457831%;
+    line-height: 7.22891566%;
 }
 
 .banner-infos ul {
-	margin-top: 8%;
-	padding-left: 0;
+    margin-top: 8%;
+    padding-left: 0;
 }
 
 .banner-template-img {
-	display: block;
-	float: right;
+    display: block;
+    float: right;
 }
 .banner-template-img img {
-	width: 100%;
-	border: none;
-	display: block;
+    width: 100%;
+    border: none;
+    display: block;
 }
 
 .editor legend.legend-editor {
-	width: 40%;
-	padding: 5px;
-	margin-bottom: 5px;
-	display: block;
-	color: #FFFFFF;
+    width: 40%;
+    padding: 5px;
+    margin-bottom: 5px;
+    display: block;
+    color: #FFFFFF;
 }
 /*-----------------------------------------------------------------------------------
- */
+*/
 /*  PÁGINA PRODUTOS
  /*-----------------------------------------------------------------------------------*/
 
 div.lista {
-	display: block;
-	margin-bottom: 3px;
-	height: 100%
+    display: block;
+    margin-bottom: 3px;
+    height: 100%
 }
 div.lista .height {
-	display: block;
-	height: 100%;
+    display: block;
+    height: 100%;
 }
 div.comercial {
-	background: url(../images/theme/entrar-1.jpg) left top repeat-x;
+    background: url(../images/theme/entrar-1.jpg) left top repeat-x;
 }
 div.centro-comercial {
-	background: #950000;
-	border-bottom: 4px solid #ffffff
+    background: #950000;
+    border-bottom: 4px solid #ffffff
 }
 div.editorial {
-	background: url(../images/theme/entrar-2.jpg) left top repeat-x;
+    background: url(../images/theme/entrar-2.jpg) left top repeat-x;
 }
 div.centro-editorial {
-	background: #FE9900;
-	border-bottom: 4px solid #ffffff
+    background: #FE9900;
+    border-bottom: 4px solid #ffffff
 }
 div.promocional {
-	background: url(../images/theme/entrar-3.jpg) left top repeat-x;
+    background: url(../images/theme/entrar-3.jpg) left top repeat-x;
 }
 div.centro-promocional {
-	background: #009C00;
-	border-bottom: 4px solid #ffffff
+    background: #009C00;
+    border-bottom: 4px solid #ffffff
 }
 div.brindes {
-	background: url(../images/theme/entrar-4.jpg) left top repeat-x;
+    background: url(../images/theme/entrar-4.jpg) left top repeat-x;
 }
 div.centro-brindes {
-	background: #653399;
-	border-bottom: 4px solid #ffffff
+    background: #653399;
+    border-bottom: 4px solid #ffffff
 }
 /*-----------------------------------------------------------------------------------*/
 /*  PÁGINA CARRINHOS
  /*-----------------------------------------------------------------------------------*/
 img.image-cart {
-	margin: auto;
-	max-width: 120px
+    margin: auto;
+    max-width: 120px
 }
 img.img-cart {
-	display: block;
-	max-width: 120px
+    display: block;
+    max-width: 120px
 }
 
 /*-----------------------------------------------------------------------------------*/
 /*  BOTOES DA NAVAEGAÇÃO
  /*-----------------------------------------------------------------------------------*/
 //
-activered bullet_default hoverblue
+//activered bullet_default hoverblue
+/*menu cinza*/
+a.activegray, button.activegray {
+    background-color: #333333;
+}
+
+a.hovergray:hover {
+    background-color: #0066ff;
+}
 /*menu default*/
 
 a.activedefault, button.activedefault {
-	background-color: #333333;
+    background-color: #333333;
 }
 a.bullet_default {
-	background-image: url('../images/theme/bullet-menu-red.png');
-	background-position: top left;
-	background-repeat: no-repeat;
+    background-image: url('../images/theme/bullet-menu-red.png');
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 a.hoverblue:hover {
-	background-color: #0066ff;
+    background-color: #0066ff;
 }
 
 /***vermelho**/
 a.activered, button.activered {
-	background-color: #CC0000;
+    background-color: #CC0000;
 }
 a.bullet_red {
-	background-image: url('../images/theme/bullet-menu-red.png');
-	background-position: top left;
-	background-repeat: no-repeat;
+    background-image: url('../images/theme/bullet-menu-red.png');
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 a.hoverred:hover {
-	background-color: #950000;
+    background-color: #950000;
 }
 
 /***verde**/
 a.activegreen, button.activegreen {
-	background-color: #009900 !important;
+    background-color: #009900 !important;
 }
 a.bullet_green {
-	background-image: url('../images/theme/bullet-menu-green.png');
-	background-position: top left;
-	background-repeat: no-repeat;
+    background-image: url('../images/theme/bullet-menu-green.png');
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 a.hovergreen:hover {
-	background-color: #FFBF00;
+    background-color: #FFBF00;
 }
 
 /***laranja**/
 a.activeorange, button.activeorange {
-	background-color: #FFBF00 !important;
+    background-color: #FFBF00 !important;
 }
 a.bullet_orange {
-	background-image: url('../images/theme/bullet-menu-orange.png');
-	background-position: top left;
-	background-repeat: no-repeat;
+    background-image: url('../images/theme/bullet-menu-orange.png');
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 a.hoverorange:hover {
-	background-color: #CE9B00;
+    background-color: #CE9B00;
 }
 
 /*menu violeta*/
 a.activviolet, button.activeviolet {
-	background-color: #663399 !important;
+    background-color: #663399 !important;
 }
 a.bullet_violet {
-	background-image: url('../images/theme/bullet-menu-violet.png');
-	background-position: top left;
-	background-repeat: no-repeat;
+    background-image: url('../images/theme/bullet-menu-violet.png');
+    background-position: top left;
+    background-repeat: no-repeat;
 }
 a.hoverviolet:hover {
-	background-color: #330066;
+    background-color: #330066;
 }
 /*-----------------------------------------------------------------------------------*/
 /*  FOOTER
  /*-----------------------------------------------------------------------------------*/
 .ecograph.page-footer {
-	margin-top:18px!important ;
-	width:100%;
+    margin-top:18px!important ;
+    width:100%;
 }
 .ecograph.page-footer .page-footer-content {
-	padding-top:0;
+    padding-top:0;
 }
 .ecograph.page-footer .page-footer-content:before, .ecograph.page-footer .page-footer-content:after {
-	display: table;
-	content: "";
+    display: table;
+    content: "";
 }
 .ecograph.page-footer .page-footer-content:after {
-	clear: both;
+    clear: both;
 }
 .ecograph .container.footer-in{
-	padding:0 !important;
+    padding:0 !important;
 }
 
 /*-----------------------------------------------------------------------------------*/
 /*  PAGINADOR
  /*-----------------------------------------------------------------------------------*/
 .metro .pagination {
-	display: inline-block;
-	padding-left: 0;
-	margin: 10px 0;
-	border-radius: 4px;
-	width: auto;
+    display: inline-block;
+    padding-left: 0;
+    margin: 10px 0;
+    border-radius: 4px;
+    width: auto;
 }
 .metro .pagination > ul {
-	padding-left: 0;
-	list-style: none;
-	margin: 0;
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
 }
 .metro .pagination > li {
-	display: inline;
+    display: inline;
 }
 .metro .pagination > ul li ul, .metro .pagination > ul li ol {
-	list-style: none;
-	padding-left: 25px;
+    list-style: none;
+    padding-left: 25px;
 }
 .metro .pagination > li > a, .pagination > li > span {
-	position: relative;
-	float: left;
-	padding: 6px 12px;
-	margin-left: -1px;
-	line-height: 1.42857143;
-	color: #428bca;
-	text-decoration: none;
-	background-color: #fff;
-	border: 1px solid #ddd;
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #428bca;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }
 .metro .pagination > li:first-child > a, .metro .pagination > li:first-child > span {
-	margin-left: 0;
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
+    margin-left: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 .metro .pagination > li:last-child > a, .metro .pagination > li:last-child > span {
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 .metro .pagination > li > a:hover, .metro .pagination > li > span:hover, .metro .pagination > li > a:focus, .metro .pagination > li > span:focus {
-	color: #2a6496;
-	background-color: #eee;
-	border-color: #ddd;
+    color: #2a6496;
+    background-color: #eee;
+    border-color: #ddd;
 }
 
 .metro .pagination > .active > a, .metro .pagination > .active > span, .metro .pagination > .active > a:hover, .metro .pagination > .active > span:hover, .metro .pagination > .active > a:focus, .metro .pagination > .active > span:focus {
-	z-index: 2;
-	color: #fff;
-	cursor: default;
-	background-color: #428bca;
-	border-color: #428bca;
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #428bca;
+    border-color: #428bca;
 }
 .metro .pagination > .disabled > span, .metro .pagination > .disabled > span:hover, .metro .pagination > .disabled > span:focus, .metro .pagination > .disabled > a, .metro .pagination > .disabled > a:hover, .metro .pagination > .disabled > a:focus {
-	color: #999;
-	cursor: not-allowed;
-	background-color: #fff;
-	border-color: #ddd;
+    color: #999;
+    cursor: not-allowed;
+    background-color: #fff;
+    border-color: #ddd;
 }
