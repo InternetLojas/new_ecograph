@@ -23,7 +23,8 @@
   define('STORE_CIDADE','Três Lagoas');/*usado no banner oferta*/
   define('STORE_ESTADO','MS');/*usado no banner oferta*/
   define('STORE_CEP','79604-170');/*usado no banner oferta*/
-  define('STORE_FONE','(11) 2626-3882');/*usado no banner oferta*/
+  define('STORE_FONE1','(11) 4541-8070');/*usado no banner oferta*/
+  define('STORE_FONE2',' 4543-0715');/*usado no banner oferta*/
   define('STORE_SITE','http::/www.pafemar.com.br');/*usado no banner oferta*/
   define('STORE_CNPJ','33.733.296/0001-09');/*usado no banner oferta*/
   define('STORE_ADDRESS_CONTACT','Rua Egidio Thome, 1373, Bairro Vila Nova, CEP: 79604-170, Três Lagoas - MS');//Av. Brigadeiro Faria Lima 394, Guarulhos, SP

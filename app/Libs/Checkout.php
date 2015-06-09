@@ -6,8 +6,13 @@ use Ecograph\Libs\Payments;
 use Ecograph\Gateway;
 use Ecograph\Customer;
 use Ecograph\Addressbook;
+use Ecograph\Order;
+use Ecograph\OrderIten;
+use Ecograph\Product;
+use Ecograph\Ordersituacao;
 use Auth;
 use Cart;
+
 
 Class Checkout {
 
@@ -23,7 +28,7 @@ Class Checkout {
 
         //$ip = $HTTP_SERVER['HTTP_CLIENT_IP'];
         //$ip = '127.0.0.1';
-        $request = Request::instance();
+        $request = \Request::instance();
         $request->setTrustedProxies(array('127.0.0.1')); // only trust proxy headers coming from the IP addresses on the array (change this to suit your needs)
         $ip = $request->getClientIp();
         $array_customer = array('customer_id' => Auth::user()->id,
@@ -113,34 +118,32 @@ Class Checkout {
      */
     static function item($new_order_id) {
         $orderitem = Null;
-        foreach (Cart::contents() as $itens) {
+        foreach (Cart::content() as $itens) {
+        	dd($itens);
             //controla o estoque
             $stock = Product::find($itens->id);
             $stock->products_quantity -= $itens->quantity;
             //$stock->save();
             //controla os itens do pedido
-            $orderitem = new OrderItem();
+            $orderitem = new OrderIten();
             $preco = $itens->price * $itens->quantity;
             $orderitem->order_id = $new_order_id;
             $orderitem->product_id = $itens->id;
-            $orderitem->quantity = $itens->quantity;
+            $orderitem->quantity = $itens->qty;
             $orderitem->product_name = $itens->name;
             $orderitem->price = $itens->price;
             $orderitem->final_price = $preco;
             $orderitem->tax = '0.00';
             //$orderitem->save();
         }
+		dd($orderitem);
+		//$orderitem = Null;
         if (is_object($orderitem)) {
-            //return $orderitem->toArray();
             return true;
         } else {
             return false;
         }
-        //return false;
-        /* return Response::json([
-          "status" => "ok",
-          "orderitem"  => $orderitem->toArray()
-          ]); */
+        
     }
 
     /**

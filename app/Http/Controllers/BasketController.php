@@ -49,6 +49,7 @@ class BasketController extends Controller {
 
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
+        //dd($post_inputs);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
 
         $item = (array('id' => $post_inputs['produto_id'],
@@ -107,73 +108,125 @@ class BasketController extends Controller {
             $this->basket_item->pacote_id = '23';
             $this->basket_item->save();
         }
+        return json_encode(array('action'=>true,
+          'info'=>'Item adicionado no carrinho com sucesso'));
     }
 
     public function Listar(Request $request) {
         //Cart::destroy();
-        $post_inputs = $request->except('_token');
-        $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
-        $contents = Cart::content();
-
-        $userId = \Auth::user()->id;
-        $carrinho = Customer::with('basketes')->find($userId);
-
-        if (count($carrinho->basketes->toarray()) > 0) {
-            $lista = $carrinho->basketes->toarray();
-            //dd($lista);
-            foreach ($lista as $key => $valor) {
-                ///os itens para esse carrinho
-                $basket_item = Basket::with('BasketIten')->find($valor['id']);
-                $itens = $basket_item->BasketIten->toarray();
-                //dd($itens[0]);
-                $categoria = CategoryProduct::where('product_id', $valor['products_id'])->get();
-                $item_categoria = $categoria->toArray();
-                $formato = Formato::find($itens[0]['formato_id'])->valor;
-                $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
-
-                $options = array("categoria" => $item_categoria[0]['products_name'],
-                    "formato" => $formato,
-                    "formato_id" => $itens[0]['formato_id'],
-                    "papel" => $formato,
-                    "papel_id" => $itens[0]['papel_id'],
-                    "acabamento" => $formato,
-                    "acabamento_id" => $itens[0]['acabamento_id'],
-                    "unidade" => $quantidade,
-                    "perfil" => $post_inputs['orc_nome_perfil'],
-                    "pacote_id" => $itens[0]['pacote_id']);
-                //
-                // Returns an array of rowid(s) of found item(s) or false on failure
-                $rowid = Cart::search(array('products_id' => $valor['products_id']));
-                if ($rowid) {
-                    Cart::update($rowid, array('qty', $valor['quantity']));
-                } else {
-                    // Batch method
-                    Cart::add(
-                            array('id' => $valor['products_id'], 'name' => $valor['products_model'], 'qty' => $valor['quantity'], 'price' => $valor['final_price'], 'options' => $options)
-                    );
-                }
+        $cart = Cart::content();
+        //$userId = \Auth::user()->id;
+        //$carrinho = Customer::with('basketes')->find($userId);
+        //dd($contents->toarray());
+        /* if (count($carrinho->basketes->toarray()) > 0) {
+          $lista = $carrinho->basketes->toarray();
+          foreach ($lista as $key => $valor) {
+          ///os itens para esse carrinho
+          $basket_item = Basket::with('BasketIten')->find($valor['id']);
+          $itens = $basket_item->BasketIten->toarray();
+          $categoria = CategoryProduct::where('product_id', $valor['products_id'])->get();
+          $item_categoria = $categoria->toArray();
+          $formato = Formato::find($itens[0]['formato_id'])->valor;
+          $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
+          $options = array("categoria" => $item_categoria[0]['products_name'],
+          "formato" => $formato,
+          "formato_id" => $itens[0]['formato_id'],
+          "papel" => $formato,
+          "papel_id" => $itens[0]['papel_id'],
+          "acabamento" => $formato,
+          "acabamento_id" => $itens[0]['acabamento_id'],
+          "unidade" => $quantidade,
+          "perfil" => $post_inputs['orc_nome_perfil'],
+          "pacote_id" => $itens[0]['pacote_id']);
+          }
+          } */
+        foreach ($cart->toarray() as $row) {
+            foreach ($row as $item) {
+            $contents[] = $row;
             }
         }
-
+       //dd($contents);
         $gateways = Gateway::ativos('1')->get();
         $classes = Utilidades::Descontos();
         $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
         $desc_acrescimo_id = $desc_acrescimo->toarray();
-        $layout = $this->layout->classes(Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
+        $layout = $this->layout->classes(Fichas::parentCategoria(0));
         return view('clientes.index')
                         ->with('title', STORE_NAME . ' Itens no carrinho')
                         ->with('page', 'carrinho')
                         ->with('ativo', 'carrinho')
-                        ->with('contents', $contents->toarray())
-                        ->with('post_inputs', $post_inputs)
+                        ->with('contents', $contents)
+                        ->with('post_inputs', '')
                         ->with('gateways', $gateways)
                         ->with('classes', $classes)
-                        ->with('parent', $parent)
-                        ->with('perfil', $post_inputs['orc_nome_perfil'])
+                        ->with('parent', '0')
+                        ->with('perfil', '')
                         ->with('desc_acrescimo_id', $desc_acrescimo_id)
                         ->with('cart_total', Cart::total())
-                        ->with('rota', 'basket')
+                        ->with('rota', 'carrinho/lista.html')
                         ->with('layout', $layout);
+        /* $post_inputs = $request->except('_token');
+          $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
+
+
+
+
+          if (count($carrinho->basketes->toarray()) > 0) {
+          $lista = $carrinho->basketes->toarray();
+          //dd($lista);
+          foreach ($lista as $key => $valor) {
+          ///os itens para esse carrinho
+          $basket_item = Basket::with('BasketIten')->find($valor['id']);
+          $itens = $basket_item->BasketIten->toarray();
+          //dd($itens[0]);
+          $categoria = CategoryProduct::where('product_id', $valor['products_id'])->get();
+          $item_categoria = $categoria->toArray();
+          $formato = Formato::find($itens[0]['formato_id'])->valor;
+          $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
+
+          $options = array("categoria" => $item_categoria[0]['products_name'],
+          "formato" => $formato,
+          "formato_id" => $itens[0]['formato_id'],
+          "papel" => $formato,
+          "papel_id" => $itens[0]['papel_id'],
+          "acabamento" => $formato,
+          "acabamento_id" => $itens[0]['acabamento_id'],
+          "unidade" => $quantidade,
+          "perfil" => $post_inputs['orc_nome_perfil'],
+          "pacote_id" => $itens[0]['pacote_id']);
+          //
+          // Returns an array of rowid(s) of found item(s) or false on failure
+          $rowid = Cart::search(array('products_id' => $valor['products_id']));
+          if ($rowid) {
+          Cart::update($rowid, array('qty', $valor['quantity']));
+          } else {
+          // Batch method
+          Cart::add(
+          array('id' => $valor['products_id'], 'name' => $valor['products_model'], 'qty' => $valor['quantity'], 'price' => $valor['final_price'], 'options' => $options)
+          );
+          }
+          }
+          }
+
+          $gateways = Gateway::ativos('1')->get();
+          $classes = Utilidades::Descontos();
+          $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
+          $desc_acrescimo_id = $desc_acrescimo->toarray();
+          $layout = $this->layout->classes(Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
+          return view('clientes.index')
+          ->with('title', STORE_NAME . ' Itens no carrinho')
+          ->with('page', 'carrinho')
+          ->with('ativo', 'carrinho')
+          ->with('contents', $contents->toarray())
+          ->with('post_inputs', $post_inputs)
+          ->with('gateways', $gateways)
+          ->with('classes', $classes)
+          ->with('parent', $parent)
+          ->with('perfil', $post_inputs['orc_nome_perfil'])
+          ->with('desc_acrescimo_id', $desc_acrescimo_id)
+          ->with('cart_total', Cart::total())
+          ->with('rota', 'basket')
+          ->with('layout', $layout); */
     }
 
     public function Carrinho() {
@@ -289,7 +342,7 @@ class BasketController extends Controller {
                         ->get();
                 // dd($carrinho);
                 foreach ($carrinho as $items) {
-                    $id = $items->id;                    
+                    $id = $items->id;
                 }
                 //elimina os item do carrinho
                 $this->basket_item->where('basket_id', $id)->delete();
@@ -299,7 +352,7 @@ class BasketController extends Controller {
                         ->where('products_id', $parans['product_id'])->delete();
                 $rowId = $item->rowid;
                 break;
-            }            
+            }
         }
         Cart::remove($rowId);
         //Session::put('success', 'Item atualizado com sucesso!');
@@ -309,3 +362,5 @@ class BasketController extends Controller {
     }
 
 }
+
+

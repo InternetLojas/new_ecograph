@@ -66,12 +66,13 @@ class EditorController extends Controller {
           "_token" => "3HOn0RnpSuACXOaFuwYCqt3YUN94v4vJRroov2hh"
           "produto_id" => "462"
           // */
-        
+
         return view('editor.index')
                         ->with('title', STORE_NAME . ' Editar ' . $produto)
                         ->with('page', 'editor')
                         ->with('ativo', 'Edicao')
                         ->with(compact('customer'))
+                        ->with('form_orcamento', $post_inputs)
                         ->with('textos', $textos[0])
                         ->with('img', $img[0])
                         ->with('perfil', $post_inputs['nome_perfil'])
@@ -94,12 +95,13 @@ class EditorController extends Controller {
         // $file_id = $customer->files->toarray();
         $file_img = File::with('filemidias')->find($file_id[0]['id']);
         $img = $file_img->filemidias->toarray();
-       // dd(compact('customer'));
+        //dd($post_inputs );
         return view('editor.index')
                         ->with('title', STORE_NAME . ' Editar ' . $post_inputs['orc_subcategoria_nome'])
                         ->with('page', 'editor')
                         ->with('ativo', 'Edicao')
                         ->with('parent', $parent)
+                        ->with('form_orcamento', $post_inputs)
                         ->with('perfil', $post_inputs['orc_nome_perfil'])
                         ->with(compact('customer'))
                         ->with('img_categoria', $img_categoria)

@@ -289,7 +289,7 @@ class ProductController extends Controller {
      */
     public function Listagem(Request $request) {
         $post_inputs = $request->all();
-
+        //dd($post_inputs);
         //quem é o pai da categoria enviada
         $pai = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
         $categ_pai = Fichas::nomecategoria($pai);

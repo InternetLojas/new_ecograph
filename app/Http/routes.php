@@ -241,7 +241,7 @@ Route::group(['prefix' => 'carrinho'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
     Route::get('lista.html', [
         'as' => 'carrinho.lista',
-        'uses' => 'BasketController@Carrinho'
+        'uses' => 'BasketController@Listar'
     ]);    
 });
 

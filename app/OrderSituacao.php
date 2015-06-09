@@ -4,8 +4,8 @@ namespace Ecograph;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderSituacao extends Model {
-
+class Ordersituacao extends Model {
+	protected $table = 'ordersituacaos';
     protected $fillable = [];
 
     public function scopeStatus($query, $class) {
