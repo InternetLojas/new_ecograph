@@ -38,6 +38,5 @@
         <div class="col-md-5">
             <a href="#"> <img src="images/banners/box-entrar.jpg" width="100%" class="img-responsive" alt="box-entrar.jpg" title="Quero criar uma conta" /></a>
         </div>
-
     </div>
 </div>

@@ -9,21 +9,22 @@
 
             //Inicio Mascara Telefone
             jQuery('input[type=tel]').mask("(99) 9999-9999?9").ready(function(event) {
-    var target, phone, element;
-            target = (event.currentTarget) ? event.currentTarget : event.srcElement;
-            phone = target.value.replace(/\D/g, '');
-            element = $(target);
-            element.unmask();
-            if (phone.length > 10) {
-    element.mask("(99) 99999-999?9");
-    } else {
-    element.mask("(99) 9999-9999?9");
-    }
-    });
+                var target, phone, element;
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);
+                element.unmask();
+                if (phone.length > 10) {
+                    element.mask("(99) 99999-999?9");
+                } else {
+                    element.mask("(99) 9999-9999?9");
+                }
+            });
             $("#telephone").mask("(99) 9999-9999");
             $("#telephone1").mask("(99) 9999-9999");
             //Fim Mascara Telefone
             //Inicio Mascara CEP
+            $("#orc_cep").mask("99999-999");
             $("#cep").mask("99999-999");
             $("#postcode").mask("99999-999");
             $("#zipcode").mask("99999-999");
@@ -62,6 +63,10 @@
                     $('#btn_orcar').click(function()
             {
             Encerrar('orcar');
+            });
+                    $('#btn_portfolio').click(function() {
+            $('#form_orcamento').attr('action', 'produtos/portfolio.html');
+                    $('#form_orcamento').submit();
             });
                     $('#btn_comprar').click(function()
             {
@@ -107,7 +112,7 @@
 
                     @if($page === 'carrinho')
 //postagem do carrinho para a floha resumo
-            var $btn_carrinho = $('#btn_carrinho');
+                    var $btn_carrinho = $('#btn_carrinho');
                     $btn_carrinho.on('click', function() {
                     var url = $('#resumo').attr('action');
                             ValidaCarrinho('resumo', url);

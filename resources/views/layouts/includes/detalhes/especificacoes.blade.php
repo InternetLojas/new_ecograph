@@ -1,37 +1,32 @@
-<div class="section" id="especificacoes_selecionada" style="display:none">
+<div class="section" id="especificacoes_selecionada" style="display:none" data-token="{!!csrf_token()!!}">
     <!--============================== content =================================-->
     <div class="destaque_home">
         <div class="row">
-            <div class="col-md-2">
-                <img id="image_escolhida" src="" alt="" title="" width="100%" class="img-responsive" style="max-width:100px"  />
-            </div>
-            <div class="col-md-4">
-                @include('layouts.includes.boxes.opcoes_finalizacao')
-            </div>
-            <div class="col-md-2 text-center">
-                <img src="images/theme/printer.jpg" alt="calculadora.png" class="img-responsive" />
-                <button type="button" class="btn  bg-green fg-white no-radius" title="Crie um orçamento exclusivo" onclick="EditarTemplates(@if (Auth::guest()) '0' @else '1' @endif);"  >
-                    IMPRIMI ORC
-                </button>
-
-            </div>
-            <div class="col-md-4">
-                <ul class="nav nav-stacked nav-tabs">
-                    <li>
-                        <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg"  class="img-responsive" />
-                        <button type="button" class="btn  bg-smallgray btn-lg no-radius" title="Deixe que criamos sua arte" id="btn_comprar" onclick=""  >
-                            Desenvolver arte R$ 50,00
-                        </button>
-                    </li>
-                    <li>
-                        <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
-                        <button type="button" class="btn btn-block bg-smallgray btn-lg no-radius" title="Envie seu arquivo PDF" id="btn_upload" onclick="(@if (Auth::guest()) '0' @else '1' @endif);"  >
-                            Envie seu arquivo PDF.
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            @include('layouts.includes.boxes.forms.form_orcamento')
+            @include('layouts.includes.boxes.opcoes_finalizacao')
         </div>
+        <div class="row">
+            <div id="cupom_frete" style="display:none">
+                <br>
+                <p>Ganhe descontos na sua compra. Se você possue código de desconto informe no campo abaixo e clique para validá-lo.</p>
+                <br>
+                <div class="col-md-6">
+                    <div id="info_cupom"></div>
+                    <div id="mensagem_cupom"></div>
+                    @include('layouts.includes.boxes.forms.form_cupom_especificacao')
+                </div>
+                <div class="col-md-6">
+                    <div id="info_correio"></div>
+                    <div id="mensagem_correio"></div>
+                    @include('layouts.includes.boxes.forms.form_frete_especificacao')
+                </div>
+            </div>
+            <p id="label_frete" style="display:none">
+                Resumo: Valor - <span id="vl_final"></span>
+                <span id="vl_desc_final"></span>
+                Frete: <span id="vl_frete_final"></span>
+                Valor Total: <span id="vl_total_final"></span>
+            </p>
+        </div>
+        @include('layouts.includes.boxes.forms.form_orcamento')
     </div>
 </div>

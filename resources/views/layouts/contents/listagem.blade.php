@@ -1,7 +1,6 @@
 <div id="info_basket"></div>
 <div class = "row">
-    @include('layouts.includes.boxes.listagem')
-    @include('layouts.includes.boxes.forms.form_basket')
+    @include('layouts.includes.boxes.listagem')    
     <div id="itens_carrinho" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -20,4 +19,7 @@
             </div>
         </div>
     </div>
+    @include('layouts.includes.boxes.forms.form_basket')
+    <input type="hidden" name="user" value="{!!Auth::user()->id!!}" />  
 </div>
+ @include('layouts.includes.modais.modal_comprar')
