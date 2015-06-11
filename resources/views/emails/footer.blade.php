@@ -17,7 +17,7 @@
                         <tr>
                             <td valign="top" width="100%" align="center" style="padding: 5px 0;font-family:Arial; font-size:10px; line-height:12px; color:#323232;">
                                 <div style="font-family:Arial;font-size:10px;  color:#323232; ">
-                                    <span style="font-family:Arial;font-size:10px;  color:#323232; ">LIGUE: {{STORE_FONE}}</span>
+                                    <span style="font-family:Arial;font-size:10px;  color:#323232; ">LIGUE: {{STORE_FONE1}}</span>
                                 </div>
                             </td>
                         </tr>

@@ -1,2 +1,11 @@
-<h4 class="title-sidebar"><span>Facebook</span></h4>
-<div class="fb-like-box" data-href="https://www.facebook.com/pages/Pafemarcombr/212467444575" data-width="178" data-height="385" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id))
+            return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&appId={{FB_APP_ID}}&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script> 
+<div class="fb-like-box" data-href="http://www.facebook.com/{{FAN_PAGE}}" data-width="350" data-show-faces="true" data-colorscheme="dark" data-stream="false" data-show-border="false" data-header="false"  data-height="240"></div>

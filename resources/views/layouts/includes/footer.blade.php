@@ -1,6 +1,6 @@
 <div class="container"> 
     <!-- Footer ================================================================== -->
-    <div style="background-color:#0050ef;padding:15px;color:#ffffff">
+    <div class="container_footer text-medio fg-white">
         <div class="row"> 
             <div class="col-sm-3"> 
                 <ul class="list-unstyled text-left">
@@ -20,13 +20,15 @@
                     </li>
                     <li>
                         <img src="images/icons/ico-home.png"  width="35">
-                        <span><a class="link-footer" href="">Rua Alonso Vasconcelos Pacheco, 853.
-                                <br>
-                                Vila Augusto. Mauá-SP. CEP 09350-281</a></span>
+                        <span>
+                            <a class="link-footer" href="">
+                                {!!STORE_ADDRESS_CONTACT!!}
+                            </a>
+                        </span>
                     </li>
                     <li>
                         <img src="images/icons/ico-fone.png"  width="35">
-                        <span><a class="link-footer" href="">11 4543-1514. 11 4541-8070. Fax: 11 4543-0715</a></span>
+                        <span><a class="link-footer" href="">{!!STORE_FONE1!!}}. {!!STORE_FONE2!!}}. Fax: {!!STORE_FAX!!}}</a></span>
                     </li>
                     <li>
                         <img src="images/icons/ico-map.png"  width="35">

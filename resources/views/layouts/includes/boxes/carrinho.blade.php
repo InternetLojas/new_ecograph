@@ -3,7 +3,7 @@
     @if(!Auth::user())
     <li class="col-xs-4 text-center">
         <i class="fa lg fa-fw fa-user pull-left"></i>
-        <a href="javascript:CriarConta('{{csrf_token()}}')" id="btn_tipo_conta" role="button" data-hint="Crie agora a sua conta" class="fg-gray"><span >Cadastro</span> </a>
+        <a href="#ModalConta" role="button" data-toggle="modal" title="Crie agora a sua conta" class="fg-gray"><span >Cadastro</span> </a>
     </li>
     <li class="col-xs-4 text-center">
         <i class="fa lg fa-fw icon-checkmark pull-left"></i>

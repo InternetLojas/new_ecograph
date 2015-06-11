@@ -9,17 +9,17 @@
 
             //Inicio Mascara Telefone
             jQuery('input[type=tel]').mask("(99) 9999-9999?9").ready(function(event) {
-                var target, phone, element;
-                target = (event.currentTarget) ? event.currentTarget : event.srcElement;
-                phone = target.value.replace(/\D/g, '');
-                element = $(target);
-                element.unmask();
-                if (phone.length > 10) {
-                    element.mask("(99) 99999-999?9");
-                } else {
-                    element.mask("(99) 9999-9999?9");
-                }
-            });
+    var target, phone, element;
+            target = (event.currentTarget) ? event.currentTarget : event.srcElement;
+            phone = target.value.replace(/\D/g, '');
+            element = $(target);
+            element.unmask();
+            if (phone.length > 10) {
+    element.mask("(99) 99999-999?9");
+    } else {
+    element.mask("(99) 9999-9999?9");
+    }
+    });
             $("#telephone").mask("(99) 9999-9999");
             $("#telephone1").mask("(99) 9999-9999");
             //Fim Mascara Telefone
@@ -65,7 +65,7 @@
             Encerrar('orcar');
             });
                     $('#btn_portfolio').click(function() {
-                    $('#form_orcamento').attr('action', 'produtos/portfolio.html');
+            $('#form_orcamento').attr('action', 'produtos/portfolio.html');
                     $('#form_orcamento').submit();
             });
                     $('#btn_comprar').click(function()
@@ -118,6 +118,13 @@
                             ValidaCarrinho('resumo', url);
                     });
                     @endif
+                   
+                    var $btn_contato = $('#btn_contato');
+                    $btn_contato.on('click', function() {
+                    var url = $('#contato').attr('action');
+                            EmailEnviar('contato', url);
+                    });
+                    
                     @if($page === 'novaconta')
                     //controle das mascaras para os telefones
                     $('#nr_big').css('display', 'block');

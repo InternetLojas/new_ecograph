@@ -1,31 +1,23 @@
-
-<h3 class="title-cadastro"><b>Contato</b></h3>
-<div class="grid">
+<!-- CONTATO-->
+<!--============================== content =================================-->
+<div class="destaque_home">
+    <!-- APRESENTAÇÃO-->
+    <section id="map" class="example" style="height:430px">
+        <p>Renderizando mapa...Aguarde!</p>
+    </section>
+</div>
+<!--============================== content =================================-->
+<div class="destaque_home">
     <div class="row">
-
-        <div class="span5">
-            <section id="map" class="example" style="height:430px">
-                <p>Renderizando mapa...Aguarde!</p>
-            </section>
-        </div>
-        <div class="span7 text-left">
-            <h2 class="header">Fale</h2>
-            <h3 class="subheader">com a gente</h3>
-            <blockquote class="fg-darkBrown">
-                Você está em busca de uma atividade física que lhe ajude a melhorar a sua postura, e com isso alcançar o equilíbrio necessário para as suas atividade diárias?<br>
-                A Pilates Motriz talvez possa te ajudar.<br>
-                Use os nossos canais de comunicão para entrar em contato com a gente ou faça-nos uma visita.
-            </blockquote>
-            <br>
+        <div class="col-md-4">
+            <h3 class="item-title"><i class="fa fa-1x fa-fw fa-map-marker on-left"></i> Endereço</h3>
             <address>
-                <strong>Pilates Motriz</strong><br />
-                Rua Saldanha Marinho, 30, Loja 201<br>
-                Porto alegre - RS, Menino Deus<br>
-                <abbr title="Phone">P:</abbr> (51) 3231-1661
+                {!!STORE_NAME!!}<br>
+                {!!STORE_ADDRESS!!}
             </address>
             <address>
-                <br>
-                <a href="mailto:#">ecograph@ecograph.com.br
+                <i class="fa fa-x fa-envelope fa-fw on-left"></i>
+                <a href="mailto:#">{!!STORE_OWNER_EMAIL_ADDRESS!!}
                     <script type="text/javascript">
                         /* <![CDATA[ */
                         (function() {
@@ -50,24 +42,11 @@
                     </script>
                 </a>
                 <br>
-                <i class="icon-globe"></i> Web: {{STORE_SITE}}
+                <i class="fa fa-x fa-fw fa-globe"></i> Web: {{STORE_SITE}}
             </address>
         </div>
-    </div> 
-    <hr>
-    <div class="row">    
-        <div class="span8">
-            <h3 class="item-title"><i class="icon-alarm on-left"></i> Deixe uma mensagem</h3>
-            <div id="mensagem_contato"></div>
-            <div id="info_contato"></div>
-            <div class="example">
-                @include('layouts.includes.boxes.forms.form_contato') 
-                <!-- / contact form -->
-            </div>  
-        </div>
-
-        <div class="span4">
-            <h3 class="item-title"><i class="icon-clock on-left"></i> Nossos horários</h3>
+        <div class="col-md-8">
+            <h3 class="item-title"><i class="fa fa-x fa-bell fa-fw on-left"></i> Nossos horários</h3>
             <table class="table ">
                 <thead>
                     <tr class="selected">
@@ -104,4 +83,11 @@
             </table>
         </div>
     </div>
+</div>
+<!--============================== content =================================-->
+<div class="destaque_home">
+    <h3 class="item-title">
+        <i class="fa fa-x fa-fw fa-envelope-o on-left"></i> Deixe uma mensagem
+    </h3>
+    @include('layouts.includes.boxes.forms.form_contato')
 </div>

@@ -1,7 +1,9 @@
-        <div class="page-region-content">
-            <div class="grid fluid">
-                <div class=""> 
-                    @include('layouts.contents.novaconta')
-                </div>
-            </div>
+<!-- CADASTRO-->
+<div class="section">
+    <div class="container">
+        <!--============================== banner =================================-->
+        <div class="wrapper">  
+            @include('layouts.contents.novaconta')
         </div>
+    </div>
+</div>

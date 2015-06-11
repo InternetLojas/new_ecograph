@@ -35,16 +35,19 @@
             </div>
         </div>
         @endif
-         <!--============================== conteúdo  =================================-->
+        <!--============================== conteúdo  =================================-->
         @yield('content')
-         <!--============================== conteúdo =================================-->
+        <!--============================== conteúdo =================================-->
         <!-- ====================    SCRIPTS   ========================== -->
         <footer class="section section-primary">
             @include('layouts.includes.footer')
         </footer>
         <div class="section">
             <div class="container">
-                <!-- ====================    SCRIPTS   ========================== -->
+                <!-- ====================    MODAL   ========================== -->
+                @if($page != 'novaconta' && !Auth::user())
+                @include('layouts.includes.modais.tipo_conta')
+                @endif
                 <!-- ====================    SCRIPTS   ========================== -->
                 @section('script')
                 @include('layouts.includes.scripts')
