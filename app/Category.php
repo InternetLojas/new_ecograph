@@ -15,7 +15,7 @@ class Category extends Model {
     protected $guarded = ['id'];
 
     public function CategoryProduct() {
-        return $this->hasMany('CategoryProduct');
+        return $this->hasMany('Ecograph\CategoryProduct');
     }
 
     // public function product() {
