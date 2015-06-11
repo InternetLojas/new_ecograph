@@ -38,21 +38,6 @@ class HomeController extends Controller {
 	 *
 	 * @return View
 	 */
-	public function basket() {
-		$userId = \Auth::user() -> id;
-		$carrinho = Customer::with('basketes') -> find($userId);
-		if (count($carrinho -> basketes -> toarray()) > 0) {
-			return redirect(url('/carrinho.html'));
-		} else {
-			return redirect(url('/home.html'));
-		}
-	}
-
-	/**
-	 * Mosta página inicial.
-	 *
-	 * @return View
-	 */
 	public function index() {
 		//dd(\Auth::user());
 		$layout = \Layout::classes(0);

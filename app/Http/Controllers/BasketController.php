@@ -47,11 +47,86 @@ class BasketController extends Controller {
         $this->basket_item = $basket_item;
     }
 
+    /**
+     * Verifica se existe produtos do carrinho antigo.
+     *
+     * @return View
+     */
+    public function Verifica() {
+        $userId = \Auth::user()->id;
+        $carrinho = Customer::with('basketes')->find($userId);
+        if (count($carrinho->basketes->toarray()) > 0) {
+            return redirect(url('/carrinho/lista.html'));
+        } else {
+            return redirect(url('/home.html'));
+        }
+    }
+
+    /* somente quando loga */
+
+    public function Lista() {
+        $title = 'Itens no carrinho';
+        //Auth::login($customer);
+        //$customers_default_address_id = Customer::find(Auth::user()->id);
+        //$default_address = Addressbook::find($customers_default_address_id->customers_default_address_id);
+        $cart = Cart::content();
+        //dd($cart);
+        $carrinho = $this->basket
+                ->where('customer_id', Auth::user()->id)
+                ->get();
+        $lista = $carrinho->toarray();
+        if (count($lista) > 0) {
+            foreach ($lista as $key => $valor) {
+                $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
+                $option_itens = $basket_option->toarray();
+                //dd( $lista);
+                $item = array('id' => $valor['products_id'],
+                    'name' => Fichas::nomeProduto($valor['products_id']),
+                    'price' => str_replace('R$ ', '', $valor['final_price']),
+                    'quantity' => $valor['quantity'],
+                    'image' => Fichas::ImgProduto($valor['products_id'])
+                );
+                $cat = CategoryProduct::Categoria($valor['products_id']);
+                $categoria = $cat->toarray();
+                $option = array('categoria_id' => $categoria[0]['category_id'],
+                    'categoria' => $categoria[0]['products_name'],
+                    'formato_id' => $option_itens[0]['formato_id'],
+                    'formato' => 'descobrir categ',
+                    'papel_id' => $option_itens[0]['papel_id'],
+                    'papel' => 'descobrir categ',
+                    'acabamento_id' => $option_itens[0]['acabamento_id'],
+                    'acabamento' => 'descobrir categ',
+                    'unidade' => '120',
+                    'perfil' => $categoria[0]['products_name'],
+                    'perfil_id' => '22'
+                );
+                Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
+            }
+             $contents = Cart::content();
+            $gateways = Gateway::ativos('1')->get();
+            $classes = Utilidades::Descontos();
+            $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
+            $desc_acrescimo_id = $desc_acrescimo->toarray();
+            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+            return view('clientes.index')
+                            ->with('title', STORE_NAME . ' Itens no carrinho')
+                            ->with('page', 'carrinho')
+                            ->with('ativo', 'carrinho')
+                            ->with('contents', $contents->toarray())
+                            ->with('post_inputs','')
+                            ->with('gateways', $gateways)
+                            ->with('classes', $classes)
+                            ->with('desc_acrescimo_id', $desc_acrescimo_id)
+                            ->with('cart_total', Cart::total())
+                            ->with('rota', 'carrinho.html')
+                            ->with('layout', $layout);
+        }
+    }
+
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
         //dd($post_inputs);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
-
         $item = (array('id' => $post_inputs['produto_id'],
             'name' => Fichas::nomeProduto($post_inputs['produto_id']),
             'price' => str_replace('R$ ', '', $post_inputs['orc_pacote_valor']),
@@ -230,15 +305,54 @@ class BasketController extends Controller {
     }
 
     public function Carrinho(Request $request) {
-        
+        $post_inputs = $request->all();
         $carrinho = $this->basket
                 ->where('customer_id', Auth::user()->id)
                 ->get();
-        //dd(Cart::content()->CartCollection());
-        if (count($carrinho->toarray()) > 0) {
+        //dd($post_inputs);
+        /*
+         *  "nome_empresa" => ""
+          "atividade" => ""
+          "nome" => "Leandro "
+          "cargo" => ""
+          "cel1" => "(51) 9976-7179"
+          "cel2" => ""
+          "fone1" => "(51) 3396-4816"
+          "fone2" => "(51) 3231-1664"
+          "end" => ""
+          "cep" => ""
+          "email" => "leanbez@gmail.com"
+          "site" => ""
+          "obs" => ""
+          "orc_peso" => "0"
+          "orc_vl_frete" => "PAC"
+          "orc_tipo_frete" => "37.00"
+          "orc_categoria_id" => "11"
+          "orc_categoria_nome" => "Pasta"
+          "orc_subcategoria_id" => "11"
+          "orc_subcategoria_nome" => "Pasta"
+          "orc_formato_id" => "26"
+          "orc_formato_nome" => "Bolsa"
+          "orc_cor_id" => ""
+          "orc_cor_nome" => ""
+          "orc_papel_id" => "10"
+          "orc_papel_nome" => "couche 300g"
+          "orc_acabamento_id" => "14"
+          "orc_acabamento_nome" => "Sem Acabamento"
+          "orc_enoblecimento_id" => ""
+          "orc_enoblecimento_nome" => ""
+          "orc_pacote_qtd" => "250 un"
+          "orc_pacote_valor" => "R$ 25"
+          "orc_id_perfil" => "62"
+          "orc_nome_perfil" => "Psicologia"
+          "_token" => "hyUnfxKSaImabSqq5jqhTPDZfYck4CO6LcYeFUKb"
+          "user" => "1"
+          "produto_id" => "3063"
+         */
+        $lista = $carrinho->toarray();
+        if (count($lista) > 0) {
             //$options= $this->basket->BasketIten(1);
             //dd($options);
-            $lista = $carrinho->toarray();
             //dd($lista);
             foreach ($lista as $key => $valor) {
                 $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();

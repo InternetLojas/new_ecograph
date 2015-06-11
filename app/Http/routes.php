@@ -29,9 +29,10 @@ Route::group(['prefix' => '/'], function() {
         'as' => '/index',
         'uses' => 'HomeController@index'
     ]);
+    /***se houver o login deve-se verificar o carrinho***/
     Route::get('home', [
         'as' => 'basket',
-        'uses' => 'HomeController@basket'
+        'uses' => 'BasketController@Verifica'
     ]);
     Route::get('home.html', [
         'as' => '/index',
@@ -246,7 +247,7 @@ Route::group(['prefix' => 'carrinho'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
     Route::get('lista.html', [
         'as' => 'carrinho.lista',
-        'uses' => 'BasketController@Listar'
+        'uses' => 'BasketController@Lista'
     ]);    
 });
 

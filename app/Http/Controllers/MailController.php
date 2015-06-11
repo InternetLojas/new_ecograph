@@ -156,19 +156,6 @@ class MailController extends Controller {
     public function Contato() {
         $erros = array();
         $post_inputs = $this->request->all();
-        //check if its our form
-        /* if (Session::token() !== $post_inputs['_token']) {
-          $erros[] = 'Esse formulário ja havia sido postado.';
-          $data = array('status' => 'fail',
-          'info' => 'Erro de sessão',
-          'erro' => $erros,
-          'loadurl' => ''
-          );
-          return json_encode($data);
-          //return Response::json($data);
-          } */
-        //nome, email, product_id
-        //$post_inputs = Input::all(Input::except('_token'));
         //chechar se é um email válido
         if (!Utilidades::validate_email($post_inputs['email'])) {
             $erros[] = 'O seu email parece não estar no formato correto.';
@@ -198,6 +185,7 @@ class MailController extends Controller {
 
             return json_encode($data);
         } else {
+            
             $data = EnvioEmail::EnviarContato();
             //echo '<pre>';print_r($data);exit;
             return json_encode($data);
