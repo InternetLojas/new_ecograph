@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'host' => env('MAIL_HOST', 'smtp.websitecommerce.com.br'),
+	'host' => env('MAIL_HOST', 'smtp.ecograph.com.br'),
 
 
 	/*
@@ -55,7 +55,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'vendasteste@websitecommerce', 'name' => STORE_NAME],
+	'from' => ['address' => STORE_EMAIL_TESTE, 'name' => STORE_NAME],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return [
 	|
 	*/
 
-	'username' => env('MAIL_USERNAME'),
+	'username' => env('newsite@ecograph.com.br'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return [
 	|
 	*/
 
-	'password' => env('MAIL_PASSWORD'),
+	'password' => env('Senha123Teste'),
 
 	/*
 	|--------------------------------------------------------------------------

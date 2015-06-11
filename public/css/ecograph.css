@@ -1786,41 +1786,57 @@ h4.title a:hover {
         ESTILO PARA Pï¿½GINA CESTA.HTML
 =======================================================================
 */
-.head_carrinho{ 
+table.head_carrinho{ 
     height:40px;
-    margin-top:25px
-}
-td.col-cesta-title{
-    width: 10.8%;
-}
-.content_carrinho{
-    display:block;
-    margin-top:5px;
-    padding-left:5px;
+    margin-top:25px;
     width:100%;
-    float:left;
 }
-.col-cesta-title-img{
-    display:block;
-    float:left;
+table.head_carrinho td{
+    width: 10.75%;
+    text-align: center;
+    font-weight:bold;
+}
+table.head_carrinho td.col-cesta-title{
+    width: 14.5%;
+}
+table.head_carrinho td.col-cesta-title-frete{
+    width: 2%;
+}
+table.body_carrinho{ 
+    width:100%;
+}
+table.body_carrinho td.col-cesta-img{   
     width: 35px;
-    min-height: 31px;
+}
+table.body_carrinho td.td-content-carrinho{
+    border:1px solid #323232;    
+}
+table.body_carrinho td.col-cesta-img{
+    vertical-align:top;
+}
+.col-cesta-title-img{    
+    width: 32px;
+    height: 32px;
+    position: relative;
     background-image: url('../images/icons/icone-box-tri.jpg');
     background-position:left top;
     background-repeat: no-repeat;
 }
-.carrinho{
-    margin-left:0;   
-    border:1px solid #bbbbbb;
-    text-align:left;
-    float:left;
+table.items{ 
     width:100%;
 }
-
+table.items td.vinte{
+    width: 10.4%;
+}
+table.items td{
+    width: 11.2%;
+    text-align: center;
+}
 
 .cesta_title{
     background-color: #333333;
-    
+    display:block;
+    width:100%;
     padding:14px 8px;
     font-size:1.1em;
 }
@@ -2264,6 +2280,10 @@ a.hoverviolet:hover {
 /*-----------------------------------------------------------------------------------*/
 /*  FOOTER
  /*-----------------------------------------------------------------------------------*/
+.container_footer{
+    background-color:#0050ef;
+    padding:15px;
+}
 footer.section {
     margin-bottom:15px
 }

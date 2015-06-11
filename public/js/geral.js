@@ -1332,3 +1332,65 @@ function CheckoutNao_Submeter(obj, whoo, form_externo, payment) {
         });
     });
 }
+
+/*
+ ******************************************************
+ *********** script para controle de email ************
+ ******************************************************
+ */
+function EmailEnviar(whoo, URL)
+{
+    var formulario = $('#' + whoo).serializeArray();
+
+    $('#' + whoo).css({
+        opacity: 0.2
+    });
+    $.post(URL, formulario, function(data) {
+        console.log(data);
+        $('#enviando_' + whoo).delay(4000).fadeOut(200);
+        var obj = JSON.parse(data);
+        if (obj.status === 'fail') {
+            $('#mensagem_' + whoo).html('');
+            $('#info_' + whoo).html('');
+            $('#mensagem_' + whoo).addClass('errormsg alert');
+            $('#mensagem_' + whoo).html('ERRO! Verifique abaixo');
+            $('#mensagem_' + whoo).delay(3000).fadeOut(500);
+            //$('#info_' + whoo).addClass('infomsg alert');
+            var li = '';
+            obj.erro.forEach(function(entry) {
+                li += '<li><small>' + entry + '</small></li>';
+            });
+
+            $('#info_' + whoo).html('<ul>' + li + '</ul>');
+            $('#info_' + whoo).delay(8000).fadeOut(200);
+            $('#' + whoo).css({
+                opacity: 1
+            });
+        } else {
+            $('#' + whoo).css({
+                opacity: 1
+            });
+            $('#mensagem_' + whoo).removeClass('errormsg alert');
+            $('#mensagem_' + whoo).addClass('successmsg alert');
+            $('#mensagem_' + whoo).html('SUCESSO! Email encaminhado.');
+            $('#mensagem_' + whoo).show();
+            console.log(data);
+            var obj = JSON.parse(data);
+            $('#mensagem_' + whoo).delay(3000).fadeOut(200, function() {
+
+                $.each(obj, function(k, v) {
+                    if (k == 'info') {
+                        alert(v);
+                    }
+                });
+            });
+        }
+        console.log(data);
+    });
+}
+
+/*
+ ******************************************************
+ ********* fim script para controle de email **********
+ ******************************************************
+ */
