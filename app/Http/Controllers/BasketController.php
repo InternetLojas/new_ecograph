@@ -17,6 +17,7 @@ use Ecograph\Basket;
 use Ecograph\Formato;
 use Ecograph\Pacote;
 use Ecograph\BasketIten;
+use Ecograph\AddressBook;
 use Cart;
 use Auth;
 
@@ -66,9 +67,7 @@ class BasketController extends Controller {
 
     public function Lista() {
         $title = 'Itens no carrinho';
-        //Auth::login($customer);
-        //$customers_default_address_id = Customer::find(Auth::user()->id);
-        //$default_address = Addressbook::find($customers_default_address_id->customers_default_address_id);
+
         $cart = Cart::content();
         //dd($cart);
         $carrinho = $this->basket
@@ -102,7 +101,7 @@ class BasketController extends Controller {
                 );
                 Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
             }
-             $contents = Cart::content();
+            $contents = Cart::content();
             $gateways = Gateway::ativos('1')->get();
             $classes = Utilidades::Descontos();
             $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
@@ -113,7 +112,7 @@ class BasketController extends Controller {
                             ->with('page', 'carrinho')
                             ->with('ativo', 'carrinho')
                             ->with('contents', $contents->toarray())
-                            ->with('post_inputs','')
+                            ->with('post_inputs', '')
                             ->with('gateways', $gateways)
                             ->with('classes', $classes)
                             ->with('desc_acrescimo_id', $desc_acrescimo_id)
@@ -190,31 +189,6 @@ class BasketController extends Controller {
     public function Listar(Request $request) {
         //dd($request);
         $cart = Cart::content();
-        //$userId = \Auth::user()->id;
-        //$carrinho = Customer::with('basketes')->find($userId);
-        //dd($contents->toarray());
-        /* if (count($carrinho->basketes->toarray()) > 0) {
-          $lista = $carrinho->basketes->toarray();
-          foreach ($lista as $key => $valor) {
-          ///os itens para esse carrinho
-          $basket_item = Basket::with('BasketIten')->find($valor['id']);
-          $itens = $basket_item->BasketIten->toarray();
-          $categoria = CategoryProduct::where('product_id', $valor['products_id'])->get();
-          $item_categoria = $categoria->toArray();
-          $formato = Formato::find($itens[0]['formato_id'])->valor;
-          $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
-          $options = array("categoria" => $item_categoria[0]['products_name'],
-          "formato" => $formato,
-          "formato_id" => $itens[0]['formato_id'],
-          "papel" => $formato,
-          "papel_id" => $itens[0]['papel_id'],
-          "acabamento" => $formato,
-          "acabamento_id" => $itens[0]['acabamento_id'],
-          "unidade" => $quantidade,
-          "perfil" => $post_inputs['orc_nome_perfil'],
-          "pacote_id" => $itens[0]['pacote_id']);
-          }
-          } */
         foreach ($cart->toarray() as $row) {
             foreach ($row as $item) {
                 $contents[] = $row;
@@ -226,185 +200,27 @@ class BasketController extends Controller {
         $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
         $desc_acrescimo_id = $desc_acrescimo->toarray();
         $layout = $this->layout->classes(Fichas::parentCategoria(0));
-        return view('clientes.index')
-                        ->with('title', STORE_NAME . ' Itens no carrinho')
-                        ->with('page', 'carrinho')
-                        ->with('ativo', 'carrinho')
-                        ->with('contents', $contents)
-                        ->with('post_inputs', '')
-                        ->with('gateways', $gateways)
-                        ->with('classes', $classes)
-                        ->with('parent', '0')
-                        ->with('perfil', '')
-                        ->with('desc_acrescimo_id', $desc_acrescimo_id)
-                        ->with('cart_total', Cart::total())
-                        ->with('rota', 'carrinho/lista.html')
-                        ->with('layout', $layout);
-        /* $post_inputs = $request->except('_token');
-          $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
-
-
-
-
-          if (count($carrinho->basketes->toarray()) > 0) {
-          $lista = $carrinho->basketes->toarray();
-          //dd($lista);
-          foreach ($lista as $key => $valor) {
-          ///os itens para esse carrinho
-          $basket_item = Basket::with('BasketIten')->find($valor['id']);
-          $itens = $basket_item->BasketIten->toarray();
-          //dd($itens[0]);
-          $categoria = CategoryProduct::where('product_id', $valor['products_id'])->get();
-          $item_categoria = $categoria->toArray();
-          $formato = Formato::find($itens[0]['formato_id'])->valor;
-          $quantidade = Pacote::find($itens[0]['pacote_id'])->quantity;
-
-          $options = array("categoria" => $item_categoria[0]['products_name'],
-          "formato" => $formato,
-          "formato_id" => $itens[0]['formato_id'],
-          "papel" => $formato,
-          "papel_id" => $itens[0]['papel_id'],
-          "acabamento" => $formato,
-          "acabamento_id" => $itens[0]['acabamento_id'],
-          "unidade" => $quantidade,
-          "perfil" => $post_inputs['orc_nome_perfil'],
-          "pacote_id" => $itens[0]['pacote_id']);
-          //
-          // Returns an array of rowid(s) of found item(s) or false on failure
-          $rowid = Cart::search(array('products_id' => $valor['products_id']));
-          if ($rowid) {
-          Cart::update($rowid, array('qty', $valor['quantity']));
-          } else {
-          // Batch method
-          Cart::add(
-          array('id' => $valor['products_id'], 'name' => $valor['products_model'], 'qty' => $valor['quantity'], 'price' => $valor['final_price'], 'options' => $options)
-          );
-          }
-          }
-          }
-
-          $gateways = Gateway::ativos('1')->get();
-          $classes = Utilidades::Descontos();
-          $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-          $desc_acrescimo_id = $desc_acrescimo->toarray();
-          $layout = $this->layout->classes(Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
-          return view('clientes.index')
-          ->with('title', STORE_NAME . ' Itens no carrinho')
-          ->with('page', 'carrinho')
-          ->with('ativo', 'carrinho')
-          ->with('contents', $contents->toarray())
-          ->with('post_inputs', $post_inputs)
-          ->with('gateways', $gateways)
-          ->with('classes', $classes)
-          ->with('parent', $parent)
-          ->with('perfil', $post_inputs['orc_nome_perfil'])
-          ->with('desc_acrescimo_id', $desc_acrescimo_id)
-          ->with('cart_total', Cart::total())
-          ->with('rota', 'basket')
-          ->with('layout', $layout); */
     }
 
-    public function Carrinho(Request $request) {
+    public function Resumo(Request $request) {
         $post_inputs = $request->all();
-        $carrinho = $this->basket
-                ->where('customer_id', Auth::user()->id)
-                ->get();
-        //dd($post_inputs);
-        /*
-         *  "nome_empresa" => ""
-          "atividade" => ""
-          "nome" => "Leandro "
-          "cargo" => ""
-          "cel1" => "(51) 9976-7179"
-          "cel2" => ""
-          "fone1" => "(51) 3396-4816"
-          "fone2" => "(51) 3231-1664"
-          "end" => ""
-          "cep" => ""
-          "email" => "leanbez@gmail.com"
-          "site" => ""
-          "obs" => ""
-          "orc_peso" => "0"
-          "orc_vl_frete" => "PAC"
-          "orc_tipo_frete" => "37.00"
-          "orc_categoria_id" => "11"
-          "orc_categoria_nome" => "Pasta"
-          "orc_subcategoria_id" => "11"
-          "orc_subcategoria_nome" => "Pasta"
-          "orc_formato_id" => "26"
-          "orc_formato_nome" => "Bolsa"
-          "orc_cor_id" => ""
-          "orc_cor_nome" => ""
-          "orc_papel_id" => "10"
-          "orc_papel_nome" => "couche 300g"
-          "orc_acabamento_id" => "14"
-          "orc_acabamento_nome" => "Sem Acabamento"
-          "orc_enoblecimento_id" => ""
-          "orc_enoblecimento_nome" => ""
-          "orc_pacote_qtd" => "250 un"
-          "orc_pacote_valor" => "R$ 25"
-          "orc_id_perfil" => "62"
-          "orc_nome_perfil" => "Psicologia"
-          "_token" => "hyUnfxKSaImabSqq5jqhTPDZfYck4CO6LcYeFUKb"
-          "user" => "1"
-          "produto_id" => "3063"
-         */
-        $lista = $carrinho->toarray();
-        if (count($lista) > 0) {
-            //$options= $this->basket->BasketIten(1);
-            //dd($options);
-            //dd($lista);
-            foreach ($lista as $key => $valor) {
-                $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
-                $option_itens = $basket_option->toarray();
-                //dd( $option_itens);
-                $item = array('id' => $valor['products_id'],
-                    'name' => Fichas::nomeProduto($valor['products_id']),
-                    'price' => str_replace('R$ ', '', $valor['final_price']),
-                    'quantity' => $valor['quantity'],
-                    'image' => Fichas::ImgProduto($valor['products_id'])
-                );
-                $option = array('categoria_id' => '1',
-                    'categoria' => 'descobrir categ',
-                    'formato_id' => $option_itens[0]['formato_id'],
-                    'formato' => 'descobrir categ',
-                    'papel_id' => $option_itens[0]['papel_id'],
-                    'papel' => 'descobrir categ',
-                    'acabamento_id' => $option_itens[0]['acabamento_id'],
-                    'acabamento' => 'descobrir categ',
-                    'unidade' => '120',
-                    'perfil' => 'descobrir perfil',
-                    'perfil_id' => '22'
-                );
-                Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
-            }
-        }
-
-        // if(is_array($update)){
-        //   foreach($update as $k=>$vl){
-        //     Cart::update($vl[0],$vl[1]);
-        //   }
-        // }    
         $contents = Cart::content();
+        //
+        //dd($post_inputs);
+        $layout = $this->layout->classes(Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
+        //levanta o endereço do cliente
+        $customers_default_address_id = Customer::find(Auth::user()->id);
+        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
 
-        //$parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
-        $post_inputs = array();
-        $gateways = Gateway::ativos('1')->get();
-        $classes = Utilidades::Descontos();
-        $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-        $desc_acrescimo_id = $desc_acrescimo->toarray();
-        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
         return view('clientes.index')
-                        ->with('title', STORE_NAME . ' Itens no carrinho')
-                        ->with('page', 'carrinho')
-                        ->with('ativo', 'carrinho')
+                        ->with('title', STORE_NAME . ' Seu resumo')
+                        ->with('page', 'resumo')
+                        ->with('ativo', 'Resumo')
                         ->with('contents', $contents->toarray())
                         ->with('post_inputs', $post_inputs)
-                        ->with('gateways', $gateways)
-                        ->with('classes', $classes)
-                        ->with('desc_acrescimo_id', $desc_acrescimo_id)
                         ->with('cart_total', Cart::total())
-                        ->with('rota', 'carrinho.html')
+                        ->with('default_address', $default_address)
+                        ->with('rota', 'resumo.html')
                         ->with('layout', $layout);
     }
 

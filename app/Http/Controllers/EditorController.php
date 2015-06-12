@@ -99,7 +99,7 @@ class EditorController extends Controller {
         return view('editor.index')
                         ->with('title', STORE_NAME . ' Editar ' . $post_inputs['orc_subcategoria_nome'])
                         ->with('page', 'editor')
-                        ->with('ativo', 'Edicao')
+                        ->with('ativo', $post_inputs['orc_subcategoria_nome'])
                         ->with('parent', $parent)
                         ->with('form_orcamento', $post_inputs)
                         ->with('perfil', $post_inputs['orc_nome_perfil'])
