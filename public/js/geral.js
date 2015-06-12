@@ -719,36 +719,22 @@ function VerPortfolio() {
 /*-----------------------------------------------------------------------------------*/
 /*  AdicionarCarrinho 
  /*-----------------------------------------------------------------------------------*/
-function AdicionarCarrinho(produto_id) {
-    $('#produto_id').val(produto_id);
+function AdicionaItemCarrinho() {
+    // $('#produto_id').val(produto_id);
     var URL = 'adicionar';
     var formulario = $('#basket').serializeArray();
     $.post(URL, formulario, function(data) {
         console.log(data);
-
-
         $('#modalAdicionando').modal('show');
     });
-    /*$.Dialog({
-     overlay: true,
-     shadow: true,
-     flat: false,
-     icon: '<img src="images/icons/icone-box-car.jpg">',
-     title: 'Seu Carrinho',
-     content: '',
-     padding: 10,
-     onShow: function(_dialog) {
-     var content = '<h2 class="subheader-secondary">Produto adicionado na cesta.</h2>\n\
-     <div class="form-actions">\n\
-     <button type="button" class="info fg-white small" onclick="BasketSubmeter();">\n\
-     <i class="icon-basket on-left"></i>Finalizar</button>\n\
-     <button class="success fg-white small" type="button" onclick="$.Dialog.close()">Continuar Comprando</button>\n\
-     </div>';
-     $.Dialog.title("Seu Carrinho");
-     $.Dialog.content(content);
-     $.Metro.initInputs();
-     }
-     });*/
+}
+
+function Personalizar(produto_id) {
+    $('#produto_id').val(produto_id);
+    //$produto = $('#' + add);
+    var URL = 'editor/personalizar.html';
+    $('#basket').attr('action', URL);
+    $('#basket').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  AdicionarEdicao
