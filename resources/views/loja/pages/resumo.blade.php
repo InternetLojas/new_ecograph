@@ -1,8 +1,7 @@
 <!-- RESUMO -->
-<div class="page-region-content">
-    <div class="grid padding5">
-        <div class="row"> 
-            @include('layouts.contents.resumo')
-        </div>
+<div class="section">
+    <!--============================== content =================================-->
+    <div class="destaque_home">                
+        @include('layouts.contents.resumo')
     </div>
 </div>

@@ -65,8 +65,8 @@
             Encerrar('orcar');
             });
                     $('#btn_portfolio').click(function() {
-            $('#form_orcamento').attr('action', 'produtos/portfolio.html');
-                    $('#form_orcamento').submit();
+
+            AdicionaItemCarrinho();
             });
                     $('#btn_comprar').click(function()
             {
@@ -118,13 +118,12 @@
                             ValidaCarrinho('resumo', url);
                     });
                     @endif
-                   
+
                     var $btn_contato = $('#btn_contato');
                     $btn_contato.on('click', function() {
                     var url = $('#contato').attr('action');
                             EmailEnviar('contato', url);
                     });
-                    
                     @if($page === 'novaconta')
                     //controle das mascaras para os telefones
                     $('#nr_big').css('display', 'block');

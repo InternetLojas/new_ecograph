@@ -1,4 +1,4 @@
-<table class="head_carrinho">
+<table class="head_carrinho text-medio">
     <tbody>
         <tr>
             <td class="col-cesta-title-frete">
@@ -8,7 +8,7 @@
             </td>
             <td>Tipo de Frete</td>
             <td>Prazo de produção</td>
-            
+
         </tr>
     </tbody>
 </table>
@@ -19,22 +19,22 @@
                 <div class="col-cesta-title-img"></div>
             </td>
             <td class="td-content-carrinho">
-                
+
                 <table class="items">
                     <tbody>
                         <tr>
                             <td class="vinte"></td>
                             <td>
-                               frete
+                                $post_inputs['orc_vl_frete']
                             </td>
                             <td class="text-medio">
                                 prazo de produção
                             </td>
-                            
+
                         </tr>
                     </tbody>
                 </table>
-               
+
             </td>
         </tr>
     </tbody>

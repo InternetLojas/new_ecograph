@@ -1,4 +1,4 @@
-<table class="head_carrinho">
+<table class="head_carrinho text-medio">
     <tbody>
         <tr>
             <td class="col-cesta-title">
@@ -34,7 +34,7 @@
                                     {!! HTML::image('images/'.Fichas::ImgProduto($itens['id']), Fichas::ImgProduto($itens['id']), array('class'=>'img-cart','width'=>'100%')) !!}
                                 </a>
                             </td>
-                            <td class="text-medio">
+                            <td class="text-medio options">
                                 {!!$itens['name']!!}<br>
                                 @foreach ($itens['options'] as $key=>$vl)
                                 @if($key != 'categoria' && $key != 'categoria_id' && $key != 'formato_id' && $key != 'papel_id' && $key != 'acabamento_id' &&  $key != 'perfil' && $key != 'perfil_id')
@@ -42,16 +42,16 @@
                                 @endif
                                 @endforeach
                             </td>
-                            <td>
+                            <td class="text-medio">
                                 {!!$itens['options']['unidade']!!}
                             </td>
-                            <td>
+                            <td class="text-medio">
                                 {!! Utilidades::toReal($itens['price'])!!}
                             </td>
-                            <td>Frete</td>
-                            <td>Desconto</td>
-                            <td>Total</td>
-                            <td>
+                            <td class="text-medio">{!! Utilidades::toReal($post_inputs['orc_tipo_frete'])!!}</td>
+                            <td class="text-medio">Desconto</td>
+                            <td class="text-medio">{!! Utilidades::toReal($cart_total+$post_inputs['orc_tipo_frete']) !!}</td>
+                            <td class="text-medio">
                                 <a href="javascript:void(0)" onclick="RemoverItem('{{ $itens['id'] }}')" title="Clique para remover o item do carrinho" class="btn bg-yellow fg-white no-radius"> 
                                     Remover
                                 </a>

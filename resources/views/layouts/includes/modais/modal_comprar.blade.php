@@ -48,13 +48,9 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <a class="btn btn-default fg-dark no-radius" data-dismiss="modal">
-                    <i class="icon icon-ok"></i> Continuar comprando
-                </a>
                 <a  class="btn bg-green fg-white no-radius" href="javascript:void()" title="Saiba mais sobre seus produtos no carrinho" onclick="BasketSubmeter();">
-                    <i class="icon icon-ok"></i> Ver o carrinho
+                    <i class="icon icon-ok"></i> Ver o Resumo
                 </a>
-
             </div>
         </div>
     </div>
