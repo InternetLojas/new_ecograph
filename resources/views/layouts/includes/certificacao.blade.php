@@ -1,4 +1,6 @@
-<h1 class="text-center text-danger"><span style="padding:2px;background-color: #808080">Certificações Ecograph</span></h1>
+<h1 class="text-center text-muted">
+    <span style="padding:2px;" class="bg-very-smallgray">Certificações Ecograph</span>
+</h1>
 <div class="row">
     <div class="col-md-8">
         <h1 class="text-success">compromisso com o meio ambiente</h1>  

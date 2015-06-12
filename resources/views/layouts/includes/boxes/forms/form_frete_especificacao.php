@@ -14,9 +14,10 @@
             </div>
         </div>
         <div id="resultado" style="display:none">
+            <p class="text-medio">Escolha um tipo de envio abaixo.</p>
             <div class="input-group" data-role="input-group">
                 <div class="col-md-12">
-                    <p>Escolha um tipo de envio abaixo.</p>
+                    
                     <ol class="list-inline text-medio bg-smallgray">
                         <li>
                             <span class="check"></span>

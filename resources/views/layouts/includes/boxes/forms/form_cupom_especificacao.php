@@ -1,10 +1,10 @@
 <form class="form-horizontal" role="form" id="cupom" name="cupom">
     <div class="form-group">
         <div class="input-group">
-            <div class="col-md-3">
-                <label class="text-medio">CUPOM</label>
+            <div class="col-md-4">
+                <label class="text-medio bg-very-smallgray">Cupom Desconto</label>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <input type="text" class="form-control no-radius" placeholder="Informe o cupom" id="discount_code" name="discount_code">
             </div>
             <div class=" col-md-offset-0 col-md-2">

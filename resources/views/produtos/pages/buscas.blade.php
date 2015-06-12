@@ -1,8 +1,8 @@
 <!-- DETALHES-->
 <div class="section">
-    <div class="container">
+    <div class="">
         <!--============================== content =================================-->
-        <div class="wrapper">
+        <div class="">
             <div class="destaque_home">
                  @include('layouts.contents.buscas')
             </div>

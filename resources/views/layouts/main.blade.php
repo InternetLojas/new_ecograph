@@ -36,7 +36,11 @@
         </div>
         @endif
         <!--============================== conteúdo  =================================-->
-        @yield('content')
+        <div class="container">
+            <div class="wrapper">
+                @yield('content')
+            </div>
+        </div>
         <!--============================== conteúdo =================================-->
         <!-- ====================    SCRIPTS   ========================== -->
         <footer class="section section-primary">

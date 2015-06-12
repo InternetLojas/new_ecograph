@@ -21,13 +21,13 @@
         <li>
             <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg"  class="img-responsive" />
             <button type="button" class="btn  bg-smallgray btn-lg no-radius" title="Deixe que criamos sua arte" id="btn_comprar" onclick=""  >
-                Desenvolver arte R$ 50,00
+                <small>Personalizar nossos desenhos</small>                    
             </button>
         </li>
         <li>
             <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
             <button type="button" class="btn btn-block bg-smallgray btn-lg no-radius" title="Envie seu arquivo PDF" id="btn_upload" onclick="(@if (Auth::guest()) '0' @else '1' @endif);"  >
-                Envie seu arquivo PDF.
+                <small>Envie seu arquivo PDF.</small>
             </button>
         </li>
     </ul>

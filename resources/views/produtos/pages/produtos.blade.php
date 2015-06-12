@@ -1,11 +1,8 @@
 <!-- PRODUTOS-->
+<!--============================== content =================================-->
 <div class="section">
-    <div class="container">
-        <!--============================== content =================================-->
-        <div class="wrapper">
-            <div class="destaque_home">                
-                    @include('layouts.contents.produtos')
-            </div>
-        </div>
+    <div class="destaque_home"> 
+        <h1 class="text-center text-muted">Todos Produtos</h1>
+        @include('layouts.contents.produtos')
     </div>
 </div>

@@ -1,11 +1,8 @@
 <!-- LISTAGEM-->
 <div class="section">
-    <div class="container">
-        <!--============================== content =================================-->
-        <div class="wrapper">
-            <div class="destaque_home">
-                @include('layouts.contents.listagem')
-            </div>
-        </div>
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+        <p class="text-medio"><b>{!!$ativo!!} - {!!$post_inputs['orc_subcategoria_nome']!!}</b></p>
+        @include('layouts.contents.listagem')
     </div>
 </div>

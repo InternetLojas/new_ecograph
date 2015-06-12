@@ -1,10 +1,11 @@
 <div class="title_content">
-    <h1 class="uppercase">
+    <p class="uppercase">
         <img src="images/icons/calculadora.png" width="35" alt="calculadora.png" />
         Calculadora Online - 
-        <span id="nome_escolhido"></span>
-    </h1>
-    Selecione as opções:
+        <span id="nome_escolhido"></span><br>
+        
+    </p>
+    <span style="font-size:90%">Selecione as opções:</span>
 </div>
 
 <!--tabela de cálculo dos preços-->

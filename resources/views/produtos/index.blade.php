@@ -1,4 +1,4 @@
-@extends('layouts.main_produtos')
+@extends('layouts.main')
 @section('content')
 {!! HTML::flash_message() !!}
 @include(Pages::page($page))  

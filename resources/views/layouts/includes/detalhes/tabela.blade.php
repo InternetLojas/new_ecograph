@@ -10,7 +10,7 @@
                 </div>
             </a>
         </div>
-        <table class="table table-bordered">
+        <table class="table table-bordered ">
             <thead class="head-itens">
                 <tr>
                     <th class="text-center">Formato</th>
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr class="bg-very-smallgray">
                     <td id="lista_formato"></td>
                     <td id="lista_cores"></td>
                     <td id="lista_papel"></td>
