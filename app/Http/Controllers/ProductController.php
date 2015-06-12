@@ -293,7 +293,9 @@ class ProductController extends Controller {
         //quem é o pai da categoria enviada
         $pai = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
         $categ_pai = Fichas::nomecategoria($pai);
-        $categorias = Category::where('parent_id', $pai)->get();
+        $cat = Category::where('parent_id', $pai)->get();
+        $categoria = $cat->toarray();
+        //dd($categoria);
         //verificar se existe o produto para a categoria solicitada
         $check_produtos = CategoryProduct::where('category_id', $post_inputs['orc_subcategoria_id'])->lists('product_id');
 //se existir produtos vinculados
@@ -303,7 +305,7 @@ class ProductController extends Controller {
                     ->orderby('created_at')
                     ->paginate(NR_PRODUTOS_POR_PAGINA);
         }
-        //dd($perfis_produtos->items());
+        
         $path = $perfis_produtos->setPath('produtos/portfolio.html');
 
         //$produtos = $perfis_produtos->toarray();
@@ -313,7 +315,7 @@ class ProductController extends Controller {
                             ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
                             ->with('parent', $pai)
                             ->with('page', 'listagem')
-                            ->with('categorias', $categorias->toarray())
+                            ->with('categorias', $categoria)
                             ->with('perfis_produtos', $perfis_produtos)
                             ->with('links', $path->render())
                             ->with('post_inputs', $post_inputs)

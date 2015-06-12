@@ -29,7 +29,7 @@ Route::group(['prefix' => '/'], function() {
         'as' => '/index',
         'uses' => 'HomeController@index'
     ]);
-    /***se houver o login deve-se verificar o carrinho***/
+    /*     * *se houver o login deve-se verificar o carrinho** */
     Route::get('home', [
         'as' => 'basket',
         'uses' => 'BasketController@Verifica'
@@ -50,18 +50,12 @@ Route::group(['prefix' => '/'], function() {
         'as' => '/entrega',
         'uses' => 'HomeController@entrega'
     ]);
-    Route::get('brindes.html', [
-        'as' => '/brindes',
-        'uses' => 'HomeController@brindes'
-    ]);
+
     Route::get('produtos.html', [
         'as' => 'produtos.produtos',
         'uses' => 'ProductController@Produtos'
     ]);
-    Route::get('brindes.html', [
-        'as' => '/brindes',
-        'uses' => 'HomeController@brindes'
-    ]);
+
     Route::get('orcamentos.html', [
         'as' => '/orcamentos',
         'uses' => 'HomeController@orcamentos'
@@ -70,30 +64,7 @@ Route::group(['prefix' => '/'], function() {
         'as' => 'comocomprar',
         'uses' => 'HomeController@comocomprar'
     ]);
-    Route::get('sobre.html', [
-        'as' => '/sobre',
-        'uses' => 'HomeController@sobre'
-    ]);
-    Route::get('entrega.html', [
-        'as' => '/entrega',
-        'uses' => 'HomeController@entrega'
-    ]);
-    Route::get('politica.html', [
-        'as' => '/politica',
-        'uses' => 'HomeController@politica'
-    ]);
-    Route::get('testemunhos.html', [
-        'as' => '/testemunhos',
-        'uses' => 'HomeController@testemunos'
-    ]);
-    Route::get('videos.html', [
-        'as' => '/videos',
-        'uses' => 'HomeController@videos'
-    ]);
-    Route::get('blog.html', [
-        'as' => '/blog',
-        'uses' => 'HomeController@blog'
-    ]);
+
     //retorna a view do missão
     Route::get('missao.html', [
         "as" => "/missao",
@@ -109,7 +80,8 @@ Route::group(['prefix' => '/'], function() {
         "as" => "/carrinho",
         "uses" => "BasketController@Carrinho"
     ]);
-    //retorna a view do carrinho de compras
+
+//retorna a view do carrinho de compras
     Route::post('carrinho.html', [
         "as" => "carrinho",
         "uses" => "BasketController@Carrinho"
@@ -185,19 +157,6 @@ Route::get('produtos/detalhes/{pai}/{filho}/{nome_categoria}', [
     "uses" => "ProductController@Detalhes"
 ]);
 
-/*
-  produtos/detalhes/3/20/flyer.html
-  Route::post('portfolio', [
-  "as" => "portfolio",
-  "uses" => "ProductController@Portfolio"
-  ]);
-
-  Route::get("listagem/{categoria}/{perfil}/{n_categoria}/{n_perfil}", [
-  "as" => "listagem/{categoria}/{perfil}/{n_categoria}/{n_perfil}",
-  "uses" => "ProductsController@Listagem"
-  ]); */
-
-
 /* ============================================================== */
 /*            Controller DE RETORNO JSON                          */
 /* ============================================================== */
@@ -236,19 +195,19 @@ Route::post('basket', [
     "uses" => "BasketController@Listar"
 ]);
 Route::get('basket/atualizar', [
-        'as' => 'basket.atualizar',
-        'uses' => 'BasketController@Atualizar'
-    ]);
+    'as' => 'basket.atualizar',
+    'uses' => 'BasketController@Atualizar'
+]);
 Route::get('basket/remover', [
-        'as' => 'basket.remover',
-        'uses' => 'BasketController@Remover'
-    ]);
+    'as' => 'basket.remover',
+    'uses' => 'BasketController@Remover'
+]);
 Route::group(['prefix' => 'carrinho'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
     Route::get('lista.html', [
         'as' => 'carrinho.lista',
         'uses' => 'BasketController@Lista'
-    ]);    
+    ]);
 });
 
 /* ============================================================== */

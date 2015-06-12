@@ -11,107 +11,112 @@ use Ecograph\Customer;
 use Ecograph\CategoryDescription;
 
 class HomeController extends Controller {
-	/*
-	 |--------------------------------------------------------------------------
-	 | Home Controller
-	 |--------------------------------------------------------------------------
-	 |
-	 | This controller renders your application's "dashboard" for users that
-	 | are authenticated. Of course, you are free to change or remove the
-	 | controller as you wish. It is just here to get your app started!
-	 |
-	 */
+    /*
+      |--------------------------------------------------------------------------
+      | Home Controller
+      |--------------------------------------------------------------------------
+      |
+      | This controller renders your application's "dashboard" for users that
+      | are authenticated. Of course, you are free to change or remove the
+      | controller as you wish. It is just here to get your app started!
+      |
+     */
 
-	private $layout;
+    private $layout;
 
-	/**
-	 * Create a new controller instance.
-	 *
-	 * @return void
-	 */
-	public function __construct(Layout $layout) {
-		$this -> layout = $layout;
-	}
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(Layout $layout) {
+        $this->layout = $layout;
+    }
 
-	/**
-	 * Mosta página inicial.
-	 *
-	 * @return View
-	 */
-	public function index() {
-		//dd(\Auth::user());
-		$layout = \Layout::classes(0);
-		return view('home.index') -> with('title', STORE_NAME . ' Impressos em geral por tema ou profissão') -> with('page', 'home') -> with('ativo', 'Home') -> with('rota', '/') -> with('layout', $layout);
-	}
+    /**
+     * Mosta página inicial.
+     *
+     * @return View
+     */
+    public function index() {
+        //dd(\Auth::user());
+        $layout = \Layout::classes(0);
+        return view('home.index')
+                        ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
+                        ->with('page', 'home')
+                        ->with('ativo', 'Home')
+                        ->with('rota', '/')
+                        ->with('layout', $layout);
+    }
 
-	/**
-	 * Mosta página brindes.
-	 *
-	 * @return View
-	 */
-	public function brindes() {
+    /**
+     * Mosta página brindes.
+     *
+     * @return View
+     */
+    public function brindes() {
 
-		$cat_brindes = CategoryDescription::where('categories_name', 'Brindes') -> get();
-		$brindes = $cat_brindes -> toarray();
+        $cat_brindes = CategoryDescription::where('categories_name', 'Brindes')->get();
+        $brindes = $cat_brindes->toarray();
 
-		$categorias = Category::where('parent_id', $brindes[0]['id']) -> get();
+        $categorias = Category::where('parent_id', $brindes[0]['id'])->get();
 
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', STORE_NAME . ' Brindes sensacionais') -> with('page', 'brindes') -> with('ativo', 'Brindes') -> with('brindes', $categorias -> toarray()) -> with('rota', '/brindes') -> with('layout', $layout);
-	}
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', STORE_NAME . ' Brindes sensacionais')->with('page', 'brindes')->with('ativo', 'Brindes')->with('brindes', $categorias->toarray())->with('rota', '/brindes')->with('layout', $layout);
+    }
 
-	public function missao() {
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', ' Missão da ' . STORE_NAME) -> with('page', 'missao') -> with('ativo', 'Nossa Missão') -> with('rota', '/missao.html') -> with('layout', $layout);
-	}
+    public function missao() {
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', ' Missão da ' . STORE_NAME)->with('page', 'missao')->with('ativo', 'Nossa Missão')->with('rota', '/missao.html')->with('layout', $layout);
+    }
 
-	public function certificacao() {
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', ' Missão da ' . STORE_NAME) -> with('page', 'certificacao') -> with('ativo', 'Certificacao') -> with('rota', '/certificacao.html') -> with('layout', $layout);
-	}
+    public function certificacao() {
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', ' Missão da ' . STORE_NAME)->with('page', 'certificacao')->with('ativo', 'Certificacao')->with('rota', '/certificacao.html')->with('layout', $layout);
+    }
 
-	/**
-	 * Mosta página sobre.
-	 *
-	 * @return View
-	 */
-	public function sobre() {
+    /**
+     * Mosta página sobre.
+     *
+     * @return View
+     */
+    public function sobre() {
 
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', STORE_NAME . ' Sobre') -> with('page', 'sobre') -> with('ativo', 'Sobre') -> with('rota', '/sobre') -> with('layout', $layout);
-	}
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', STORE_NAME . ' Sobre')->with('page', 'sobre')->with('ativo', 'Sobre')->with('rota', '/sobre')->with('layout', $layout);
+    }
 
-	/**
-	 * Mosta página entrega.
-	 *
-	 * @return View
-	 */
-	public function entrega() {
+    /**
+     * Mosta página entrega.
+     *
+     * @return View
+     */
+    public function entrega() {
 
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', STORE_NAME . ' Entrega') -> with('page', 'entrega') -> with('ativo', 'Entrega') -> with('rota', '/entrega') -> with('layout', $layout);
-	}
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', STORE_NAME . ' Entrega')->with('page', 'entrega')->with('ativo', 'Entrega')->with('rota', '/entrega')->with('layout', $layout);
+    }
 
-	/**
-	 * Mosta página como comprar.
-	 *
-	 * @return View
-	 */
-	public function comocomprar() {
+    /**
+     * Mosta página como comprar.
+     *
+     * @return View
+     */
+    public function comocomprar() {
 
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', STORE_NAME . ' Como comprar') -> with('page', 'comocomprar') -> with('ativo', 'Como Comprar') -> with('rota', '/comocomprar') -> with('layout', $layout);
-	}
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', STORE_NAME . ' Como comprar')->with('page', 'comocomprar')->with('ativo', 'Como Comprar')->with('rota', '/comocomprar')->with('layout', $layout);
+    }
 
-	/**
-	 * Mosta página como comprar.
-	 *
-	 * @return View
-	 */
-	public function contato() {
+    /**
+     * Mosta página como comprar.
+     *
+     * @return View
+     */
+    public function contato() {
 
-		$layout = $this -> layout -> classes('0');
-		return view('home.index') -> with('title', STORE_NAME . ' Contato') -> with('page', 'contato') -> with('ativo', 'Contato') -> with('rota', 'contato.html') -> with('layout', $layout);
-	}
+        $layout = $this->layout->classes('0');
+        return view('home.index')->with('title', STORE_NAME . ' Contato')->with('page', 'contato')->with('ativo', 'Contato')->with('rota', 'contato.html')->with('layout', $layout);
+    }
 
 }
