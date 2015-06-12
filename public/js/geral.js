@@ -227,6 +227,7 @@ function CheckCadastro() {
 function Calculadora(current_id, categoria) {
     $('#escolhido').val(current_id);
     $('#nome_categoria').val(categoria);
+    $('#modal_escolhido').html(categoria);
     var URL = $('#calc').attr('action');
     $('#categ_selecionada').val(categoria);
     var formulario = $('#calc').serializeArray();
@@ -255,7 +256,7 @@ function Calculadora(current_id, categoria) {
                 } else {
                     $('.listview .list.fg-white').each(function(i) {
                         $(this).attr('class', 'list bg-gray fg-white btn-detalhes');
-                   });
+                    });
                     $.each(obj, function(key, val) {
                         /*if (key === 'informacao' && val.info !== '') {
                          $('#info_calculadora').addClass('notice marker-on-bottom bg-cyan fg-white');
@@ -579,7 +580,8 @@ function EscolhaPerfil() {
                 var button = '';
                 if (data.info !== 'erro') {
                     $.each(data, function(key, val) {
-                        div += '<div class="row fluid">';
+                        div += '<div class="row">';
+                        div += '<div class="col-md-12">';
                         $.each(val, function(k, item) {
                             //alert(item.nome_perfil);
                             button += '<div class="umquarto bg-dark">\n\
@@ -588,7 +590,7 @@ function EscolhaPerfil() {
                                         <span class="pull-lef text-medio">' + item.nome_perfil + '</span>\n\
                                 </button></div>';
                         });
-                        div += button + '</div><div class="clearfix"></div>';
+                        div += button + '</div></div>';
                         button = '';
                     });
                     $('#listview').html(div);
@@ -872,10 +874,13 @@ function SetaFreteOrcamento(tipo, id) {
     $('#vl_total_final').text(parseFloat(vl_final.replace(",", ".")) + parseFloat(vl_frete));
     //$('#form_orcamento').attr('action', 'produtos/orcamento');
     //$('#form_orcamento').submit();
-    $('#info_correio').html('Aguarde enquanto redirecionamos para o portfólio ...');
-    $('#info_correio').fadeIn(800);
-    $('#info_correio').delay(1000).fadeOut(400, function() {
-        EditarTemplates('1');
+    $('#info_correio').html('<p class="text-warning">Aguarde enquanto redirecionamos para o portfólio ...</p>');
+    $('#info_correio').fadeIn(400);
+    $('#info_correio').delay(4000).fadeOut(400, function() {
+        var action = 'produtos/portfolio.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        $('#form_orcamento').submit();
     });
 
 }
