@@ -28,20 +28,19 @@ function search_verifica()
 function EnderecoCEP() {
 
     var whoo = "formtipoconta";
-    //overlay('on', whoo);
+
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
-    if ($.trim($("#postcode").val()) !== "")
-    {
+    if ($.trim($("#postcode").val()) !== "") {
         CEP = $.trim($("#postcode").val());
         $('#mensagem_' + whoo).removeClass('errormsg alert');
         $('#info_' + whoo).removeClass('infomsg alert');
-        $.get("http://apps.widenet.com.br/busca-cep/api/cep.json", {code: CEP.replace("-", "")}, function(result) {
-            //{
 
+        // $.getScript("http://cep.republicavirtual.com.br/web_cep.php?formato=javascript&cep=" + CEP.replace("-", ""), function()
+        $.get("https://apps.widenet.com.br/busca-cep/api/cep.json", {code: CEP.replace("-", "")}, function(result) {
             if (result.status !== 1) {
                 alert("Endereço não encontrado para o cep informado " + CEP);
-                overlay('off', whoo);
+
                 return;
             }
             var longstring = result.address;
@@ -58,13 +57,17 @@ function EnderecoCEP() {
         $('#mensagem_' + whoo).html('ERRO!');
         $('#mensagem_' + whoo).delay(2000).fadeOut(500);
         $('#info_' + whoo).addClass('infomsg alert');
-        $('#info_' + whoo).html('Por favor! Informe um endereço postal pertinente.');
+        $('#info_' + whoo).html('<p class="alert alert-warning">Por favor! Informe um endereço postal pertinente.</p>');
         $('#' + whoo).css({
             opacity: 1
         });
+
         $("#postcode").focus();
+
     }
 }
+
+
 /*-----------------------------------------------------------------------------------*/
 /*  verifica se dados postados para nova conta atende regras
  /*-----------------------------------------------------------------------------------*/
@@ -78,15 +81,16 @@ function ValidaTipoConta(whoo, URL) {
         });
         $('#mensagem_' + whoo).html('');
         $('#info_' + whoo).html('');
-        //overlay('on', whoo);
-        $('#mensagem_' + whoo).addClass('errormsg alert');
+
+        $('#mensagem_' + whoo).addClass('alert alert-danger');
         $('#mensagem_' + whoo).html('ERRO!');
         $('#mensagem_' + whoo).fadeOut(800, function() {
             $('#enviando_' + whoo).delay(1000).fadeOut(500);
-            $('#info_' + whoo).addClass('infomsg alert');
-            $('#info_' + whoo).html('Por favor! Informe um endereço postal pertinente.');
-            //overlay('off', whoo);
-            $('#info_' + whoo).delay(2000).fadeOut(400);
+            $('#info_' + whoo).addClass('alert');
+            $('#info_' + whoo).html('<p class="alert alert-warning">Por favor! Informe um endereço postal pertinente.</p>');
+
+
+            //$('#info_' + whoo).delay(2000).fadeOut(400);
             $('#postcode').focus();
         });
     } else {
@@ -96,6 +100,7 @@ function ValidaTipoConta(whoo, URL) {
         });
         $('#mensagem_' + whoo).html('');
         $('#info_' + whoo).html('');
+
         var formulario = $('#' + whoo).serializeArray();
         ///encaminha os dados
         $.post(URL, formulario, function(data) {
@@ -103,15 +108,17 @@ function ValidaTipoConta(whoo, URL) {
             var obj = JSON.parse(data);
             if (obj.status === 'fail') {
                 //se houver falha
-                $('#mensagem_' + whoo).addClass('errormsg alert');
+
+                $('#mensagem_' + whoo).addClass('alert alert-danger');
                 $('#mensagem_' + whoo).html('ERRO!');
                 $('#mensagem_' + whoo).fadeOut(800, function() {
                     $('#enviando_' + whoo).delay(1000).fadeOut(500);
+                    //$('#info_' + whoo).addClass('infomsg alert');
                     var li = '';
                     obj.erro.forEach(function(entry) {
                         li += '<li>' + entry + '</li>';
                     });
-                    $('#info_' + whoo).removeClass('infomsg alert');
+                    $('#info_' + whoo).removeClass('alert');
                     $('#info_' + whoo).html('<ul>' + li + '</ul>');
                     $('#info_' + whoo).css('display', 'block');
                     $('#' + whoo).css({
@@ -125,19 +132,19 @@ function ValidaTipoConta(whoo, URL) {
                     opacity: 1
                 });
                 $('#enviando_' + whoo).delay(1000).fadeOut(500);
-                $('#mensagem_' + whoo).removeClass('errormsg alert');
-                $('#mensagem_' + whoo).addClass('successmsg alert');
-                $('#mensagem_' + whoo).html('SUCESSO! Dados validados corretamente.');
+                $('#mensagem_' + whoo).removeClass('alert alert-warning');
+                $('#mensagem_' + whoo).addClass('alert');
+                $('#mensagem_' + whoo).html('<p class="alert alert-success">SUCESSO! Dados validados corretamente.</p>');
                 $('#mensagem_' + whoo).delay(1200).fadeOut(800, function() {
                     $('#info_' + whoo).html(obj.info);
                 });
                 $('#info_' + whoo).delay(1200).fadeOut(400, function() {
                     $('#mensagem_' + whoo).html('');
-                    $('#info_' + whoo).removeClass('infomsg alert');
+                    $('#info_' + whoo).removeClass('alert');
                     $('#info_' + whoo).html('');
-                    $('#info_' + whoo).addClass('infomsg alert');
+                    $('#info_' + whoo).addClass('alert');
                     $('#' + whoo).attr('action', obj.loadurl);
-                    $('#info_' + whoo).html('Aguarde finalizando o cadastro e redirecionando ...');
+                    $('#info_' + whoo).html('<p class="alert-success">Aguarde finalizando o cadastro e redirecionando ...</p>');
                     $('#info_' + whoo).fadeIn(800);
                     $('#info_' + whoo).delay(1000).fadeOut(400, function() {
                         $('#' + whoo).submit();
@@ -160,7 +167,7 @@ function CheckCadastro() {
     });
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
-    overlay('on', whoo);
+
     var formulario = $('#' + whoo).serializeArray();
     var URL = $('#' + whoo).attr('action');
     ///encaminha os dados
@@ -169,7 +176,7 @@ function CheckCadastro() {
         var obj = JSON.parse(data);
         if (obj.status === 'fail') {
 ///se houver falhsa
-            overlay('off', whoo);
+
             $('#mensagem_' + whoo).addClass('errormsg alert');
             $('#mensagem_' + whoo).html('ERRO!');
             $('#enviando_' + whoo).delay(1000).fadeOut(500);
@@ -716,6 +723,22 @@ function VerPortfolio() {
     //   });
     //});
 }
+
+/*-----------------------------------------------------------------------------------*/
+/*  VerPortfolio
+ /*-----------------------------------------------------------------------------------*/
+function EnviarPDF(guest) {
+    var action = 'produtos/enviarpdf.html';
+    if (guest === '1') {
+        $('#logar').slideUp('fast');
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        $('#form_orcamento').submit();
+    } else {
+        $('#logar').slideDown('fast');
+    }
+    //});
+}
 /*-----------------------------------------------------------------------------------*/
 /*  AdicionarCarrinho 
  /*-----------------------------------------------------------------------------------*/
@@ -765,7 +788,19 @@ function EditarTemplates(guest) {
     }
 
 }
-
+function ImprimirOrcamento(guest) {
+    if (guest === '1') {
+        $('#logar').css('display', 'none');
+        var action = 'produtos/orcamento.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        //$('#lista_perfis').delay(2000).fadeOut(400, function() {
+        $('#cupom_frete').css('display', 'block');
+        //});
+    } else {
+        $('#logar').slideDown('fast');
+    }
+}
 /*-----------------------------------------------------------------------------------*/
 /*  BasketSubmeter
  /*-----------------------------------------------------------------------------------*/
@@ -850,16 +885,18 @@ function SetaFreteOrcamento(tipo, id) {
     $('#vl_frete_final').text(vl_frete);
     $('#vl_final').text(vl_final);
     $('#orc_tipo_frete').val(vl_frete);
-    $('#vl_frete_escolhido').val(vl_frete);
+    $('#vl_frete_escolhido').val('R$ ' + vl_frete);
     $('#tipo_frete').val(tipo);
     $('#tipo_escolha_frete').html(tipo);
     $('#escolha_frete').html('R$ ' + vl_frete);
     $('#vl_frete_escolhido').val(vl_frete);
     $('#tipo_frete_escolhido').val(tipo);
-    $('#label_frete').fadeIn(400);
-    $('#vl_total_final').text(parseFloat(vl_final.replace(",", ".")) + parseFloat(vl_frete));
-    //$('#form_orcamento').attr('action', 'produtos/orcamento');
-    //$('#form_orcamento').submit();
+    $('#label_frete').css('display', 'block');
+    $('#btn-opcoes').css('display', 'block');
+    $('#vl_total_final').html('R$ ' + parseFloat(vl_final.replace(",", ".")) + parseFloat(vl_frete));
+
+}
+function Comprar() {
     $('#info_correio').html('<p class="text-warning">Aguarde enquanto redirecionamos para o portfólio ...</p>');
     $('#info_correio').fadeIn(400);
     $('#info_correio').delay(4000).fadeOut(400, function() {
@@ -868,7 +905,6 @@ function SetaFreteOrcamento(tipo, id) {
         $('#form_orcamento').attr('method', 'post');
         $('#form_orcamento').submit();
     });
-
 }
 /*-----------------------------------------------------------------------------------*/
 /*  Desconto
@@ -993,16 +1029,19 @@ function RemoverItem(product)
 {
     $.get('basket/remover', {'product_id': product}, function(result) {
         console.log(result);
+
         var obj = JSON.parse(result);
-        if (obj.action === true) {
+        if (obj.reload === 'true') {
             $('#info_carrinho').html('<div class="alert alert-success" role="alert"><p class="text-info">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
+            $('#info_carrinho').delay(5000).fadeIn('slow', function() {
+                window.location.href = 'carrinho/lista.html'
+            });
         } else {
             $('#info_carrinho').html('<div class="alert alert-warning" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
         }
-        $('#info_carrinho').delay(5000, function() {
-            document.location.reload(true);
-        });
+
     });
+
 }
 /*******************************************************
  ***     script para controle da página de resumo    ***

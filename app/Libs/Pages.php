@@ -31,6 +31,7 @@ Class Pages {
             'detalhes' => 'produtos.pages.detalhes',
             'categoria' => 'produtos.pages.categorias',
             'busca' => 'produtos.pages.buscas',
+            'enviarpdf' => 'produtos.pages.enviarpdf',
             'novidadesnaocadastradas' => 'produtos.pages.novidadesnaocadastradas',
             'naocadastrado' => 'produtos.pages.naocadastrado',
             'catnaocadastrado' => 'produtos.pages.catnaocadastrado',
