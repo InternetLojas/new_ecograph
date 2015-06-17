@@ -49,22 +49,6 @@ class HomeController extends Controller {
                         ->with('layout', $layout);
     }
 
-    /**
-     * Mosta página brindes.
-     *
-     * @return View
-     */
-    public function brindes() {
-
-        $cat_brindes = CategoryDescription::where('categories_name', 'Brindes')->get();
-        $brindes = $cat_brindes->toarray();
-
-        $categorias = Category::where('parent_id', $brindes[0]['id'])->get();
-
-        $layout = $this->layout->classes('0');
-        return view('home.index')->with('title', STORE_NAME . ' Brindes sensacionais')->with('page', 'brindes')->with('ativo', 'Brindes')->with('brindes', $categorias->toarray())->with('rota', '/brindes')->with('layout', $layout);
-    }
-
     public function missao() {
         $layout = $this->layout->classes('0');
         return view('home.index')->with('title', ' Missão da ' . STORE_NAME)->with('page', 'missao')->with('ativo', 'Nossa Missão')->with('rota', '/missao.html')->with('layout', $layout);

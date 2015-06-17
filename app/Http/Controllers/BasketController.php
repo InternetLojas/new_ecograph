@@ -119,6 +119,14 @@ class BasketController extends Controller {
                             ->with('cart_total', Cart::total())
                             ->with('rota', 'carrinho.html')
                             ->with('layout', $layout);
+        } else {
+            $layout = $this->layout->classes(0);
+            return view('clientes.index')
+                            ->with('title', STORE_NAME . ' Carrinho Vazio')
+                            ->with('page', 'carrinhovazio')
+                            ->with('ativo', 'Carrinho Vazio')
+                            ->with('rota', 'carrinho/lista.html')
+                            ->with('layout', $layout);
         }
     }
 
@@ -265,17 +273,18 @@ class BasketController extends Controller {
     public function Remover() {
         $parans = \Request::all();
         $content = Cart::content();
+        //dd($content);
         foreach ($content as $item) {
-            if ($parans['product_id'] == $item->id) {
+            if ($item->id == $parans['product_id']) {
                 //Cart::update($item->rowid, array('quatity' => $parans['quantity']));
                 $carrinho = $this->basket
                         ->where('customer_id', Auth::user()->id)
                         ->where('products_id', $parans['product_id'])
-                        ->get();
-                // dd($carrinho);
-                foreach ($carrinho as $items) {
-                    $id = $items->id;
-                }
+                        ->lists('id');
+                //dd($carrinho);
+                //foreach ($carrinho as $items) {
+                $id = $carrinho[0]['id'];
+                //}
                 //elimina os item do carrinho
                 $this->basket_item->where('basket_id', $id)->delete();
                 //elimina a entrada com a linha de produto do carrinho
@@ -283,13 +292,15 @@ class BasketController extends Controller {
                         ->where('customer_id', Auth::user()->id)
                         ->where('products_id', $parans['product_id'])->delete();
                 $rowId = $item->rowid;
-                break;
+                Cart::remove($rowId);
+                return json_encode(array(
+                    'reload' => 'true',
+                    'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
             }
         }
-        Cart::remove($rowId);
+        //Cart::remove($rowId);
         //Session::put('success', 'Item atualizado com sucesso!');
         //if (Cart::count() > 0) {
-        return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
         //} 
     }
 

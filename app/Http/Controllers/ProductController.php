@@ -19,7 +19,7 @@ use Ecograph\Papel;
 use Ecograph\Acabamento;
 use Ecograph\Pacformato;
 use Ecograph\Pacote;
-use Ecograph\Perfil;
+use Cart;
 use Ecograph\ProdutoPerfil;
 use Ecograph\Category;
 use Ecograph\CategoryProduct;
@@ -64,18 +64,17 @@ class ProductController extends Controller {
                 $listagem[] = array($item['id'], $item['nome_filho']);
             }
         }
-        $solicitado = array('pai' => '1', 
-            'filho' => '5', 
+        $solicitado = array('pai' => '1',
+            'filho' => '5',
             'nome_html' => 'cartao-visita.html');
         return view('produtos.index')
-                ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
-                ->with('page', 'vitrine')
-                ->with('ativo', 'Vitrine')
-                ->with('listagem', $listagem)
-                ->with('solicitado', $solicitado)
-                ->with('rota', '/produtos/portfolio.html')
-                ->with('layout', $layout);
-     
+                        ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
+                        ->with('page', 'vitrine')
+                        ->with('ativo', 'Vitrine')
+                        ->with('listagem', $listagem)
+                        ->with('solicitado', $solicitado)
+                        ->with('rota', '/produtos/portfolio.html')
+                        ->with('layout', $layout);
     }
 
     /**
@@ -114,12 +113,12 @@ class ProductController extends Controller {
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($pai);
         return view('produtos.index')
-                ->with('title', STORE_NAME)
-                ->with('page', 'imprimir')
-                ->with('post_inputs', $post_inputs)
-                ->with('ativo', 'teste')
-                ->with('layout', $layout)
-                ->with('rota', 'portfolio/');
+                        ->with('title', STORE_NAME)
+                        ->with('page', 'imprimir')
+                        ->with('post_inputs', $post_inputs)
+                        ->with('ativo', 'teste')
+                        ->with('layout', $layout)
+                        ->with('rota', 'portfolio/');
     }
 
     /**
@@ -305,7 +304,7 @@ class ProductController extends Controller {
                     ->orderby('created_at')
                     ->paginate(NR_PRODUTOS_POR_PAGINA);
         }
-        
+
         $path = $perfis_produtos->setPath('produtos/portfolio.html');
 
         //$produtos = $perfis_produtos->toarray();
@@ -326,6 +325,27 @@ class ProductController extends Controller {
         } else {
             echo 'sem produtos';
         }
+    }
+
+    /**
+     * *
+     * apresenta a página prodtuos
+     * @return view
+     */
+    public function EnviarPDF(Request $request) {
+        $post_inputs = $request->all();
+        //dd($post_inputs);
+        $layout = $this->layout->classes('0');
+        $contents = Cart::content();
+        //dd($contents);
+        return view('produtos.index')
+                        ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
+                        ->with('page', 'enviarpdf')
+                        ->with('ativo', 'Enviar PDF')
+                        ->with('contents', $contents->toarray())
+                        ->with('post_inputs', $post_inputs)
+                        ->with('rota', '/produtos/enviarpdf.html')
+                        ->with('layout', $layout);
     }
 
 }

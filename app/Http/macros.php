@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Ecograph\Category;
 
@@ -286,20 +286,52 @@ HTML::macro('lista_categorias', function($id) {
 
     $html = '';
     $filhos = Category::filhos($id);
-    foreach(Utilidades::Agrupa($filhos->toarray(), '3','busca') as $row){
+    foreach (Utilidades::Agrupa($filhos->toarray(), '3', 'busca') as $row) {
         $html .= '<p>';
-    $html .= '<ol class="inline fg-white text-left ">';
-    foreach ($row as $key => $items) {
-        $html .= '<li class="">';
-        $html .= '<i class="icon-arrow-right-5  on-left"></i>';
-        $html .= '<a class="fg-white" id="' . $items['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $id . '/' . $items['id'] . '/' . URLAmigaveis::Slug(Fichas::nomeCategoria($items['id']), '-', true) . '.html">' . Fichas::nomeCategoria($items['id']) . '</a>';
-        $html .= '</li>';
+        $html .= '<ol class="inline fg-white text-left ">';
+        foreach ($row as $key => $items) {
+            $html .= '<li class="">';
+            $html .= '<i class="icon-arrow-right-5  on-left"></i>';
+            $html .= '<a class="fg-white" id="' . $items['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $id . '/' . $items['id'] . '/' . URLAmigaveis::Slug(Fichas::nomeCategoria($items['id']), '-', true) . '.html">' . Fichas::nomeCategoria($items['id']) . '</a>';
+            $html .= '</li>';
+        }
+        $html .= '</ol></p>';
     }
-    $html .= '</ol></p>';
-}
     return $html;
 });
 
+HTML::macro('orcamento_categorias', function() {
+    $categorias = Category::all()->where('id','<>','1')->lists('id');
+
+    $html = '';
+    //dd($array_categ);
+    foreach (Utilidades::Agrupa($categorias, '6', 'busca') as $row) {
+        $html .= '<div class="row">';
+        $html .= '<ul class="list-unstyled list-inline text-left text-medio">';
+        foreach ($row as $key => $items) {
+            $html .= '<li class="col-md-2 pd-5">';
+            $html .= '<input type="radio" name="categoria" value="' . $items . '" >';
+
+            $html .= '<span class="mg-left5">' . Fichas::nomeCategoria($items) . '</span>';
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        $html .= '</div>';
+    }
+    return $html;
+
+    /* $html = '';
+      foreach ($lista as $categorias) {
+      $html .= ' <ul class="list-unstyled list-inline text-center text-muted">';
+      foreach ($categorias['prole']['filhos'] as $item) {
+      $html .= '<li class="afasta">';
+      $html .= '<a class="text-medio" title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a> | ';
+      $html .='</li>';
+      }
+      $html .= '</ul>';
+      }
+      return $html; */
+});
 HTML::macro('slider', function($group) {
 
     $html = '';
@@ -379,7 +411,7 @@ HTML::macro('lista_sub_categorias', function($lista) {
         $html .= ' <ul class="list-unstyled list-inline text-center text-muted">';
         foreach ($categorias['prole']['filhos'] as $item) {
             $html .= '<li class="afasta">';
-            $html .= '<a title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a> | ';
+            $html .= '<a class="text-medio" title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a> | ';
             $html .='</li>';
         }
         $html .= '</ul>';

@@ -12,6 +12,7 @@ use Validator;
 use Ecograph\Customer;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
+use Ecograph\Libs\Utilidades;
 
 class CustomerController extends Controller {
 
@@ -33,7 +34,7 @@ class CustomerController extends Controller {
      * @return view
      */
     public function Login() {
-        
+
         $layout = $this->layout->classes('0');
         $layout['color_bg_footer'] = '#003366';
         return view('clientes.index')
@@ -149,40 +150,35 @@ class CustomerController extends Controller {
      * utiliza função javascript CheckCadastro() para validacao
      * @return json
      */
-    public function Cadastro() {
+    public function Cadastro(Request $request) {
         $erros = array();
         //check if its our form
-        if (Session::token() !== Input::get('_token')) {
-            $erros[] = 'Esse formulário ja havia sido postado.';
-            $data = array('status' => 'fail', 'info' => 'Erro de sessão', 'erro' => $erros, 'loadurl' => '');
-            return json_encode($data);
-            //return Response::json($data);
-        }
+        $post_inputs = $request->all($request->except('_token', 'customers_cpf_cnpj', 'email', 'agree'));
+
         //regras a serem validadas
         $rules = Customer::$rules;
-        $customers_pf_pj = Input::get('customers_pf_pj');
+        $customers_pf_pj = $post_inputs['customers_pf_pj'];
         if (!empty($customers_pf_pj) && $customers_pf_pj == 'f') {
-            if (!Utilidades::validate_cpf(Input::get('customers_cpf_cnpj'))) {
+            if (!Utilidades::validate_cpf($post_inputs['customers_cpf_cnpj'])) {
                 $erros[] = 'CPF no formato errado.';
             }
         } else {
-            if (!Utilidades::validate_cnpj(Input::get('customers_cpf_cnpj'))) {
+            if (!Utilidades::validate_cnpj($post_inputs['customers_cpf_cnpj'])) {
                 $erros[] = 'CNPJ no formato errado';
             }
             $rules['entry_company'] = 'required|regex:/^[a-zA-Z\s]*$/|min:5|max:120';
             $rules['entry_fantasia'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
         }
-        if (!Utilidades::validate_email(Input::get('email'))) {
+        if (!Utilidades::validate_email($post_inputs['email'])) {
             //    echo 'aquiii';exit;
             $erros[] = 'O seu email parece não estar no formato correto.';
         } else {
-            $check_email = Customer::where('email', Input::get('email'))->lists('id');
+            $check_email = Customer::where('email', $post_inputs['email'])->lists('id');
             if (count($check_email) > 0) {
                 $erros[] = 'Esse email ja está cadastrado.';
             }
         }
 
-        $post_inputs = Input::all(Input::except('_token', 'customers_cpf_cnpj', 'email', 'agree'));
 
         //verfica se os dois telefones - fixo e celular estão vazios
         if ($post_inputs['customers_telephone'] == '' && $post_inputs['customers_cel'] == '') {
@@ -287,6 +283,22 @@ class CustomerController extends Controller {
             }
         }
         return json_encode($data);
+    }
+
+    /**
+     * Mosta página orcamento.
+     *
+     * @return View
+     */
+    public function Orcamento() {
+        //dd(\Auth::user());
+        $layout = \Layout::classes(0);
+        return view('clientes.index')
+                        ->with('title', STORE_NAME . ' Monte seu orçamento')
+                        ->with('page', 'orcamento')
+                        ->with('ativo', 'Orcamento')
+                        ->with('rota', 'orcamento.html')
+                        ->with('layout', $layout);
     }
 
 }

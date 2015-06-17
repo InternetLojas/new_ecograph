@@ -56,9 +56,9 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'ProductController@Produtos'
     ]);
 
-    Route::get('orcamentos.html', [
-        'as' => '/orcamentos',
-        'uses' => 'HomeController@orcamentos'
+    Route::get('orcamento.html', [
+        'as' => 'orcamento',
+        'uses' => 'CustomerController@orcamento'
     ]);
     Route::get('como-comprar.html', [
         'as' => 'comocomprar',
@@ -122,7 +122,7 @@ Route::post('criarconta', array(
 /* * *quando o cliente preenche o cadastro e envia os dados* */
 Route::post('cadastro.html', array(
     "as" => 'cadastro.cadastro',
-    "uses" => 'CustomersController@Cadastro'
+    "uses" => 'CustomerController@Cadastro'
 ));
 
 /* * *verifica o cupom informado e dá o desconto* */
@@ -145,6 +145,10 @@ Route::group(['prefix' => 'produtos'], function() {
     Route::post('portfolio.html', [
         'as' => 'produtos.portfolio',
         'uses' => 'ProductController@Listagem'
+    ]);
+    Route::post('enviarpdf.html', [
+        'as' => 'produtos.enviarpdf',
+        'uses' => 'ProductController@EnviarPDF'
     ]);
     Route::get('portfolio.html', [
         'as' => 'produtos.index',
