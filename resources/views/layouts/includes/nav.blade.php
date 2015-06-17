@@ -1,6 +1,6 @@
 <!--navigation -->
 <nav class="wrapper" role="navigation" >
-    <ul class="list-unstyled list-inline text-center">
+    <ul class="list-unstyled list-inline text-center text-medio">
         <li class="col-md-2">
             <a class="fg-gray @if($page=='home')active @endif user" href="{!! URL::to('/') !!}" title ='Início'> <span>Home</span> </a>
         </li>

@@ -1,5 +1,7 @@
 <!-- EDIÇÃO-->
 <div class="section">
-    <!--============================== banner =================================-->
-    @include('layouts.contents.edicao')
+    <div class="destaque_home">
+        <!--============================== banner =================================-->
+        @include('layouts.contents.edicao')
+    </div>
 </div>

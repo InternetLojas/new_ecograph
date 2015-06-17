@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalVerificando"> 
+<div class="modal fade" id="modal"> 
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

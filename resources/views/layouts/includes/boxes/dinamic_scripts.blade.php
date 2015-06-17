@@ -171,25 +171,25 @@
 //postagem do formulário de cadastro
                     var $btn_cadastro = $('#btn_cadastro');
                     $btn_cadastro.on('click', function() {
-                    whoo = 'cadastro';
-                            if (!$('#agree').is(':checked')) {
-                    $('#concorde').css('display', 'block');
-                            $('#mensagem_' + whoo).html('');
-                            $('#info_' + whoo).html('');
-                            overlay('on', whoo);
-                            $('#info_' + whoo).removeClass('errormsg alert');
-                            $('#info' + whoo).removeClass('infomsg alert');
-                            $('#mensagem_' + whoo).removeClass('errormsg alert');
-                            //$('#mensagem_' + whoo).addClass('errormsg alert');
-                            //$('#mensagem_' + whoo).html('ERRO!');
-                            //$('#mensagem_' + whoo).fadeOut(800, function() {                                   
-                            $('#info_' + whoo).addClass('infomsg alert');
-                            $('#info_' + whoo).html('Por favor! É necessário que você concorde com as regras de uso.');
-                            //});
-                            $('#info_' + whoo).delay(3000).fadeOut(400);
-                            overlay('off', whoo);
+                    var whoo = 'cadastro';
+                    if (!$('#agree').is(':checked')) {
+                                $('#concorde').css('display', 'block');
+                                $('#mensagem_' + whoo).html('');
+                                $('#info_' + whoo).html('');
+
+                                $('#info_' + whoo).removeClass('alert');
+                                $('#info' + whoo).removeClass('alert');
+                                $('#mensagem_' + whoo).removeClass('alert');
+                                //$('#mensagem_' + whoo).addClass('errormsg alert');
+                                //$('#mensagem_' + whoo).html('ERRO!');
+                                //$('#mensagem_' + whoo).fadeOut(800, function() {                                   
+                                $('#info_' + whoo).addClass('alert');
+                                $('#info_' + whoo).html('<p class="alert-warning">Por favor! É necessário que você concorde com as regras de uso.</p>');
+                                //});
+                                $('#info_' + whoo).fadeIn('fast');
+                            //overlay('off', whoo);
                             //mostra os erros contidos no formulário de cadastro              
-                            $("#modal-erros").modal('show');
+                            //$("#modal-erros").modal('show');
                             return false;
                     }
                     CheckCadastro();

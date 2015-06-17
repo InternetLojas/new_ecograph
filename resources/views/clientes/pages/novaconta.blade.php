@@ -1,9 +1,7 @@
 <!-- CADASTRO-->
 <div class="section">
-    <div class="container">
-        <!--============================== banner =================================-->
-        <div class="wrapper">  
-            @include('layouts.contents.novaconta')
-        </div>
+    <div class="destaque_home">
+        <!--============================== banner =================================-->   
+        @include('layouts.contents.novaconta')
     </div>
 </div>

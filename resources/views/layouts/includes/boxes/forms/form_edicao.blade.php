@@ -12,7 +12,7 @@
         <input type="text" name="cargo" class="form-control no-radius" placeholder="Seu cargo"/>
     </div>
     <div class="form-group" data-role="input-control" >
-        <input type="tel" name="cel1" value="{!!$customer['customers_ddd2']!!} {!!$customer['customers_cel']!!}" class="form-control no-radius" placeholder="Celular/>
+        <input type="tel" name="cel1" value="{!!$customer['customers_ddd2']!!} {!!$customer['customers_cel']!!}" class="form-control no-radius" placeholder="Celular" />
     </div>
     <div class="form-group" data-role="input-control" >
         <input type="tel" name="cel2" value="" class="form-control no-radius" placeholder="Celular"/>

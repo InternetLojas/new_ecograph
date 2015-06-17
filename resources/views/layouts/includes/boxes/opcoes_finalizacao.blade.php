@@ -12,7 +12,7 @@
 </div>
 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 span2 text-center text-medio">
     <img src="images/theme/printer.jpg" alt="calculadora.png" class="img-responsive" />
-    <button type="button" class="btn  bg-green fg-white no-radius" title="Crie um orçamento exclusivo" onclick="EditarTemplates(@if (Auth::guest()) '0' @else '1' @endif);"  >
+    <button type="button" class="btn  bg-green fg-white no-radius" title="Crie um orçamento exclusivo" onclick="ImprimirOrcamento(@if (Auth::guest()) '0' @else '1' @endif);"  >
         IMPRIMI ORC
     </button>
 </div>
@@ -20,13 +20,13 @@
     <ul class="nav nav-stacked nav-tabs text-medio">
         <li>
             <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg"  class="img-responsive" />
-            <button type="button" class="btn  bg-smallgray btn-lg no-radius" title="Deixe que criamos sua arte" id="btn_comprar" onclick=""  >
+            <button type="button" class="btn  bg-smallgray btn-lg no-radius" title="Deixe que criamos sua arte" id="btn_comprar"  >
                 <small>Personalizar nossos desenhos</small>                    
             </button>
         </li>
         <li>
             <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
-            <button type="button" class="btn btn-block bg-smallgray btn-lg no-radius" title="Envie seu arquivo PDF" id="btn_upload" onclick="(@if (Auth::guest()) '0' @else '1' @endif);"  >
+            <button type="button" class="btn btn-block bg-smallgray btn-lg no-radius" tile="Envie seu arquivo PDF" onclick="EnviarPDF(@if (Auth::guest()) '0' @else '1' @endif);;"  >
                 <small>Envie seu arquivo PDF.</small>
             </button>
         </li>

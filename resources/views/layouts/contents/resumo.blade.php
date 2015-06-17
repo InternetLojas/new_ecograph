@@ -8,6 +8,7 @@
         <h3><span class="text-medio">Loja:produto</span><br>Cesta de compras</h3>
     </div>
 </div>
+<div id="info_carrinho"></div>
 <!--================= tabela dos produtos do carrinho ===================-->
 @include('layouts.includes.carrinho.itens_carrinho')
 @include('layouts.includes.boxes.forms.form_carrinho')

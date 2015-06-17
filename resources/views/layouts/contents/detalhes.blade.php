@@ -1,9 +1,8 @@
 <div class="title_content">
-    <p class="uppercase">
+    <p class="uppercase bold">
         <img src="images/icons/calculadora.png" width="35" alt="calculadora.png" />
         Calculadora Online - 
-        <span id="nome_escolhido"></span><br>
-        
+        <span id="nome_escolhido"></span><br>        
     </p>
     <span style="font-size:90%">Selecione as opções:</span>
 </div>

@@ -1,5 +1,5 @@
 <!-- DETALHES-->
-<div class="section">
+<div class="row">
     <div class="destaque_home">
         <!--============================== content =================================-->
         <div class="col-md-3 col-lg-3">
