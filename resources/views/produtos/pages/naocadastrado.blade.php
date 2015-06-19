@@ -1,7 +1,7 @@
-<div class="page-region-content">
-    <div class="grid fluid">
-        <div class="row"> 
-            @include('layouts.contents.naocadastrado')
-        </div>
+<!-- LISTAGEM-->
+<div class="section">
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+        @include('layouts.contents.naocadastrado')
     </div>
 </div>

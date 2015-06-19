@@ -1,8 +1,7 @@
-
-<div class="page-region-content">
-    <div class="grid fluid">
-        <div class="row"> 
-            @include('layouts.contents.imprimir')
-        </div>
+<!-- LISTAGEM-->
+<div class="section">
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+        @include('layouts.contents.imprimir')
     </div>
 </div>
