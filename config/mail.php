@@ -81,7 +81,7 @@ return [
 	|
 	*/
 
-	'username' => env('newsite@ecograph.com.br'),
+	'username' => env('MAIL_USERNAME','newsite@ecograph.com.br'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return [
 	|
 	*/
 
-	'password' => env('Senha123Teste'),
+	'password' => env('MAIL_PASSWORD','Senha123Teste'),
 
 	/*
 	|--------------------------------------------------------------------------

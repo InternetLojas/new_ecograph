@@ -3,7 +3,7 @@
  /*-----------------------------------------------------------------------------------*/
 function search_verifica()
 {
-    alert('sdjklfjdsf');
+   
     var strMensagem;
     strMensagem = '';
     if (document.search.keyword.value.length < 2) {
@@ -177,9 +177,9 @@ function CheckCadastro() {
         if (obj.status === 'fail') {
 ///se houver falhsa
 
-            $('#mensagem_' + whoo).addClass('errormsg alert');
-            $('#mensagem_' + whoo).html('ERRO!');
-            $('#enviando_' + whoo).delay(1000).fadeOut(500);
+            //$('#mensagem_' + whoo).addClass('errormsg alert');
+            //$('#mensagem_' + whoo).html('ERRO!');
+            $('#enviando_' + whoo).delay(3000).fadeOut(500);
             var li = '';
             obj.erro.forEach(function(entry) {
                 li += '<li>' + entry + '</li>';
@@ -192,7 +192,7 @@ function CheckCadastro() {
             });
             //mostra os erros contidos no formulário de cadastro              
             $("#modal-erros").modal('show');
-            $('#info_' + whoo).delay(2000).fadeOut(400);
+            //$('#info_' + whoo).delay(2000).fadeOut(400);
             return false;
         } else {
 ////se enviar estiver ok
@@ -232,6 +232,7 @@ function CheckCadastro() {
 /*  Calculadora
  /*-----------------------------------------------------------------------------------*/
 function Calculadora(current_id, categoria) {
+    $('#pdf').val('0');
     $('#escolhido').val(current_id);
     $('#nome_categoria').val(categoria);
     $('#modal_escolhido').html(categoria);
@@ -506,7 +507,9 @@ function CalculaPreco(categoria, localizador) {
  /*-----------------------------------------------------------------------------------*/
 function SetaEscolhas(localizador, imagem) {
     $('#especificacoes_selecionadas').slideDown('slow');
-    $('#all_produtos').fadeOut('slow');
+    $('#cupom_frete').css('display', 'none');
+    $('#resultado').css('display', 'none');
+    $('logar').css('display', 'none');
     var qtd = $('#qtd_' + localizador).text();
     var peso = $('#peso_selecionado_' + localizador).val();
     var preco = $('#preco_' + localizador).text();
@@ -582,7 +585,7 @@ function EscolhaPerfil() {
     $.getJSON(
             url_modal,
             function(data) {
-                //console.log(data);
+                console.log(data);
                 var div = '';
                 var button = '';
                 if (data.info !== 'erro') {
@@ -601,22 +604,16 @@ function EscolhaPerfil() {
                         button = '';
                     });
                     $('#listview').html(div);
-                    //$('#info_perfis').addClass('notice marker-on-bottom bg-orange fg-black');
-                    //$('#info_perfis').html('<p class="title"><i class="icon-smiley on-left"></i> Escolha um perfil que mais se adequa as suas necessidade.</p>');
-                    //$('#info_perfis').delay(3000).fadeOut(400, function() {
-                    //$('#especificacoes_selecionada').slideUp('fast');
-                    //});
-                    //$('#lista_perfis').slideUp('slow');
                     $('#info_perfis').delay(3000).fadeOut(400);
                     $('#lista_perfis').fadeIn(800);
                     $('#ModalPerfil').modal('show');
                 } else {
-                    //$('#listview').html(div);
-                    $('#info_perfis').addClass('notice marker-on-bottom bg-red fg-white');
-                    $('#info_perfis').html('<p class="title"><i class="icon-smiley on-left"></i> Ainda não existem perfis incorporados a essa categoria.</p>');
-                    $('#info_perfis').delay(3000).fadeOut(400, function() {
-                        $('.example.detalhes').slideDown('fast');
-                    });
+                    $('#listview').html();
+                    $('#info_perfis').addClass('alert');
+                    $('#info_perfis').html('<p class="alert alert-warning">Ainda não existem perfis incorporados a essa categoria.</p>');
+                    $('#info_perfis').delay(3000).fadeOut(400);
+                    $('#lista_perfis').fadeIn(800);
+                    $('#ModalPerfil').modal('show');
                 }
             });
 }
@@ -660,26 +657,28 @@ function GerarOrcamento() {
 /*  VerTemplate
  /*-----------------------------------------------------------------------------------*/
 function VerTemplate(id, nome) {
+    if (id === '') {
+        $('#ModalPerfil').modal('show');
+    }
     $('#orc_id_perfil').val(id);
     $('#orc_nome_perfil').val(nome);
     var token = $('#especificacoes_selecionada').attr('data-token');
     $('.token').val(token);
     $('#cupom_frete').slideDown('slow');
     $('#ModalPerfil').modal('hide');
-    //$('#lista_perfis').fadeOut(400);
-    //$('#image_finalizacao').css('display', 'block');
-    //$('#finalizacao').fadeIn(800);
-    //$('#btns').css('display', 'block');
-    //return false;
     var action = 'produtos/portfolio.html';
     $('#form_orcamento').attr('action', action);
     $('#form_orcamento').attr('method', 'post');
-    //return VerPortfolio();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  Encerrar
  /*-----------------------------------------------------------------------------------*/
 function Encerrar(step, logado) {
+    $('#cupom_frete').css('display','none');
+    $('#resultado').css('display','none');
+    $('#btn-opcoes').css('display','none');
+    $('#btn-opcao-pdf').css('display','none');
+     $('#pdf').val('0');
     if (logado) {
         $('#logar').css('display', 'none');
         if (step === 'orcar') {
@@ -687,9 +686,15 @@ function Encerrar(step, logado) {
             $('#form_orcamento').attr('action', action);
             $('#form_orcamento').attr('method', 'post');
             return CalcularFrete();
+        } else if (step === 'comprar') {
+            var action = 'produtos/portfolio.html';
+            $('#form_orcamento').attr('action', action);
+            $('#form_orcamento').attr('method', 'post');
+            EscolhaPerfil();
         } else {
             EscolhaPerfil();
         }
+
     } else {
         $('#logar').css('display', 'block');
     }
@@ -712,8 +717,8 @@ function VerPortfolio() {
     //var formulario = $('#form_orcamento').serializeArray();
     //$('#produto_id').val(produto_id);
     $('#portfolio').css('display', 'block');
-    $('#info_portfolio').addClass('fg-black');
-    $('#info_portfolio').html('<p class="text-warning lead"><i class="icon-smiley on-left"></i> Aguarde enquanto estamos redirecionando para o portfólio de produtos.</p>');
+    $('#info_portfolio').addClass('alert');
+    $('#info_portfolio').html('<p class="alert alert-info"> Aguarde enquanto estamos redirecionando para o portfólio de produtos.</p>');
     $('#info_portfolio').delay(3000).fadeOut(400, function() {
         $('#form_orcamento').submit();
     });
@@ -725,32 +730,40 @@ function VerPortfolio() {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/*  VerPortfolio
+/*  PDF
  /*-----------------------------------------------------------------------------------*/
+ function PDF(guest) { 
+      $('#cupom_frete').css('display','none');
+      $('#resultado').css('display','none');
+       $('#btn-opcao-pdf').css('display','none');
+       $('#btn-opcoes').css('display','none');
+ 
+    if (guest === '1') {
+        $('#logar').slideUp('fast');
+        token = $('#especificacoes_selecionada').attr('data-token');
+        $('.token').val(token);
+        $('#pdf').val('1');
+        $('#cupom_frete').slideDown('slow');
+    } else {
+        $('#logar').slideDown('fast');
+    }
+    
+}
 function EnviarPDF(guest) {
     var action = 'produtos/enviarpdf.html';
     if (guest === '1') {
         $('#logar').slideUp('fast');
+        token = $('#especificacoes_selecionada').attr('data-token');
+        $('.token').val(token);
         $('#form_orcamento').attr('action', action);
         $('#form_orcamento').attr('method', 'post');
         $('#form_orcamento').submit();
     } else {
         $('#logar').slideDown('fast');
     }
-    //});
+    
 }
-/*-----------------------------------------------------------------------------------*/
-/*  AdicionarCarrinho 
- /*-----------------------------------------------------------------------------------*/
-function AdicionaItemCarrinho() {
-    // $('#produto_id').val(produto_id);
-    var URL = 'adicionar';
-    var formulario = $('#basket').serializeArray();
-    $.post(URL, formulario, function(data) {
-        console.log(data);
-        $('#modalAdicionando').modal('show');
-    });
-}
+
 
 function Personalizar(produto_id) {
     $('#produto_id').val(produto_id);
@@ -789,51 +802,64 @@ function EditarTemplates(guest) {
 
 }
 function ImprimirOrcamento(guest) {
+     $('#cupom_frete').css('display','none');
+      $('#resultado').css('display','none');
+       $('#btn-opcao-pdf').css('display','none');
+       $('#btn-opcoes').css('display','none');
+     $('#pdf').val('0');
     if (guest === '1') {
         $('#logar').css('display', 'none');
         var action = 'produtos/orcamento.html';
         $('#form_orcamento').attr('action', action);
         $('#form_orcamento').attr('method', 'post');
-        //$('#lista_perfis').delay(2000).fadeOut(400, function() {
-        $('#cupom_frete').css('display', 'block');
-        //});
+        token = $('#especificacoes_selecionada').attr('data-token');
+        $('.token').val(token);
+        $('#cupom_frete').slideDown('slow');
     } else {
         $('#logar').slideDown('fast');
     }
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*  AdicionarCarrinho 
+ /*-----------------------------------------------------------------------------------*/
+function AdicionaItemCarrinho(produto_id) {
+    $('#produto_id').val(produto_id);
+    var URL = 'adicionar';
+    var formulario = $('#basket').serializeArray();
+    $.post(URL, formulario, function(data) {
+        $('#info_basket').addClass('alert alert-success');
+        $('#info_basket').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para a área de edição, Por favor aguarde...</p>');
+        $('#info_basket').css('display', 'block');
+        $('#modalAdicionando').modal('show');
+        $('#info_basket').delay(3000).fadeOut(800, function() {
+            return BasketSubmeter();
+        });
+    });
 }
 /*-----------------------------------------------------------------------------------*/
 /*  BasketSubmeter
  /*-----------------------------------------------------------------------------------*/
 function BasketSubmeter() {
-//var formulario = $('#basket').serializeArray();
-//$('#form_orcamento').submit();
-//$('#info_basket').addClass('notice marker-on-bottom bg-orange fg-black');
-//$('#info_basket').html('<p class="tertiary-text"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o carinho.</p>');
-//$('#info_basket').delay(2000).fadeOut(800, function() {
-//     $('#basket').submit();
-// });
-    //$.Dialog.close();
-    $('#info_basket').addClass('alert alert-success');
-    $('#info_basket').html('<p class="fg-white"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o carrinho. Aguarde...</p>');
-    $('#info_basket').fadeOut(800, function() {
-        $('#basket').submit();
-    });
+    action_submeter = 'editor/personalizar.html';
+    $('#basket').attr('action', action_submeter);
+    $('#basket').attr('method','post');
+    $('#basket').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  FreteOrcamento
  /*-----------------------------------------------------------------------------------*/
 function FreteOrcamento() {
+    $('#wait').css('display', 'block');
     if ($.trim($("#orc_cep").val()) !== "") {
+
         CEP = $("#orc_cep").val();
         peso = $('#orc_peso').val();
         $('#orc_peso_frete').val(peso);
         var formulario = $('#correio').serializeArray();
         var url = "calcula_frete/" + CEP;
-        $('#wait').fadeIn(400);
     } else {
-        $("#ajax-loading").hide();
-        $("#erro").html("<img src=\"images/icons/access_denied_24.png\" style=\"float:left\" /><b>Erro no pedido ao servidor.</b>");
-        return false;
+        $("#wait").hide();
     }
     $.post(url, formulario, function(data) {
         var obj = JSON.parse(data);
@@ -852,9 +878,6 @@ function FreteOrcamento() {
         $('#frete_sedex').val(sedex.toFixed(2));
         $('#wait').delay(2000).fadeOut(400);
         $('#resultado').slideDown('slow', function() {
-            $('#info_frete').addClass('notice marker-on-bottom bg-orange fg-black');
-            $('#info_frete').html('<p class="tertiary-text"><i class="icon-smiley on-left"></i> Escolha uma forma de envio.</p>');
-            $('#info_frete').delay(2000).fadeOut(400);
             $('#resultado').css('display', 'block');
             $('#desconto').css('display', 'block');
         });
@@ -879,28 +902,38 @@ function SetaFrete(tipo, id) {
 /*  SetaFreteOrcamento
  /*-----------------------------------------------------------------------------------*/
 function SetaFreteOrcamento(tipo, id) {
-    var vl_frete = $('#' + id).val();
-    var vl_final = $('#orc_pacote_valor').val();
-    $('#orc_vl_frete').val(tipo);
-    $('#vl_frete_final').text(vl_frete);
-    $('#vl_final').text(vl_final);
-    $('#orc_tipo_frete').val(vl_frete);
-    $('#vl_frete_escolhido').val('R$ ' + vl_frete);
-    $('#tipo_frete').val(tipo);
-    $('#tipo_escolha_frete').html(tipo);
-    $('#escolha_frete').html('R$ ' + vl_frete);
-    $('#vl_frete_escolhido').val(vl_frete);
-    $('#tipo_frete_escolhido').val(tipo);
+     vl_frete = +$('#' + id).val();
+    orc_pacote_valor = $('#orc_pacote_valor').val();
+     vl_final = +orc_pacote_valor.replace("R$ ", "");
+     pdf = $('#pdf').val();
+    $('#orc_vl_frete').val(vl_frete);  
+    $('#vl_final').text($('#orc_pacote_valor').val() + '.00');
+    $('#orc_tipo_frete').val(tipo);
+    $('#vl_frete_escolhido').val('R$ ' + $('#' + id).val());   
+    $('#escolha_frete').html('R$ ' + $('#' + id).val());
     $('#label_frete').css('display', 'block');
-    $('#btn-opcoes').css('display', 'block');
-    $('#vl_total_final').html('R$ ' + parseFloat(vl_final.replace(",", ".")) + parseFloat(vl_frete));
-
+    if(pdf === '0'){
+        $('#btn-opcoes').css('display', 'block');
+    } else {
+         $('#btn-opcao-pdf').css('display', 'block');
+    }
+    $('#vl_total_final').html('R$ ' + (vl_final + vl_frete).toFixed(2));
 }
 function Comprar() {
     $('#info_correio').html('<p class="text-warning">Aguarde enquanto redirecionamos para o portfólio ...</p>');
     $('#info_correio').fadeIn(400);
     $('#info_correio').delay(4000).fadeOut(400, function() {
         var action = 'produtos/portfolio.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        $('#form_orcamento').submit();
+    });
+}
+function SolicitarOrcamento() {
+    $('#info_correio').html('<p class="text-warning">Aguarde enquanto redirecionamos para seu orçamento ...</p>');
+    $('#info_correio').fadeIn(400);
+    $('#info_correio').delay(4000).fadeOut(400, function() {
+        var action = 'orcamento.html';
         $('#form_orcamento').attr('action', action);
         $('#form_orcamento').attr('method', 'post');
         $('#form_orcamento').submit();
@@ -1031,10 +1064,12 @@ function RemoverItem(product)
         console.log(result);
 
         var obj = JSON.parse(result);
+        alert(obj.reload);
         if (obj.reload === 'true') {
-            $('#info_carrinho').html('<div class="alert alert-success" role="alert"><p class="text-info">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
+            $('#info_carrinho').html('<p class="alert alert-info text-medio text-center">' + obj.info + ' <img src="images/img/loader.gif" /></p>');
+            $('#info_carrinho').slideDown('fast');
             $('#info_carrinho').delay(5000).fadeIn('slow', function() {
-                window.location.href = 'carrinho/lista.html'
+                document.location.href = 'carrinho/lista.html'
             });
         } else {
             $('#info_carrinho').html('<div class="alert alert-warning" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
