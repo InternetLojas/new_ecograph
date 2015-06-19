@@ -66,9 +66,7 @@ class BasketController extends Controller {
     /* somente quando loga */
 
     public function Lista() {
-        $title = 'Itens no carrinho';
-
-        $cart = Cart::content();
+        //$cart = Cart::content();
         //dd($cart);
         $carrinho = $this->basket
                 ->where('customer_id', Auth::user()->id)
@@ -107,6 +105,10 @@ class BasketController extends Controller {
             $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
             $desc_acrescimo_id = $desc_acrescimo->toarray();
             $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+            //levanta o endereço do cliente
+            $customers_default_address_id = Customer::find(Auth::user()->id);
+            $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
+
             return view('clientes.index')
                             ->with('title', STORE_NAME . ' Itens no carrinho')
                             ->with('page', 'carrinho')
@@ -117,6 +119,7 @@ class BasketController extends Controller {
                             ->with('classes', $classes)
                             ->with('desc_acrescimo_id', $desc_acrescimo_id)
                             ->with('cart_total', Cart::total())
+                            ->with('default_address', $default_address)
                             ->with('rota', 'carrinho.html')
                             ->with('layout', $layout);
         } else {
@@ -191,7 +194,9 @@ class BasketController extends Controller {
             $this->basket_item->save();
         }
         return json_encode(array('action' => true,
-            'info' => 'Item adicionado no carrinho com sucesso'));
+            'info' => 'Item adicionado no carrinho com sucesso',
+            'total_itens' => Cart::count()
+        ));
     }
 
     public function Listar(Request $request) {
@@ -281,8 +286,9 @@ class BasketController extends Controller {
                         ->where('customer_id', Auth::user()->id)
                         ->where('products_id', $parans['product_id'])
                         ->lists('id');
-                //dd($carrinho);
-                //foreach ($carrinho as $items) {
+                if(count($carrinho)>0)
+                {
+                    //foreach ($carrinho as $items) {
                 $id = $carrinho[0]['id'];
                 //}
                 //elimina os item do carrinho
@@ -293,9 +299,13 @@ class BasketController extends Controller {
                         ->where('products_id', $parans['product_id'])->delete();
                 $rowId = $item->rowid;
                 Cart::remove($rowId);
+                
                 return json_encode(array(
                     'reload' => 'true',
                     'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
+            } else {
+                Cart::destroy();
+            }
             }
         }
         //Cart::remove($rowId);

@@ -47,45 +47,30 @@ class StoreController extends Controller {
      * @return View
      */
     public function Resumo(Request $request) {
-        $inputs = $request->all();
-        $userId = \Auth::user()->id;
-        $basket = Customer::with('Basketes')->find($userId);
-
-        /*         * *itens principais do carrinho do cliente* */
-        $carrinho = $basket->Basketes->toarray();
-        $parent = \Fichas::parentCategoria(6);
-        /*         * *enquanto houve itens principais levanta-se outras informações */
-        foreach ($carrinho as $car) {
-            $basket_item = Basket::with('BasketIten')->find($car['id']);
-            $cart[$car['products_id']] = $basket_item->BasketIten->toarray();
-        }
-        $layout = $this->layout->classes($parent);
-        $rules = array('forma_pagamento_id' => 'required|numeric',
-            'vl_frete_escolhido' => 'required|numeric',
-            'tipo_frete_escolhido' => 'required',
-            'discount_avista_id' => 'numeric',
-            'vl_discount_avista' => 'numeric',
-            'forma_pagamento' => 'required');
-        $validation = Validator::make($inputs, $rules);
-        if ($validation->fails()) {
-            // Validation has failed.
-            Session::put('error', 'Por favor revise os dados informados!');
-            return new RedirectResponse(url('/carrinho.html'));
-        }
         Session::forget('error');
-        $vl_frete = $inputs['vl_frete_escolhido'];
-        $tipo_frete = $inputs['tipo_frete_escolhido'];
-        $vl_desconto_avista = $inputs['vl_discount_avista'];
-        //levanta o tipo de frete
-        //$shipping_info = Confshipping::detalhes($tipo_frete)->get();
-        // $shipping = $shipping_info->toarray();
+        $post_inputs = $request->all();
+        //dd($post_inputs);
+        $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
+        $layout = $this->layout->classes($parent);
+        $title = 'Resumo do Pedido';
+        $cart_total = Cart::total();
         //levanta o endereço do cliente
         $customers_default_address_id = Customer::find(Auth::user()->id);
         $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
         //levanta o tipo de pagamento
-        $gateway = Gateway::find($inputs['forma_pagamento_id']);
-        $title = 'Resumo do Pedido';
-        return view('loja.index')->with('title', STORE_NAME . $title)->with('page', 'resumo')->with('ativo', 'Resumo')->with('rota', 'loja/resumo.html')->with('cart', $cart)->with('default_address', $default_address)->with('gateway', $gateway->toarray())->with('vl_desconto_avista', $vl_desconto_avista)->with('vl_frete', $vl_frete)->with('tipo_frete', $tipo_frete)->with('contents', Cart::content())->with('layout', $layout);
+        $gateway = Gateway::ativos('1')->get();
+        //$gateway = Gateway::find('1');
+        return view('loja.index')
+        ->with('title', STORE_NAME . 'Resumo')
+        ->with('page', 'resumo')
+        ->with('ativo', 'Resumo')
+        ->with('rota', 'loja/resumo.html')
+        ->with('contents', Cart::content())
+        ->with('default_address', $default_address)
+        ->with('gateways', $gateway)
+        ->with('post_inputs', $post_inputs)
+         ->with('cart_total', $cart_total)
+        ->with('layout', $layout);
     }
 
     /**
@@ -228,7 +213,7 @@ class StoreController extends Controller {
 
     public function Busca() {
         $keyword = \Request::get('keyword');
-        $filtro = '';
+        //$filtro = '';
         $filtro = Fichas::trataKeyword($keyword);
         if (is_array($filtro)) {
             $chave = Fichas::Proibidas($filtro);
@@ -238,12 +223,28 @@ class StoreController extends Controller {
                 $path = $resultado->setPath('loja/busca');
                 $links = $path->appends(['keyword' => $keyword])->render();
                 $layout = $this->layout->classes('0');
-                return view('produtos.index')->with('products', $products)->with('keyword', $keyword)->with('title', STORE_NAME . ' Busca por: ' . $keyword)->with('page', 'busca')->with('links', $links)->with('ativo', $keyword)->with('total', $resultado->total())->with('rota', 'loja/busca')->with('layout', $layout);
+                return view('produtos.index')
+                        ->with('products', $products)
+                        ->with('keyword', $keyword)
+                        ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+                        ->with('page', 'busca')
+                        ->with('links', $links)
+                        ->with('ativo', $keyword)
+                        ->with('total', $resultado->total())
+                        ->with('rota', 'loja/busca')
+                        ->with('layout', $layout);
             }
         }
 
         $layout = $this->layout->classes('0');
-        return view('produtos.index')->with('products', '')->with('keyword', $keyword)->with('title', STORE_NAME . ' Busca por: ' . $keyword)->with('page', 'naocadastrado')->with('ativo', 'busca')->with('total', '0')->with('rota', 'busca/')->with('layout', $layout)->with('message', 'A busca por ' . $keyword . ' não obteve resultado.')->with('class', LAYOUT);
+        return view('produtos.index')
+                ->with('products', '')
+                ->with('keyword', $keyword)
+                ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+                ->with('page', 'naocadastrado')->with('ativo', 'busca')
+                ->with('total', '0')->with('rota', 'busca/')
+                ->with('layout', $layout)
+                ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
     }
 
 }

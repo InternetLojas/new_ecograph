@@ -9,10 +9,14 @@ use Auth;
 use Cart;
 use Session;
 use Validator;
+use Hash;
 use Ecograph\Customer;
+use Ecograph\AddressBook;
+use Ecograph\Acesso;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
 use Ecograph\Libs\Utilidades;
+use EnvioEmail;
 
 class CustomerController extends Controller {
 
@@ -62,7 +66,7 @@ class CustomerController extends Controller {
         Session::forget('admin');
         Session::forget('administrador');
         $layout = $this->layout->classes('6');
-        $populares = Fichas::produtosPopulares();
+        //$populares = Fichas::produtosPopulares();
         return view('clientes.index')->with('title', STORE_NAME . ' Sessão encerrada!')->with('page', 'logout')->with('ativo', 'Sessão encerrada')->with('rota', 'clientes/index')->with('populares', $populares)->with('layout', $layout)->with('class', LAYOUT);
     }
 
@@ -74,7 +78,14 @@ class CustomerController extends Controller {
         }
         $address = array();
         //dd($address);
-        return view('clientes.index')->with('title', STORE_NAME . ' Minha Conta')->with('message', 'Bem Vindo :' . Customer::find(Auth::user()->id)->customers_firstname)->with('page', 'minhaconta')->with('ativo', 'Minha Conta')->with('rota', 'minhaconta')->with('customers', $customers)->with('address', $address);
+        return view('clientes.index')
+                        ->with('title', STORE_NAME . ' Minha Conta')
+                        ->with('message', 'Bem Vindo :' . Customer::find(Auth::user()->id)->customers_firstname)
+                        ->with('page', 'minhaconta')
+                        ->with('ativo', 'Minha Conta')
+                        ->with('rota', 'minhaconta')
+                        ->with('customers', $customers)
+                        ->with('address', $address);
     }
 
     /**
@@ -141,7 +152,21 @@ class CustomerController extends Controller {
                 $email = '';
             }
             $layout = $this->layout->classes('6');
-            return view('clientes.index')->with('title', STORE_NAME . ' Cadastro de Clientes')->with('page', 'novaconta')->with('ativo', 'Cadastro')->with('rota', 'clientes/index')->with('tipo', $tipo)->with('entry_postcode', $entry_postcode)->with('entry_street_address', ($entry_street_address))->with('entry_suburb', ($entry_suburb))->with('entry_city', ($entry_city))->with('entry_state', $entry_state)->with('customers_firstname', $customers_firstname)->with('customers_lastname', $customers_lastname)->with('email', $email)->with('layout', $layout);
+            return view('clientes.index')
+                            ->with('title', STORE_NAME . ' Cadastro de Clientes')
+                            ->with('page', 'novaconta')
+                            ->with('ativo', 'Cadastro')
+                            ->with('rota', 'clientes/index')
+                            ->with('tipo', $tipo)
+                            ->with('entry_postcode', $entry_postcode)
+                            ->with('entry_street_address', ($entry_street_address))
+                            ->with('entry_suburb', ($entry_suburb))
+                            ->with('entry_city', ($entry_city))
+                            ->with('entry_state', $entry_state)
+                            ->with('customers_firstname', $customers_firstname)
+                            ->with('customers_lastname', $customers_lastname)
+                            ->with('email', $email)
+                            ->with('layout', $layout);
         }
     }
 
@@ -152,8 +177,9 @@ class CustomerController extends Controller {
      */
     public function Cadastro(Request $request) {
         $erros = array();
+        //dd($request);
         //check if its our form
-        $post_inputs = $request->all($request->except('_token', 'customers_cpf_cnpj', 'email', 'agree'));
+        $post_inputs = $request->all($request->except('_token', 'email', 'agree', 'customers_revendedor'));
 
         //regras a serem validadas
         $rules = Customer::$rules;
@@ -166,6 +192,7 @@ class CustomerController extends Controller {
             if (!Utilidades::validate_cnpj($post_inputs['customers_cpf_cnpj'])) {
                 $erros[] = 'CNPJ no formato errado';
             }
+             $rules['customers_atuacao'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
             $rules['entry_company'] = 'required|regex:/^[a-zA-Z\s]*$/|min:5|max:120';
             $rules['entry_fantasia'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
         }
@@ -183,7 +210,10 @@ class CustomerController extends Controller {
         //verfica se os dois telefones - fixo e celular estão vazios
         if ($post_inputs['customers_telephone'] == '' && $post_inputs['customers_cel'] == '') {
             $erros[] = 'Informe pelo menos um dos telefones: Fixo ou Celular.';
-            $data = array('status' => 'fail', 'info' => 'Erro de preenchimento', 'erro' => $erros, 'loadurl' => '');
+            $data = array('status' => 'fail',
+                'info' => 'Erro de preenchimento',
+                'erro' => $erros,
+                'loadurl' => '');
             return json_encode($data);
         }
         //retirada das mascaras
@@ -203,58 +233,59 @@ class CustomerController extends Controller {
         }
 
         if (count($erros) > 0) {
-            $data = array('status' => 'fail', 'info' => 'Erro de dados', 'erro' => $erros, 'loadurl' => '');
-
+            $data = array('status' => 'fail',
+                'info' => 'Erro de dados',
+                'erro' => $erros,
+                'loadurl' => '');
             return json_encode($data);
         } else {
             //exit;
-            $post_inputs['customers_cpf_cnpj'] = Input::get('customers_cpf_cnpj');
-            $post_inputs['email'] = Input::get('email');
-
-            $salve = false;
+            // $post_inputs['customers_cpf_cnpj'] = Input::get('customers_cpf_cnpj');
+            // $post_inputs['email'] = Input::get('email');
+            //$salve = false;
             //prepara os dados para o cliente
             $customer = new Customer;
-            $customer->customers_gender = Input::get('customers_gender');
-            $customer->remember_token = Input::get('_token');
-            $password = Input::get('password');
+            $customer->customers_gender = $post_inputs['customers_gender'];
+            $customer->remember_token = $post_inputs['_token'];
+            $password = $post_inputs['password'];
             $customer->password = Hash::make($password);
-            $customer->customers_firstname = Input::get('customers_firstname');
-            $customer->customers_lastname = Input::get('customers_lastname');
-            //$customer->customers_dob = Input::get('customers_dob');
-            $customer->email = Input::get('email');
-            $customer->customers_telephone = Input::get('customers_telephone');
-            //$customer->customers_ddd = Input::get('customers_ddd');
-            $customer->customers_telephone1 = Input::get('customers_telephone1');
-            //$customer->customers_ddd1 = Input::get('customers_ddd1');
-            $customer->customers_cel = Input::get('customers_cel');
-            //$customer->customers_ddd2 = Input::get('customers_ddd2');
-            $customer->customers_newsletter = Input::get('customers_newsletter');
-            $customer->customers_cpf_cnpj = Input::get('customers_cpf_cnpj');
-            $customer->customers_pf_pj = Input::get('customers_pf_pj');
-            //$customer->customers_rg_ie = Input::get('customers_rg_ie');
+            $customer->customers_firstname = $post_inputs['customers_firstname'];
+            $customer->customers_lastname = $post_inputs['customers_lastname'];
+            //$customer->customers_dob = $post_inputs[customers_dob');
+            $customer->email = $post_inputs['email'];
+            $customer->customers_telephone = $post_inputs['customers_telephone'];
+            //$customer->customers_ddd = $post_inputs[customers_ddd');
+            $customer->customers_telephone1 = $post_inputs['customers_telephone1'];
+            //$customer->customers_ddd1 = $post_inputs['customers_ddd1'];
+            $customer->customers_cel = $post_inputs['customers_cel'];
+            //$customer->customers_ddd2 = $post_inputs['customers_ddd2'];
+            $customer->customers_cel1 = $post_inputs['customers_cel1'];
+            $customer->customers_newsletter = $post_inputs['customers_newsletter'];
+            $customer->customers_cpf_cnpj = $post_inputs['customers_cpf_cnpj'];
+            $customer->customers_pf_pj = $post_inputs['customers_pf_pj'];
+            //$customer->customers_rg_ie = $post_inputs['customers_rg_ie'];
             //dados do cliente armazenados em customers
             $customer->save();
 
             //prepara os dados do livro d endereço
-            $address = new Addressbook;
+            $address = new AddressBook;
             $address->customer_id = $customer->id;
-            $address->entry_gender = Input::get('customers_gender');
-            if (Input::get('customers_pf_pj') == 'j') {
-                $address->entry_company = Input::get('entry_company');
-                $address->entry_fantasia = Input::get('entry_fantasia');
+            $address->entry_gender = $post_inputs['customers_gender'];
+            if ($post_inputs['customers_pf_pj'] == 'j') {
+                $address->entry_company = $post_inputs['entry_company'];
+                $address->entry_fantasia = $post_inputs['entry_fantasia'];
             }
-            $address->entry_firstname = Input::get('customers_firstname');
-            $address->entry_lastname = Input::get('customers_lastname');
-            $address->entry_street_address = Input::get('entry_street_address');
-            $address->entry_suburb = Input::get('entry_suburb');
-            $address->entry_postcode = Input::get('entry_postcode');
-            $address->entry_city = Input::get('entry_city');
-            $address->entry_state = Input::get('entry_state');
-            $address->entry_state_code = Input::get('entry_state');
-            $address->entry_country_id = Input::get('entry_country_id');
-            $address->entry_nr_rua = Input::get('entry_nr_rua');
-            $address->entry_comp_ref = Input::get('entry_comp_ref');
-            $address->entry_ref_entrega = Input::get('entry_ref_entrega');
+            $address->entry_firstname = $post_inputs['customers_firstname'];
+            $address->entry_lastname = $post_inputs['customers_lastname'];
+            $address->entry_street_address = $post_inputs['entry_street_address'];
+            $address->entry_suburb = $post_inputs['entry_suburb'];
+            $address->entry_postcode = $post_inputs['entry_postcode'];
+            $address->entry_city = $post_inputs['entry_city'];
+            $address->entry_state = $post_inputs['entry_state'];
+            $address->entry_state_code = $post_inputs['entry_state'];
+            $address->entry_nr_rua = $post_inputs['entry_nr_rua'];
+            $address->entry_comp_ref = $post_inputs['entry_comp_ref'];
+            $address->entry_ref_entrega = $post_inputs['entry_ref_entrega'];
             //dados de endereços aramzenados para o cliente
             $address->save();
             //setando o endereço padrão para o cliente
@@ -265,24 +296,53 @@ class CustomerController extends Controller {
             $acessos->customer_id = $customer->id;
             //dados de acesso criado para o cliente
             $salve = $acessos->save();
-            //caso tudo ocrre correta envia o email
-            if ($salve) {
-                session::put('nova_conta_uf', $address->entry_state);
-                if (EnvioEmail::NovoCadastro($customer)) {
-                    //Session::put('success', '. Enviarmos uma email com suas informações.');
-                    $data = array('status' => 'pass', 'info' => 'Sua conta foi criada com sucesso. Enviarmos uma email com suas informações.', 'erro' => '', 'loadurl' => URL::to('contasucesso'));
-                } else {
-                    $data = array('status' => 'pass', 'info' => 'Sua conta foi criada com sucesso. No entanto não conseguimos enviar um email com suas informações.', 'erro' => '', 'loadurl' => URL::to('contasucesso'));
-                    //Session::put('error', 'Sua conta foi criada com sucesso, mas não conseguimos enviar um email com suas informações.');
-                }
+            return $this->TratarEmail($salve,$customer);
+        }
+        //return json_encode($data);
+    }
+
+    public function TratarEmail($check, $customer) {
+        $erro = array();
+        if ($check) {
+            //session::put('nova_conta_uf', $address->entry_state);
+            if (EnvioEmail::NovoCadastro($customer)) {
+                //Session::put('success', '. Enviarmos uma email com suas informações.');
+                $data = array('status' => 'pass',
+                    'info' => 'Sua conta foi criada com sucesso. Enviarmos uma email com suas informações.',
+                    'erro' => '',
+                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
             } else {
-                $erro[] = 'Não foi possível enviar os dados para o servidor.';
-                $data = array('status' => 'fail', 'info' => 'Erro na criação da conta', 'erro' => $erro, 'loadurl' => URL::to('contasucesso'));
-                //Session::put('error', 'Erro na criação da conta. Por favor tente novamente.');
-                //return Redirect::to('inicio')->withError();
+                $data = array('status' => 'pass',
+                    'info' => 'Sua conta foi criada com sucesso. No entanto não conseguimos enviar um email com suas informações.',
+                    'erro' => '',
+                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
+                //Session::put('error', 'Sua conta foi criada com sucesso, mas não conseguimos enviar um email com suas informações.');
             }
+        } else {
+            $erro[] = 'Não foi possível enviar os dados para o servidor.';
+            $data = array('status' => 'fail',
+                'info' => 'Erro na criação da conta',
+                'erro' => $erro,
+                'loadurl' => URL::to('cliente/conta/sucesso.html'));
+            //Session::put('error', 'Erro na criação da conta. Por favor tente novamente.');
+            //return Redirect::to('inicio')->withError();
         }
         return json_encode($data);
+    }
+
+    /**
+     * Script CheckCadastro faz validação de alguns campos antes de postar.
+     *
+     * @return Response
+     */
+    public function ContaCriada() {
+        $layout = $this->layout->classes(0);
+        return View::make('clientes.index')
+                        ->with('title', STORE_NAME . ' Sua conta foi criada')
+                        ->with('page', 'contacriada')
+                        ->with('ativo', 'Sucesso')
+                        ->with('layout', $layout)
+                        ->with('rota', 'clientes/conta/sucesso.html');
     }
 
     /**
@@ -290,13 +350,15 @@ class CustomerController extends Controller {
      *
      * @return View
      */
-    public function Orcamento() {
-        //dd(\Auth::user());
-        $layout = \Layout::classes(0);
+    public function Orcamento(Request $request) {
+        $post_inputs = $request->all();
+        $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
+        $layout = $this->layout->classes($pai);
         return view('clientes.index')
                         ->with('title', STORE_NAME . ' Monte seu orçamento')
-                        ->with('page', 'orcamento')
+                        ->with('page', 'imprimir')
                         ->with('ativo', 'Orcamento')
+                        ->with('post_inputs', $post_inputs)
                         ->with('rota', 'orcamento.html')
                         ->with('layout', $layout);
     }

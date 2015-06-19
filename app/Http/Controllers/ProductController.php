@@ -64,16 +64,12 @@ class ProductController extends Controller {
                 $listagem[] = array($item['id'], $item['nome_filho']);
             }
         }
-        $solicitado = array('pai' => '1',
-            'filho' => '5',
-            'nome_html' => 'cartao-visita.html');
         return view('produtos.index')
                         ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
                         ->with('page', 'vitrine')
                         ->with('ativo', 'Vitrine')
-                        ->with('listagem', $listagem)
-                        ->with('solicitado', $solicitado)
-                        ->with('rota', '/produtos/portfolio.html')
+                        ->with('listagem', $listagem)                       
+                        ->with('rota', 'produtos/portfolio.html')
                         ->with('layout', $layout);
     }
 
@@ -98,7 +94,7 @@ class ProductController extends Controller {
                         ->with('ativo', 'Detalhes')
                         ->with('listagem', $listagem)
                         ->with('solicitado', $solicitado)
-                        ->with('rota', '/produtos/detalhes/')
+                        ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html)
                         ->with('layout', $layout);
     }
 
@@ -118,7 +114,7 @@ class ProductController extends Controller {
                         ->with('post_inputs', $post_inputs)
                         ->with('ativo', 'teste')
                         ->with('layout', $layout)
-                        ->with('rota', 'portfolio/');
+                        ->with('rota', 'produtos/orcamento');
     }
 
     /**
@@ -344,7 +340,7 @@ class ProductController extends Controller {
                         ->with('ativo', 'Enviar PDF')
                         ->with('contents', $contents->toarray())
                         ->with('post_inputs', $post_inputs)
-                        ->with('rota', '/produtos/enviarpdf.html')
+                        ->with('rota', 'produtos/enviarpdf.html')
                         ->with('layout', $layout);
     }
 
