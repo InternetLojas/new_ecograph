@@ -46,11 +46,11 @@ Class Utilidades {
     }
 
     public static function SubstituiImgProd($img) {
-         //echo $img;exit;
+        //echo $img;exit;
         if (!file_exists('images/' . $img)) {
             $img = 'theme/naoencontrado.png';
         }
-       
+
         return $img;
     }
 
@@ -674,6 +674,94 @@ Class Utilidades {
         } else {
             return false;
         }
+    }
+
+    public static function validate_cpf($cpf) {
+        $cpf = preg_replace("@[.-]@", "", $cpf);
+        $cpf = str_replace(".", "", $cpf);
+        $cpf = str_replace("/", "", $cpf);
+        if (!is_numeric($cpf)) {
+            $status = false;
+        } else {
+            if (($cpf == '11111111111') || ($cpf == '22222222222') ||
+                    ($cpf == '33333333333') || ($cpf == '44444444444') ||
+                    ($cpf == '55555555555') || ($cpf == '66666666666') ||
+                    ($cpf == '77777777777') || ($cpf == '88888888888') ||
+                    ($cpf == '99999999999') || ($cpf == '00000000000')) {
+                $status = false;
+            } else {
+                //PEGA O DIGITO VERIFIACADOR
+                $dv_informado = substr($cpf, 9, 2);
+                for ($i = 0; $i <= 8; $i++) {
+                    $digito[$i] = substr($cpf, $i, 1);
+                }
+                $posicao = 10;
+                $soma = 0;
+                for ($i = 0; $i <= 8; $i++) {
+                    $soma = $soma + $digito[$i] * $posicao;
+                    $posicao = $posicao - 1;
+                }
+                $digito[9] = $soma % 11;
+                if ($digito[9] < 2) {
+                    $digito[9] = 0;
+                } else {
+                    $digito[9] = 11 - $digito[9];
+                }
+                $posicao = 11;
+                $soma = 0;
+                for ($i = 0; $i <= 9; $i++) {
+                    $soma = $soma + $digito[$i] * $posicao;
+                    $posicao = $posicao - 1;
+                }
+                $digito[10] = $soma % 11;
+                if ($digito[10] < 2) {
+                    $digito[10] = 0;
+                } else {
+                    $digito[10] = 11 - $digito[10];
+                }
+                $dv = $digito[9] * 10 + $digito[10];
+                if ($dv != $dv_informado) {
+                    $status = false;
+                } else
+                    $status = true;
+            }
+        }
+        return $status;
+    }
+
+    public static function validate_cnpj($cnpj) {
+        $cnpj = preg_replace("@[./'-]@", "", $cnpj);
+        $cnpj = str_replace(".", "", $cnpj);
+        $cnpj = str_replace("/", "", $cnpj);
+        $cnpj = str_replace("-", "", $cnpj);
+        if (!is_numeric($cnpj)) {
+            return false;
+        }
+        if ($cnpj == '00000000000000') {
+            return false;
+        }
+        $k = 6;
+        $soma1 = "";
+        $soma2 = "";
+        for ($i = 0; $i < 13; $i++) {
+            $k = $k == 1 ? 9 : $k;
+            $soma2 += ( $cnpj{$i} * $k );
+            $k--;
+            if ($i < 12) {
+                if ($k == 1) {
+                    $k = 9;
+                    $soma1 += ( $cnpj{$i} * $k );
+                    $k = 1;
+                } else {
+                    $soma1 += ( $cnpj{$i} * $k );
+                }
+            }
+        }
+
+        $digito1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
+        $digito2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
+
+        return ($cnpj{12} == $digito1 and $cnpj{13} == $digito2);
     }
 
 }

@@ -56,7 +56,7 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'ProductController@Produtos'
     ]);
 
-    Route::get('orcamento.html', [
+    Route::post('orcamento.html', [
         'as' => 'orcamento',
         'uses' => 'CustomerController@orcamento'
     ]);
@@ -82,10 +82,10 @@ Route::group(['prefix' => '/'], function() {
     ]);
 
 //retorna a view do carrinho de compras
-    Route::post('resumo.html', [
-        "as" => "resumo",
-        "uses" => "BasketController@Resumo"
-    ]);
+   // Route::post('resumo.html', [
+  //      "as" => "resumo",
+     //   "uses" => "BasketController@Resumo"
+  //  ]);
 });
 
 
@@ -107,6 +107,10 @@ Route::group(['prefix' => 'clientes'], function() {
     Route::get('login.html', [
         'as' => 'clientes.login',
         'uses' => 'CustomerController@login'
+    ]);
+    Route::get('conta/sucesso.html', [
+        'as' => 'clientes.conta.sucesso',
+        'uses' => 'CustomerController@ContaCriada'
     ]);
 });
 /* * *controla o modal com o form formtipoconta retorna JSON* */
@@ -142,13 +146,13 @@ Route::group(['prefix' => 'produtos'], function() {
         'as' => 'produtos.orcamento',
         'uses' => 'ProductController@Orcamento'
     ]);
-    Route::post('portfolio.html', [
-        'as' => 'produtos.portfolio',
-        'uses' => 'ProductController@Listagem'
-    ]);
     Route::post('enviarpdf.html', [
         'as' => 'produtos.enviarpdf',
         'uses' => 'ProductController@EnviarPDF'
+    ]);
+    Route::post('portfolio.html', [
+        'as' => 'produtos.portfolio',
+        'uses' => 'ProductController@Listagem'
     ]);
     Route::get('portfolio.html', [
         'as' => 'produtos.index',
@@ -220,30 +224,30 @@ Route::group(['prefix' => 'carrinho'], function() {
 Route::group(['prefix' => 'loja'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
     Route::post("resumo.html", array(
-        "as" => "resumo.resumo",
+        "as" => "loja.resumo",
         "uses" => "StoreController@Resumo"
     ));
     Route::post("validacaixa", array(
-        "as" => "validacaixa.validacaixa",
+        "as" => "loja.validacaixa",
         "uses" => "StoreController@ValidaCaixa"));
     Route::post("process", array(
-        "as" => "process.process",
+        "as" => "loja.process",
         "uses" => "ProcessController@Process"
     ));
     Route::get("busca/", array(
-        "as" => "busca.busca",
+        "as" => "loja.busca",
         "uses" => "StoreController@Busca"
     ));
     Route::post("checkout.html", array(
-        "as" => "checkout.checkout",
+        "as" => "loja.checkout",
         "uses" => "StoreController@Checkout"
     ));
     Route::post("pedido", array(
-        "as" => "pedido.pedido",
+        "as" => "loja.pedido",
         "uses" => "ProcessController@Pedido"
     ));
     Route::post("caixa", array(
-        "as" => "caixa.caixa",
+        "as" => "loja.caixa",
         "uses" => "StoreController@Caixa"
     ));
 });

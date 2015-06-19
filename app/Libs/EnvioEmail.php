@@ -187,9 +187,9 @@ class EnvioEmail {
 
     public static function NovoCadastro($customer) {
         $data = $customer->toarray();
-        //$input = Input::old();
-        if (Mail::send('emails.cadastro', $data, function($message) {
-                    $info = Input::all();
+        $info = \Request::all();
+        if (Mail::send('emails.cadastro', $data, $info, function($message) {
+                    //$info = \Request::all();
                     $message->from(STORE_EMAIL_TESTE, STORE_NAME);
                     $message->to($info['email'], $info['customers_firstname'] . ' ' .
                                     $info['customers_lastname'])

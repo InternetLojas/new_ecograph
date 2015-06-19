@@ -28,6 +28,7 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
         'customers_telephone',
         'customers_telephone1',
         'customers_cel',
+        'customers_cel1',
         'password',
         'customers_newsletter',
         'customers_cpf_cnpj',
@@ -36,6 +37,7 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
         'customers_ddd',
         'customers_ddd1',
         'customers_ddd2',
+        'customers_atuacao',
         'created_at',
         'update_at'
     );
@@ -54,7 +56,7 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
     public function Basketes() {
         return $this->hasMany('Ecograph\Basket');
     }
-    
+
     public function Order() {
         return $this->hasMany('Ecograph\Order');
     }
@@ -67,28 +69,27 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
     protected $hidden = ['password', 'remember_token'];
     public static $rules = array(
         'customers_gender' => 'required',
-        'customers_firstname' => 'required|regex:/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i|min:3|max:80',
-        'customers_lastname' => 'required|regex:/^[a-zA-Z\s]*$/|min:3|max:80',
+        'customers_firstname' => 'required|regex:/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i|min:3|max:32',
+        'customers_lastname' => 'required|regex:/^[a-zA-Z\s]*$/|min:3|max:32',
         'customers_dob' => 'date',
         'email' => 'required|email|unique:customers',
         'entry_postcode' => 'required|min:8',
         'entry_street_address' => 'required|min:5|max:120',
         'entry_nr_rua' => 'required|min:1|numeric',
         'entry_comp_ref' => 'regex:/^[0-9a-zA-ZéúíóáÉÚÍÓÁèùìòàÈÙÌÒÀõãñÕÃÑêûîôâÊÛÎÔÂëÿüïöäËYÜÏÖÄçÇ\-\'\s]*$/|max:80',
-        'entry_ref_entrega' => 'max:80',
+        'entry_ref_entrega' => 'regex:/^[0-9a-zA-ZéúíóáÉÚÍÓÁèùìòàÈÙÌÒÀõãñÕÃÑêûîôâÊÛÎÔÂëÿüïöäËYÜÏÖÄçÇ\-\'\s]*$/|max:80',
         'entry_suburb' => 'required|min:5|max:80',
         'entry_city' => 'required|regex:/^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i|min:2|max:80',
         'entry_state' => 'required|min:2|alpha',
-        'customers_ddd' => 'required|min:2',
+        //'customers_ddd' => 'required|min:2',
         'customers_telephone' => 'min:8',
-        'customers_ddd1' => 'required|min:2',
+        //'customers_ddd1' => 'required|min:2',
         'customers_telephone1' => 'min:8',
-        'customers_ddd2' => 'required|min:2',
         'customers_cel' => 'min:8',
+        'customers_cel1' => 'min:8',
         'password' => 'required|alpha_num|min:8|confirmed',
         'password_confirmation' => 'required|alpha_num|min:8',
-        'customers_pf_pj' => 'required',
-        'entry_country_id' => 'required'
+        'customers_pf_pj' => 'required'
     );
 
 }
