@@ -16,7 +16,7 @@
 {{ Metatags::tagsfacebook($descricao, $detalhes) }}
 @endif
 <!-- Latest compiled and minified CSS & JS -->
-<link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ asset('/css/ecograph-bootstrap.css')}}">
 
 <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="{{ asset('/css/iconFont.css')}}">

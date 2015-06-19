@@ -11,8 +11,6 @@
 <!--================= tabela dos produtos do carrinho ===================-->
 @include('layouts.includes.carrinho.itens_carrinho')
 @include('layouts.includes.boxes.forms.form_carrinho')
-<!--================= informações sobre entrega ==========================-->
-@include('layouts.includes.carrinho.info_endereco')
-<!--============================== content =================================-->
-@include('layouts.includes.carrinho.info_prazos')
+
+
 

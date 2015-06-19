@@ -1,5 +1,12 @@
 
-@if (is_array($populares))  
+@if (is_array($populares)) 
+
+<div class="title_content">
+    <h4>
+        Na sua próxima visita não deixe de conferir 
+        <small>nossos produtos campeõs de visita</small>
+    </h4>
+</div>
 @foreach(Utilidades::Agrupa($populares, '4','busca') as $row)
 <div class="row">
     @foreach($row as $key=>$product)

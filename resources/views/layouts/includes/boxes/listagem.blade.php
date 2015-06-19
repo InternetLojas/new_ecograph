@@ -13,7 +13,7 @@
                 <p class="fg-dark">
                     {!!Fichas::nomeproduto($row['original']['id'])!!}
                 </p>
-                <button type="button" onclick="Personalizar('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
+                <button type="button" onclick="AdicionaItemCarrinho('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
                     <i class="icon-cart on-left"></i>Comprar
                 </button>
             </div>

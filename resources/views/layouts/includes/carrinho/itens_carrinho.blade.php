@@ -48,9 +48,17 @@
                             <td class="text-medio">
                                 {!! Utilidades::toReal($itens['price'])!!}
                             </td>
-                            <td class="text-medio">{!! Utilidades::toReal($post_inputs['orc_tipo_frete'])!!}</td>
+                            <td class="text-medio">
+                                @if(is_array($post_inputs))
+                                {!!Utilidades::toReal($post_inputs['orc_tipo_frete'])!!}
+                                @endif
+                            </td>
                             <td class="text-medio">Desconto</td>
-                            <td class="text-medio">{!! Utilidades::toReal($cart_total+$post_inputs['orc_tipo_frete']) !!}</td>
+                            <td class="text-medio">
+                                @if(is_array($post_inputs))
+                                {!!Utilidades::toReal($cart_total+$post_inputs['orc_tipo_frete'])!!}
+                                @endif
+                            </td>
                             <td class="text-medio">
                                 <a href="javascript:void(0)" onclick="RemoverItem('{{ $itens['id'] }}')" title="Clique para remover o item do carrinho" class="btn bg-yellow fg-white no-radius"> 
                                     Remover

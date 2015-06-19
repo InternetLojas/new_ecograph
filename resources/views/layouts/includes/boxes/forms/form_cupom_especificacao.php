@@ -1,3 +1,5 @@
+<div id="info_cupom"></div>
+<div id="mensagem_cupom"></div>
 <form class="form-horizontal" role="form" id="cupom" name="cupom">
     <div class="form-group">
         <div class="input-group">

@@ -1,48 +1,78 @@
-<div class="section" id="especificacoes_selecionada" style="display:none" data-token="{!!csrf_token()!!}">
-    <!--============================== content =================================-->
-    <div class="destaque_home">
-        @include('layouts.includes.boxes.opcoes_finalizacao')
-        <div id="cupom_frete" style="display:none">           
-            <p class="text-medio">Ganhe descontos na sua compra. Se você possue código de desconto informe no campo abaixo e clique para validá-lo.</p>
-            <div id="resultado" style="display:none">
-                <div class="row">
-                    @include('layouts.includes.boxes.forms.form_resultado_frete')
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+<div class="">
+    <div id="especificacoes_selecionada" style="display:none;" data-token="{!!csrf_token()!!}">
+        <!--============================== content =================================-->
+        <div class="destaque_home">
+            @include('layouts.includes.boxes.opcoes_finalizacao')
+        </div>
+        <div class="clearfix"></div>        
+        <div class="destaque_home" id="cupom_frete" style="display:none;">            
+            <div class="col-md-6">
+                <div class="well well-md">
+                    <p class="text-medio" style="min-height:60px">
+                        Ganhe descontos na sua compra.<br>
+                        Se você possue código de desconto informe no campo abaixo e clique para validá-lo.
+                    </p>
                     @include('layouts.includes.boxes.forms.form_cupom_especificacao')
                 </div>
-                <div class="col-md-6">
-                    @include('layouts.includes.boxes.forms.form_frete_especificacao')
+            </div>
+            <div class="col-md-6">
+                <div class="well well-md">
+                    <p class="text-medio" style="min-height:60px">
+                        Informe o CEP para pesquisar o valor do frete:<br>
+                        <span id="wait" style="display:none;">                           
+                            <img src="images/img/loader.gif" class="img-responsive" alt="Image" width="16">  
+                        </span>
+                    </p>
+                    @include('layouts.includes.boxes.forms.form_frete_especificacao')                    
                 </div>
             </div>
-            <p id="label_frete" style="display:none">
-                Resumo: Valor - <span id="vl_final"></span>
-                <span id="vl_desc_final"></span>
-                Frete: <span id="vl_frete_final"></span>
-                Valor Total: <span id="vl_total_final"></span>
+        </div>
+        <div class="clearfix"></div> 
+        <div class="destaque_home" id="resultado" style="display:none;">
+            <p class="text-medio text-center"><strong>Escolha uma forma de envio para continuar.</strong></p>        
+            <div class="text-center">
+                @include('layouts.includes.boxes.forms.form_resultado_frete')
+            </div>
+            <p id="label_frete" class="text-medio text-center" style="display:none;">
+                <strong>
+                    Resumo: Valor - <span id="vl_final"></span>
+                    <span id="vl_desc_final"></span>
+                    Frete: <span id="escolha_frete"></span>
+                    Valor Total: <span id="vl_total_final"></span>
+                </strong>
             </p>
         </div>
-    </div>
+        <div class="clearfix"></div> 
+        <div class="destaque_home" id="btn-opcoes" style="display:none"> 
+            
+                <div class="well well-md">
+                    <p class="bg-dark fg-white text-center text-medio" >
+                        Não encontrou o produto desejado, clique em solicitar orçamento. Se deseja ver os desenhos clique em ver os desenhos.
+                    </p>
+                    <div class="text-center">
+                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="SolicitarOrcamento()">
+                            SOLICITAR ORÇAMENTO
+                        </button>
+                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="VerPortfolio()">
+                            VER OS DESENHOS
+                        </button>
+                    </div>
+                </div>
+        
+        </div>
+        <div class="destaque_home" id="btn-opcao-pdf" style="display:none"> 
+            
+                <div class="well well-md">
+                    
+                    <div class="text-center">                       
+                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="EnviarPDF(@if (Auth::guest()) '0' @else '1' @endif)">
+                            CONTINUAR
+                        </button>
+                    </div>
+                </div>
+        
+        </div>
 
-    <div class="destaque_home" id="btn-opcoes" style="display:none">
-        <div class="col-md-6">       
-            <p class="bg-dark fg-white text-center" >
-                Não encontrou o produto desejado, clique em solicitar orçamento.
-            </p>
-            <a href="orcamento.html" title="Solicite um orçamento" class="btn bg-gray fg-white no-radius">
-                SOLICITAR ORÇAMENTO
-            </a>
-        </div>
-        <div class="col-md-6">
-            <p class="bg-dark fg-white text-center" >
-                Clique em ver os desenhos para prosseguir.
-            </p>
-            <button type="button" class="btn bg-gray fg-white no-radius" onclick="Comprar()">
-                VER OS DESENHOS
-            </button>
-        </div>
+        @include('layouts.includes.boxes.forms.form_orcamento') 
     </div>
-    @include('layouts.includes.boxes.forms.form_orcamento') 
 </div>

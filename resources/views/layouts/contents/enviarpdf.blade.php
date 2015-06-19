@@ -30,7 +30,7 @@
         </td>
         <td class="">{!!$post_inputs['orc_pacote_valor']!!}</td>
         <td class="">{!!$post_inputs['orc_categoria_id']!!}</td>
-        <td class="">{!!$post_inputs['orc_vl_frete']!!}</td>
+        <td class="">{!!Utilidades::toReal($post_inputs['orc_vl_frete'])!!}</td>
         <td class="">
             <div class="upload">
                 <form name="orc_offline" id="orc_offline" method="post" action="orc_offline.html" enctype="multipart/form-data" role="form">              
@@ -46,23 +46,7 @@
                 </form>
             </div>
         </td>
-    </tr>
-    
+    </tr>    
 </table>
-<table class="table text-medio">
-    <tr>
-        <td class="">
-            Utilize nosso Gabarito
-        </td>
-        <td class=""></td>
-        <td class=""></td>
-        <td class="">
-            Valor Total
-        </td>
-        <td class="">
-            Continuar Comprando
-            Finalizar Compra
-        </td>
-    </tr>
-</table>
+
 

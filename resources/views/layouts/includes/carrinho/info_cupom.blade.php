@@ -3,11 +3,11 @@
         <tr>
             <td class="col-cesta-title">
                 <span class="cesta_title fg-white">
-                    Prazos
+                    Cupom
                 </span>
             </td>
-            <td>Tipo de Frete</td>
-            <td>Prazo de produção</td>
+            <td>Cupom Promocional</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -30,12 +30,9 @@
                             <td class="vinte">                                
                             </td>
                             <td>
-                                 {!!$post_inputs['orc_tipo_frete']!!}
+                                 Cupom Utilizado - 
                             </td>
-                            <td class="">
-<p>Prazo de produção - 5 dias úteis.</p>
-
-                            </td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>

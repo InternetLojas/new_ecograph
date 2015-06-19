@@ -4,8 +4,8 @@
             <div class="text-center">
                 <span class="badge fg-black position-top">Foto vitrine</span>
             </div>
-            <a title="Detalhes para a categoria nome da categro" id="categoria_5" href="#">
-                imagem
+            <a title="Detalhes para a categoria da foto da vitrine" href="produtos/detalhes/1/6/produto-vitrine.html">
+                imagem da vitrine
             </a>
         </div>
     </div>
@@ -14,8 +14,8 @@
             <div class="text-center">
                 <span class="badge fg-black position-top">Foto vitrine</span>
             </div>
-            <a title="Detalhes para a categoria nome da categro" id="categoria_5" href="#">
-                imagem
+            <a title="Detalhes para a categoria da foto da vitrine" href="produtos/detalhes/1/6/produto-vitrine.html">     
+                imagem da vitrine
             </a>
         </div>
     </div>
@@ -24,8 +24,8 @@
             <div class="text-center">
                 <span class="badge fg-black position-top">Foto vitrine</span>
             </div>
-            <a title="Detalhes para a categoria nome da categro" id="categoria_5" href="#">
-                imagem
+            <a title="Detalhes para a categoria da foto da vitrine" href="produtos/detalhes/1/6/produto-vitrine.html">     
+                imagem da vitrine
             </a>
         </div>
     </div>

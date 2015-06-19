@@ -1,4 +1,4 @@
-<!-- CARRINHO-->
+<!-- RESUMO-->
 <!--============================== content =================================-->
 <div class="title_pagina">
     <div class="icone_pagina">
@@ -14,15 +14,17 @@
 @include('layouts.includes.boxes.forms.form_carrinho')
 <!--================= informações sobre entrega ==========================-->
 @include('layouts.includes.carrinho.info_endereco')
-<!--============================== content =================================-->
 @include('layouts.includes.carrinho.info_prazos')
-
-
-
+@include('layouts.includes.carrinho.info_cupom')
+<!--Painel com as formas de pagamento disponíveis-->
+<div class="container">
+@include('layouts.includes.boxes.forms.form_tipo_pgmto')
+</div>
+<!--
 include('layouts.includes.resumo.endereco')
 include('layouts.includes.resumo.envio')
 include('layouts.includes.resumo.produtos')
 include('layouts.includes.resumo.pagamento')
-include('layouts.includes.resumo.ficha')
+include('layouts.includes.resumo.ficha')-->
 
 

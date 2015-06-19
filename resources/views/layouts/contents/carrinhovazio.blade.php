@@ -12,15 +12,13 @@
 <div class="row">
     <div class="col-md-8">
         <div class="panel ">
-            <div class="panel-heading bg-dark fg-white no-radius">
-                <h3 class="panel-title">Carrinho Vazio</h3>
-            </div>
-            <div class="panel-body bg-smallgray">
-                <h4>
+            
+            <div class="panel-body">
+                <h3>
                     Você ainda não possui nenum produto adicionado ao seu carrinho.<br>
                     Por favor! clique no botão "Escolher meus produtos" para navegar no nosso portfólio.<br><br>
-                </h4>
-                <a href="{{URL::to('produtos.html')}}" class="btn btn-lg bg-yellow no-radius pull-right" title="Clique para efetuar a sua compra">
+                </h3>
+                <a href="{{URL::to('produtos.html')}}" class="btn btn-lg bg-yellow fg-dark no-radius pull-right" title="Clique para efetuar a sua compra">
                     <i class="icon-info-sign icon-white"></i> Escolher meus produtos
                 </a>
             </div>

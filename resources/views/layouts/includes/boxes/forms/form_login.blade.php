@@ -10,7 +10,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-2">
-                <label for="password" class="control-label">Password</label>
+                <label for="password" class="control-label">Senha</label>
             </div>
             <div class="col-sm-10">
                 <input type="password" class="form-control" name="password" id="password" placeholder="Sua senha" required>
@@ -26,8 +26,8 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <div class="checkbox">
-                    <label class="badge">
-                        <input type="checkbox"> Remember me
+                    <label class="text-medio">
+                        <input type="checkbox">Lembre-me
                     </label>
                 </div>
             </div>
@@ -35,7 +35,6 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-11">
                 <a class="btn btn-link" href="{{ url('/password/email') }}">Esqueceu a senha?</a>
-
             </div>
         </div>
         <div class="form-group">

@@ -16,9 +16,10 @@
                     <p class="fg-dark">
                         {!!Fichas::nomeproduto($item['id'])!!}
                     </p>
-                    <button type="button" onclick="AdicionarCarrinho('{{$item['id']}}');" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($item['id']) }}" id="{{$item['id']}}">
+ 
+                    <a href="{{ URL::to('produtos/detalhes') }}/{{Fichas::parentCategoria($item['id'])}}/{{$item['id'] }}/{{ URLAmigaveis::Slug(Fichas::nomeProduto($item['id']),'-',true) }}.html" title="{{ Fichas::nomeProduto($item['id']) }}" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($item['id']) }}" id="{{$item['id']}}">
                         <i class="icon-cart on-left"></i>Comprar
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
