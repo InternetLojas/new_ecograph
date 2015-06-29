@@ -1633,14 +1633,23 @@ hr {
 .uppercase{
     text-transform:uppercase!important;
 }
+.text-smallbig{
+    font-size:2.22em;
+}
+.text-big{
+    font-size:2.4em;
+}
 .text-medio{
-    font-size:77.77777777777778%;
+    font-size:0.77em;
+}
+.text-mediobig{
+    font-size:0.95em;
 }
 span.afasta{
     font-weight: 600;
     font-size: 88.88888888888889%;
 }
-
+span.right.afasta{ float:right;margin-right:4px;}
 .umquarto {
     display: block;
     float: left;
@@ -1714,11 +1723,22 @@ span.element-divider-end:before{
 .destaque_home_orcamento{
     padding:0 20px;
 }
+.banner{
+   padding:0 30px;
+   display:block;
+}
+.destaque_home_banner{
+    
+    background-color: #afd9ee!important;
+}
 li.pd-5{
     padding: 2px 0;
 }
 span.mg-left5{
     margin-left:5px;
+}
+.mg-left50{
+    margin-left:50px;
 }
 table.body_cadastro{ 
     width:100%;
@@ -2014,7 +2034,9 @@ table.lista_produtos th span.afasta {
     padding: 0;
     margin-left: 8px;
 }
-
+ul.list-categ{
+    padding: 2px 30px;
+}
 li.afasta a {
     color: #999 !important;
 }
@@ -2149,6 +2171,13 @@ ul.nav li a.nav-hz,
     border-radius:0!important;
     text-align: left;
     padding-left:5px;
+}
+ul.list li.list-categorias a.nav-hz{
+    padding: 2px ;
+}
+ul.list li.list-categorias{
+    border-bottom:1px solid #ffffff;
+    
 }
 span.btn-search{
     background-color:#343434!important;
