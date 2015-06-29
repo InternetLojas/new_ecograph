@@ -10,7 +10,7 @@
             </a>
         </div>
         <table class="table table-bordered ">
-            <thead class="bg-smallgray text-center">
+            <thead class="bg-very-smallgray text-center text-medio">
                 <tr>
                     <th class="text-center">Formato</th>
                     <th class="text-center">Cores</th>

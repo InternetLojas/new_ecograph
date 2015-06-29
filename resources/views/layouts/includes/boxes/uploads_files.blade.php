@@ -1,6 +1,6 @@
 <!--<form name="form_upload" id="form_upload" method="post" role="form" action="editor/upload" enctype="multipart/form-data">-->
     <div class="form-group file" data-role="form-group">
-        <span>Inserir Logoiipo1</span>
+        <span>Inserir Logotipo1</span>
         <input type="file" id="logo1" name="files1" class="form-control no-radius" placehoder="inserir Arquivo 1" data-token="{!! csrf_token() !!}"/>
     </div>
     <div class="form-group file" data-role="input-control">

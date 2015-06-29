@@ -1,4 +1,9 @@
-<h1 class="text-center fg-dark">
-    <span style="padding:2px;" class="bg-very-smallgray">Todos produtos</span>
-</h1>
-{!!HTML::lista_sub_categorias(Fichas::CategoriasPais())!!}
+
+<div class="destaque_home">
+    <h1 class="text-center text-dark">Todos produtos</h1>
+    <div class="row">
+        <div class="col-md-12">                            
+            {!!HTML::lista_sub_categorias(Fichas::CategoriasPais())!!}
+        </div>
+    </div>
+</div>

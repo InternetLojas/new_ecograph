@@ -107,31 +107,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($address as $value)
-                            <tr>
-                                @if($customers->customers_pf_pj == 'j')
-                                <td>{{ $value->entry_company }} - {{ $value->entry_fantasia }}</td>
-                                @endif
-                                <td>{{ $customers->customers_cpf_cnpj }}</td>
-                                <td>{{ $customers->customers_rg_ie }}</td>
-                                <td>{{ $customers->ddd }} {{ $customers->customers_telephone }}</td>
-                                <td>{{ $value->entry_street_address }}</td>
-                                <td>{{ $value->entry_suburb }}</td>
-                                <td>{{ $value->entry_city }}</td>
-                                <td>{{ $value->entry_state }}</td>
-                                <td>{{ $value->entry_nr_rua }}</td>
-                                <td>{{ $value->entry_comp_ref }}</td>
-                                <td>{{ $value-> entry_ref_entrega }}</td>
-                                <td class="center">
-                                    <ul class="unstyled">
-                                        <li>
-                                            <a href="{{ URL::to('clientes/editar/endereco')}}/{{ $customers->id }}">
-                                                <i class="icon-folder-close"></i> Atualizar dados</a> 
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            @endforeach
+                          
                         </tbody>
                     </table>
                     <hr class="soft"/>
@@ -149,22 +125,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($orders as $order)
-                            <tr>
-                                <td>{{ $order->id }}</td>
-                                <td>{{ $order->payment_method }}</td>
-                                <td>{{ $order->orders_status }}</td>
-                                <td>{{ $order->created_at }}</td>
-                                <td class="center">
-                                    <ul class="unstyled">
-                                        <li>
-                                            <a href="{{ URL::to('clientes/pedidos')}}/{{ $order->id }}">
-                                                <i class="icon-folder-close"></i> Ver pedido</a> 
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            @endforeach
+                          
                         </tbody>
                     </table>
                     <hr>

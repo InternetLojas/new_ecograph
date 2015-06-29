@@ -12,5 +12,4 @@
 @include('layouts.includes.detalhes.especificacoes')
 @include('layouts.includes.detalhes.logar')
 @include('layouts.includes.modais.modal_perfil')
-@include('layouts.includes.detalhes.portfolio')
 

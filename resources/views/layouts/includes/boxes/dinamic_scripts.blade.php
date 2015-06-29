@@ -66,7 +66,12 @@
             });
                     $('#btn_portfolio').click(function() {
 
-            AdicionaItemCarrinho();
+             @if(Auth::check())
+                    var logado = true;
+                    @else
+                    var logado = false
+                    @endif
+                    Encerrar('comprar', logado);
             });
                     $('#btn_comprar').click(function()
             {

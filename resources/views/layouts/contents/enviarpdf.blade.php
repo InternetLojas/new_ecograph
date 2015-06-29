@@ -1,5 +1,5 @@
 <!--============================== content =================================-->
-<p class="text-medio"><b>{!!Fichas::nomeCategoria(Fichas::parentCategoria($post_inputs['orc_categoria_id']))!!} - {!!Fichas::nomeCategoria($post_inputs['orc_categoria_id'])!!}</b></p>
+<p class="text-medio"><b>{!!$post_inputs['orc_categoria_nome']!!} - {!!$post_inputs['orc_subcategoria_nome']!!}</b></p>
 <p class="bg-gray fg-white text-center text-medio" >
     Inserir arquivo w PDF ou JPEG 300 dpis, cores CMYK.
 </p>
@@ -21,7 +21,7 @@
         </td>
         <td class="">{!!$post_inputs['orc_pacote_qtd']!!}</td>
         <td class="">
-            Produto: {!!Fichas::nomeCategoria(Fichas::parentCategoria($post_inputs['orc_categoria_id']))!!}<br>
+            Produto: {!!$post_inputs['orc_categoria_nome']!!}<br>
             Formato: {!!$post_inputs['orc_formato_nome']!!}<br>
             Cores: {!!$post_inputs['orc_cor_nome']!!}<br>
             Papel: {!!$post_inputs['orc_papel_nome']!!}<br>

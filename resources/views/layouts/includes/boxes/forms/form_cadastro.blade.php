@@ -301,7 +301,7 @@
         </tbody>
     </table>
 </div>
-<!-- REVENDECOR-->
+<!-- REVENDECOR--
 <h3 class="title-cadastro">Revenda</h3>
 <div class="destaque_home_edicao"> 
     <table class="body_cadastro">
@@ -328,7 +328,7 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div>-->
 <h3 class="title-cadastro">Regras de uso</h3>
 <div class="destaque_home_edicao"> 
     <table class="body_cadastro">

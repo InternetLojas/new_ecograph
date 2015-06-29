@@ -1,16 +1,21 @@
 <form>
     <div class="form-group">       
         <div class="input-group" data-role="input-group">
-            <ul class="list-inline text-medio">
-                <li>
-                    <span class="check"></span>
-                    PAC: <span id="vl_pac" ></span>
-                    <input id="frete_pac" type="radio" value="" name="vl_frete" onclick="SetaFreteOrcamento('PAC', 'frete_pac')" />
-                </li>
+            <ul class="list-inline text-medio">                
                 <li>
                     <span class="check"></span>
                     SEDEX: <span id="vl_sedex" ></span>
-                    <input id="frete_sedex" type="radio" value="" name="vl_frete" onclick="SetaFreteOrcamento('SEDEX', 'frete_sedex')" />
+                    <input id="frete_sedex" type="radio" value="" name="vl_frete" onclick="SetaFrete('SEDEX', 'frete_sedex')" />
+                </li>
+                <li>
+                    <span class="check"></span>
+                    TRANSPORTADORA (<small class="fg-red">o cliente escolhe sua transportadora</small>)
+                    <input id="frete_transportadora" type="radio" value="0.00" name="vl_frete" onclick="SetaFrete('TRANSPORTADORA', 'frete_transportadora')" />
+                </li>
+                <li>
+                    <span class="check"></span>
+                    RETIRAR NA LOJA (<small class="fg-red">sem custo para envio</small>) 
+                    <input id="frete_retirar_loja" type="radio" value="0.00" name="vl_frete" onclick="SetaFrete('RETIRAR NA LOJA', 'frete_retirar_loja')" />
                 </li>
             </ul>
         </div>            

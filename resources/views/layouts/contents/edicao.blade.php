@@ -6,11 +6,15 @@
 <div class="destaque_home_edicao">
     <!--============================== content =================================-->
     <div id="info_basket"></div>
-    <form name="basket" id="basket" method="post" action="resumo.html" enctype="multipart/form-data" role="form">              
+    <form name="basket" id="basket" method="post" action="loja/upload-resumo.html" enctype="multipart/form-data" role="form">              
         <div class="editor">
             <div class="col-md-7">
                 <p class="legend-editor-texto  bg-gray fg-white" ><b>Inserir Texto</b></p>
                 @include('layouts.includes.boxes.forms.form_edicao') 
+                @foreach($form_orcamento as $key => $vl)
+                <input type="hidden" name="{{$key}}" value="{{$vl}}" />
+                @endforeach
+                <input type="hidden" name="user" value="{!!Auth::user()->id!!}" /> 
             </div>
             <div class="col-md-5">
                 <p class="legend-editor-logos  bg-gray fg-white" ><b>Inserir Logo/Imagem</b></p>
@@ -20,7 +24,7 @@
                         <img src="images/{!!$img_categoria!!}" class="img-responsive img-editor" />
                     </div>
                     <div class="row">
-                        <button type="button" name="comprar" id="btn_portfolio" class="btn btn-editor bg-dark fg-white no-radius">
+                        <button type="submit" name="Resumo" class="btn btn-editor bg-dark fg-white no-radius">
                             Finalizar compra
                         </button>
                         <p class="tex-muted text-center text-medio">
@@ -29,11 +33,7 @@
                     </div>
                 </div>
             </div>       
-            @foreach($form_orcamento as $key => $vl)
-            <input type="hidden" name="{{$key}}" value="{{$vl}}" />
-            @endforeach
-            <input type="hidden" name="user" value="{!!Auth::user()->id!!}" />  
+
         </div>
     </form>
-    @include('layouts.includes.modais.modal_comprar')
 </div>

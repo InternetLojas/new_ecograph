@@ -1,11 +1,9 @@
 <div class="">
     <div id="especificacoes_selecionada" style="display:none;" data-token="{!!csrf_token()!!}">
         <!--============================== content =================================-->
-        <div class="destaque_home">
-            @include('layouts.includes.boxes.opcoes_finalizacao')
-        </div>
+        @include('layouts.includes.boxes.opcoes_finalizacao')
         <div class="clearfix"></div>        
-        <div class="destaque_home" id="cupom_frete" style="display:none;">            
+        <div class="destaque_home" id="cupom_frete" style="display:none;" data-acao="imprimir">            
             <div class="col-md-6">
                 <div class="well well-md">
                     <p class="text-medio" style="min-height:60px">
@@ -41,38 +39,29 @@
                     Valor Total: <span id="vl_total_final"></span>
                 </strong>
             </p>
+             <div id="info_encerrar"></div>   
         </div>
         <div class="clearfix"></div> 
-        <div class="destaque_home" id="btn-opcoes" style="display:none"> 
-            
-                <div class="well well-md">
-                    <p class="bg-dark fg-white text-center text-medio" >
-                        Não encontrou o produto desejado, clique em solicitar orçamento. Se deseja ver os desenhos clique em ver os desenhos.
-                    </p>
-                    <div class="text-center">
-                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="SolicitarOrcamento()">
-                            SOLICITAR ORÇAMENTO
-                        </button>
-                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="VerPortfolio()">
-                            VER OS DESENHOS
-                        </button>
-                    </div>
-                </div>
-        
-        </div>
-        <div class="destaque_home" id="btn-opcao-pdf" style="display:none"> 
-            
-                <div class="well well-md">
-                    
+        <div class="destaque_home" id="btn-opcoes" style="display:none">             
+            <div class="well well-md"> 
+                <div class="text-center">
+                    <!--<button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="SolicitarOrcamento()">
+                        SOLICITAR ORÇAMENTO
+                    </button>-->
                     <div class="text-center">                       
-                        <button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="EnviarPDF(@if (Auth::guest()) '0' @else '1' @endif)">
+                        <button type="button" title="Gere o orçamento para impressão" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-imprimir" onclick="Encerrar()">
+                            CONTINUAR
+                        </button>
+                        <button type="button" title="Encontre o desenho que mais lhe convem" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-personalizar" onclick="Encerrar()">
+                            CONTINUAR
+                        </button>
+                        <button type="button" title="Envie sua arte para nós" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-enviar" onclick="Encerrar()">
                             CONTINUAR
                         </button>
                     </div>
                 </div>
-        
+            </div>        
         </div>
-
         @include('layouts.includes.boxes.forms.form_orcamento') 
     </div>
 </div>

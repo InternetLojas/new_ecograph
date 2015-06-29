@@ -27,7 +27,7 @@
             <div class="container">
                 <!--============================== banner =================================-->
                 <div class="wrapper">                    
-                    <div class="row">
+                    <div class="banner">
                         @include('layouts.includes.banner_slider')
                     </div>
                 </div>
