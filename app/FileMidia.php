@@ -10,5 +10,6 @@ class FileMidia extends Model {
     {
         return $this->belongsTo('Ecograph\File', 'file_id');
     }
+ 
 
 }

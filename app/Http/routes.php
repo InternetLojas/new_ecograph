@@ -227,6 +227,10 @@ Route::group(['prefix' => 'loja'], function() {
         "as" => "loja.resumo",
         "uses" => "StoreController@Resumo"
     ));
+    Route::post("upload-resumo.html", array(
+        "as" => "loja.upload-resumo",
+        "uses" => "StoreController@UploadResumo"
+    ));
     Route::post("validacaixa", array(
         "as" => "loja.validacaixa",
         "uses" => "StoreController@ValidaCaixa"));

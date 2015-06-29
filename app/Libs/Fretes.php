@@ -47,32 +47,28 @@ Class Fretes {
         return $envelope;
     }
 
-    public static function makeURL($peso, $ceporigem, $cepdestino, $srv, $nVlValorDeclarado = '') {
-        /* if (empty($nVlValorDeclarado)) {
-          if (Cart::total() * 100 >= 10000) {
-          $nVlValorDeclarado = 10000;
-          } else {
-          $nVlValorDeclarado = Cart::total(); // Declarar valor - 0 - desabilitado
-          }
-          } */
+    public static function makeURL($peso, $cepdestino, $srv, $nVlValorDeclarado = '') {
         $nVlValorDeclarado = 1000;
-        return '?nCdEmpresa=&sDsSenha=&sCepOrigem=' . $ceporigem . '&sCepDestino=' . $cepdestino . '&nVlPeso=' . $peso . '&nCdFormato=1&nVlComprimento=20&nVlAltura=10&nVlLargura=15&sCdMaoPropria=n&nVlValorDeclarado=' . $nVlValorDeclarado . '&sCdAvisoRecebimento=n&nCdServico=' . $srv . '&nVlDiametro=60&StrRetorno=xml';
+        return '?nCdEmpresa=&sDsSenha=&sCepOrigem=' . STORE_CEP . '&sCepDestino=' . $cepdestino . '&nVlPeso=' . $peso . '&nCdFormato=1&nVlComprimento=20&nVlAltura=10&nVlLargura=15&sCdMaoPropria=n&nVlValorDeclarado=' . $nVlValorDeclarado . '&sCdAvisoRecebimento=n&nCdServico=' . $srv . '&nVlDiametro=60&StrRetorno=xml';
     }
 
     public static function GetRequestCorreio($URL) {
         $endereco_wsdl = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPreco';
         $xml = simplexml_load_file($endereco_wsdl . $URL);
-        $valor = array();
+        $response = array();
         foreach ($xml->Servicos->cServico as $value) {
             if ($value->Valor != '0,00') {
-                $valor = $value->Valor;
+                $response = array('erro' => false,'valor'=> $value->Valor);
+                //$valor = $value->Valor;
                 break;
             } else {
-                $valor['Erro'] = $value->MsgErro;
+                $response = array('erro' => true,'erro'=>$value->MsgErro );
+                //$valor['Erro'] = $value->MsgErro;
+                break;
             }
         }
 
-        return $valor;
+        return $response;
     }
 
     public static function CurlRequestCorreio($dados) {

@@ -301,7 +301,7 @@ HTML::macro('lista_categorias', function($id) {
 });
 
 HTML::macro('orcamento_categorias', function() {
-    $categorias = Category::all()->where('id','<>','1')->lists('id');
+    $categorias = Category::all()->where('id', '<>', '1')->lists('id');
 
     $html = '';
     //dd($array_categ);
@@ -407,15 +407,15 @@ HTML::macro('lista_sub_categorias', function($lista) {
     //echo '<pre>';
     //print_r($lista);
     $html = '';
+    $html .= '<ul class="list-unstyled list-inline text-center list-categ">';
     foreach ($lista as $categorias) {
-        $html .= ' <ul class="list-unstyled list-inline text-center text-muted">';
         foreach ($categorias['prole']['filhos'] as $item) {
             $html .= '<li class="afasta">';
             $html .= '<a class="text-medio" title="Detalhes para a categoria ' . $item['nome_filho'] . '" id="' . $item['id'] . '" href="' . URL::to('produtos/detalhes') . '/' . $item['parent_id'] . '/' . $item['id'] . '/' . URLAmigaveis::Slug($item['nome_filho'], '-', true) . '.html">' . $item['nome_filho'] . '</a> | ';
             $html .='</li>';
         }
-        $html .= '</ul>';
     }
+    $html .= '</ul>';
     return $html;
     //exit;
 });
