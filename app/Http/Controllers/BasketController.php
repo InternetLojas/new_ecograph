@@ -136,10 +136,12 @@ class BasketController extends Controller {
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
         //dd($post_inputs);
+        $valor = str_replace('R$ ', '',$post_inputs['orc_pacote_valor']);
+        $price = str_replace(',', '.',$valor);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
         $item = (array('id' => $post_inputs['produto_id'],
             'name' => Fichas::nomeProduto($post_inputs['produto_id']),
-            'price' => str_replace('R$ ', '', $post_inputs['orc_pacote_valor']),
+            'price' => $price,
             'quantity' => 1,
             'image' => $image
         ));

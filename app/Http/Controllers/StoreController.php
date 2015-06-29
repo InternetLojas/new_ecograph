@@ -49,7 +49,7 @@ class StoreController extends Controller {
     public function Resumo(Request $request) {
         Session::forget('error');
         $post_inputs = $request->all();
-        //dd($post_inputs);
+
         $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($parent);
         $title = 'Resumo do Pedido';
@@ -61,16 +61,114 @@ class StoreController extends Controller {
         $gateway = Gateway::ativos('1')->get();
         //$gateway = Gateway::find('1');
         return view('loja.index')
-        ->with('title', STORE_NAME . 'Resumo')
-        ->with('page', 'resumo')
-        ->with('ativo', 'Resumo')
-        ->with('rota', 'loja/resumo.html')
-        ->with('contents', Cart::content())
-        ->with('default_address', $default_address)
-        ->with('gateways', $gateway)
-        ->with('post_inputs', $post_inputs)
-         ->with('cart_total', $cart_total)
-        ->with('layout', $layout);
+                        ->with('title', STORE_NAME . 'Resumo')
+                        ->with('page', 'resumo')
+                        ->with('ativo', 'Resumo')
+                        ->with('rota', 'loja/resumo.html')
+                        ->with('contents', Cart::content())
+                        ->with('default_address', $default_address)
+                        ->with('gateways', $gateway)
+                        ->with('post_inputs', $post_inputs)
+                        ->with('cart_total', $cart_total)
+                        ->with('layout', $layout);
+    }
+
+    public function UploadResumo(Request $request) {
+        $erros = array();
+        $post_inputs = $request->all();
+        /**
+         * Storage related
+         */
+        //$rules = array('image' => 'required'); //mimes:jpeg,bmp,png and for max size max:10000
+        $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
+        if ($request->file('files1')) {
+            $rules['file1'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+            $validator = Validator::make($post_inputs['files1'], $rules);
+            if ($validator->fails()) {
+                
+            } else {
+                $fileName1 = $request->file('files1')->getClientOriginalName();
+                $request->file('files1')->move($storagePath, $fileName1);
+            }
+        }
+        if ($request->file('files2')) {
+            $fileName2 = $request->file('files2')->getClientOriginalName();
+            $request->file('files2')->move($storagePath, $fileName2);
+        }
+        if ($request->file('files3')) {
+            $fileName3 = $request->file('files3')->getClientOriginalName();
+            $request->file('files3')->move($storagePath, $fileName3);
+        }
+        if ($request->file('files4')) {
+            $fileName4 = $request->file('files4')->getClientOriginalName();
+            $request->file('files4')->move($storagePath, $fileName4);
+        }
+        if ($request->file('files5')) {
+            $fileName5 = $request->file('files5')->getClientOriginalName();
+            $request->file('files5')->move($storagePath, $fileName5);
+        }
+        if ($request->file('files6')) {
+            $fileName6 = $request->file('files6')->getClientOriginalName();
+            $request->file('files6')->move($storagePath, $fileName6);
+        }
+        if (count($erros) > 0) {
+            $layout = \Layout::classes(0);
+            return view('home.index')
+                            ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
+                            ->with('page', 'home')
+                            ->with('ativo', 'Home')
+                            ->with('rota', '/')
+                            ->with('layout', $layout);
+            // send back to the page with the input data and errors
+        }
+        $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
+        $layout = $this->layout->classes($parent);
+        //$title = 'Resumo do Pedido';
+        $cart_total = Cart::total();
+        //levanta o endereço do cliente
+        $address = Customer::with('AddressBook')->find(\Auth::user()->id)->AddressBook;
+        $default_address = $address->toarray();
+        //levanta o tipo de pagamento
+        $gateway = Gateway::ativos('1')->get();
+        //$gateway = Gateway::find('1');
+        return view('loja.index')
+                        ->with('title', STORE_NAME . 'Resumo')
+                        ->with('page', 'resumo')
+                        ->with('ativo', 'Resumo')
+                        ->with('rota', 'loja/resumo.html')
+                        ->with('contents', Cart::content())
+                        ->with('default_address', $default_address[0])
+                        ->with('gateways', $gateway)
+                        ->with('post_inputs', $post_inputs)
+                        ->with('cart_total', $cart_total)
+                        ->with('layout', $layout);
+    }
+
+    public function upload() {
+        /**
+         * Request related
+         */
+        $file = \Request::file('documento');
+
+        $userId = \Request::get('userId');
+
+        /**
+         * Storage related
+         */
+        $storagePath = storage_path() . '/documentos/' . $userId;
+
+        $fileName = $file->getClientOriginalName();
+
+        /**
+         * Database related
+         */
+        $fileModel = new \App\File();
+        $fileModel->name = $fileName;
+
+        $user = \App\User::find($userId);
+        $user->files()->save($fileModel);
+
+        return $file->move($storagePath, $fileName);
     }
 
     /**
@@ -119,7 +217,7 @@ class StoreController extends Controller {
      * @return json
      */
     public function Caixa() {
-        
+
         $erros = array();
         //check if its our form
         if (Session::token() !== Input::get('_token')) {
@@ -224,27 +322,27 @@ class StoreController extends Controller {
                 $links = $path->appends(['keyword' => $keyword])->render();
                 $layout = $this->layout->classes('0');
                 return view('produtos.index')
-                        ->with('products', $products)
-                        ->with('keyword', $keyword)
-                        ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
-                        ->with('page', 'busca')
-                        ->with('links', $links)
-                        ->with('ativo', $keyword)
-                        ->with('total', $resultado->total())
-                        ->with('rota', 'loja/busca')
-                        ->with('layout', $layout);
+                                ->with('products', $products)
+                                ->with('keyword', $keyword)
+                                ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+                                ->with('page', 'busca')
+                                ->with('links', $links)
+                                ->with('ativo', $keyword)
+                                ->with('total', $resultado->total())
+                                ->with('rota', 'loja/busca')
+                                ->with('layout', $layout);
             }
         }
 
         $layout = $this->layout->classes('0');
         return view('produtos.index')
-                ->with('products', '')
-                ->with('keyword', $keyword)
-                ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
-                ->with('page', 'naocadastrado')->with('ativo', 'busca')
-                ->with('total', '0')->with('rota', 'busca/')
-                ->with('layout', $layout)
-                ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
+                        ->with('products', '')
+                        ->with('keyword', $keyword)
+                        ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+                        ->with('page', 'naocadastrado')->with('ativo', 'busca')
+                        ->with('total', '0')->with('rota', 'busca/')
+                        ->with('layout', $layout)
+                        ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
     }
 
 }

@@ -73,11 +73,13 @@ class CustomerController extends Controller {
     public function conta() {
         if (Auth::user()->id) {
             // get the customer
-            $customers = Customer::where('id', Auth::user()->id)->get();
+            $customers = Customer::find(Auth::user()->id);
             //$address = Customer::find(Auth::user()->id)->address;
+            $address = Customer::with('AddressBook')->find(\Auth::user()->id)->AddressBook;
+            $default_address = $address->toarray();
         }
-        $address = array();
-        //dd($address);
+        //$address = array();
+        //dd($customers);
         return view('clientes.index')
                         ->with('title', STORE_NAME . ' Minha Conta')
                         ->with('message', 'Bem Vindo :' . Customer::find(Auth::user()->id)->customers_firstname)
@@ -85,7 +87,7 @@ class CustomerController extends Controller {
                         ->with('ativo', 'Minha Conta')
                         ->with('rota', 'minhaconta')
                         ->with('customers', $customers)
-                        ->with('address', $address);
+                        ->with('address', $default_address);
     }
 
     /**
@@ -192,7 +194,7 @@ class CustomerController extends Controller {
             if (!Utilidades::validate_cnpj($post_inputs['customers_cpf_cnpj'])) {
                 $erros[] = 'CNPJ no formato errado';
             }
-             $rules['customers_atuacao'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
+            $rules['customers_atuacao'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
             $rules['entry_company'] = 'required|regex:/^[a-zA-Z\s]*$/|min:5|max:120';
             $rules['entry_fantasia'] = 'regex:/^[a-zA-Z\s]*$/|min:5|max:120';
         }
@@ -296,7 +298,7 @@ class CustomerController extends Controller {
             $acessos->customer_id = $customer->id;
             //dados de acesso criado para o cliente
             $salve = $acessos->save();
-            return $this->TratarEmail($salve,$customer);
+            return $this->TratarEmail($salve, $customer);
         }
         //return json_encode($data);
     }

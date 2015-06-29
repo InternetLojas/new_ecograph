@@ -53,7 +53,7 @@ class PricesController extends Controller {
         //identificando o peso para o pacote 
         $category_peso = Pacpapel::wherein('id', $pacote_papeis)->get();
         $peso = $category_peso->toarray();
-       
+
         foreach ($peso as $k => $valores) {
             $pacote_peso[] = utf8_encode($valores['weight']);
         }
@@ -74,7 +74,7 @@ class PricesController extends Controller {
             $data = array('preco' => $span_preco);
         }
         $data['peso'] = ($pacote_peso);
-        if($post_inputs['categoria']==5){
+        if ($post_inputs['categoria'] == 5) {
             $data['preco'][5] = '25,00';
             $data['preco'][6] = '25,00';
             $data['preco'][7] = '25,00';
@@ -94,14 +94,23 @@ class PricesController extends Controller {
     public function Fretes(Request $request) {
         $post_inputs = $request->all();
         $post_inputs['orc_peso'] = '3.25';
-        $URL_PAC = Fretes::makeURL($post_inputs['orc_peso'], '90810150', $post_inputs['orc_cep'], '41106');
-        $URL_SEDEX = Fretes::makeURL($post_inputs['orc_peso'], '90810150', $post_inputs['orc_cep'], '40010');
-        $valor_pac = Fretes::GetRequestCorreio($URL_PAC);
+        //$URL_PAC = Fretes::makeURL($post_inputs['orc_peso'], '90810150', $post_inputs['orc_cep'], '41106');
+        $URL_SEDEX = Fretes::makeURL($post_inputs['orc_peso'], $post_inputs['orc_cep'], '40010');
+        //echo $URL_SEDEX ;exit;
+        //$valor_pac = Fretes::GetRequestCorreio($URL_PAC);
         $valor_sedex = Fretes::GetRequestCorreio($URL_SEDEX);
-        $correios = array('PAC' => $valor_pac,
-            'SEDEX' => $valor_sedex);
-        $data = json_encode($correios);
-        return $data;
+        if ($valor_sedex['erro']) {
+            $data = array('erro' => true,
+                'mensagem' => $valor_sedex['erro']);
+        } else {
+            
+            $data = array('erro' => false,
+                'Transportadora' => 0,
+                'SEDEX' => $valor_sedex['valor'],
+                'Retirada na Loja' => 0);
+        }
+        //dd(json_encode($data));
+        return json_encode($data);
     }
 
 }

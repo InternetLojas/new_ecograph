@@ -52,8 +52,8 @@ class EditorController extends Controller {
     public function Personalizar(Request $request) {
         $post_inputs = $request->all();
         $img_categoria = Category::find($post_inputs['orc_subcategoria_id'])->categories_image;
-        $parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
-        $layout = $this->layout->classes(\Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
+        //$parent = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
+        $layout = $this->layout->classes($post_inputs['orc_categoria_id']);
         $customers = Customer::where('id', \Auth::user()->id)->get();
         $customer = $customers->toarray();
         //dd($customer[0]);
@@ -77,7 +77,7 @@ class EditorController extends Controller {
                         ->with('title', STORE_NAME . ' Editar ' . $post_inputs['orc_subcategoria_nome'])
                         ->with('page', 'editor')
                         ->with('ativo', $post_inputs['orc_subcategoria_nome'])
-                        ->with('parent', $parent)
+                        ->with('parent', $post_inputs['orc_categoria_id'])
                         ->with('form_orcamento', $post_inputs)
                         ->with('perfil', $post_inputs['orc_nome_perfil'])
                         ->with('customer',$customer[0])

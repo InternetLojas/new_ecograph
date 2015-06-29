@@ -332,13 +332,13 @@ class ProductController extends Controller {
         $post_inputs = $request->all();
         //dd($post_inputs);
         $layout = $this->layout->classes('0');
-        $contents = Cart::content();
+        //$contents = Cart::content();
         //dd($contents);
         return view('produtos.index')
                         ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
                         ->with('page', 'enviarpdf')
                         ->with('ativo', 'Enviar PDF')
-                        ->with('contents', $contents->toarray())
+                       
                         ->with('post_inputs', $post_inputs)
                         ->with('rota', 'produtos/enviarpdf.html')
                         ->with('layout', $layout);
