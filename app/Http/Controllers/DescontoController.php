@@ -29,6 +29,7 @@ class DescontoController extends Controller {
      */
     public static function Desconto(Request $request) {
         $post_inputs = $request->all();
+
         $erros = array();
         //check if its our form
         //regras a serem validadas
@@ -80,6 +81,7 @@ class DescontoController extends Controller {
                             'extra' => $extra,
                             'config' => $config
                         );
+                        
                         return json_encode($data);
                     }
                 }

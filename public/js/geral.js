@@ -819,17 +819,26 @@ function FreteOrcamento() {
 function SetaFrete(tipo, id) {
     $('#label_frete').css('display', 'none');
     vl_frete = +$('#' + id).val();
+    //alert(vl_frete);
+    perc_desconto = $('#perc_desconto').val();
+    //alert(perc_desconto);
     orc_pacote_valor = $('#orc_pacote_valor').val();
-    vl_final = +orc_pacote_valor.replace("R$ ", "");
+    pacote_valor = orc_pacote_valor.replace("R$ ", "");
+    valor = pacote_valor.replace(",", ".");
+    //alert(valor);
     acao = $('#cupom_frete').attr('data-acao');
-    $('#orc_vl_frete').val(vl_frete);
-    $('#vl_final').text($('#orc_pacote_valor').val() + '.00');
+    vl_final = $('#orc_vl_frete').val(vl_frete);
+    //alert(vl_final);
+    $('#vl_final').text($('#orc_pacote_valor').val() + ',00');
     $('#orc_tipo_frete').val(tipo);
     $('#vl_frete_escolhido').val('R$ ' + $('#' + id).val());
     $('#escolha_frete').html('R$ ' + $('#' + id).val());
     $('#btn-opcoes').slideDown('slow');
+    $('#label_frete').fadeIn(500);
     //SetaBtnAcao(acao);
-    soma = vl_final + vl_frete;
+    soma = (+valor - +(valor*perc_desconto)) + vl_frete;
+    $('#vl_desc_final').html('R$ ' +((valor*perc_desconto).toFixed(2)).replace('.', ','));
+    $('#orc_desconto_valor').val(valor*perc_desconto);  
     $('#vl_total_final').html('R$ ' + (soma.toFixed(2)).replace('.', ','));
 }
 /*-----------------------------------------------------------------------------------*/
@@ -1116,28 +1125,30 @@ function PreparaUpload(midia) {
 }
 /*
  *******************************************************
- ***   script para controle da página de carrinho    ***
+ ***   script para controle da cupom    ***
  *******************************************************
  */
 function ValidaCupom(whoo, URL)
 {
 
-    $('#enviando_' + whoo).show();
+    /*$('#enviando_' + whoo).show();
     $('#' + whoo).css({
         opacity: 0.2
-    });
+    });*/
+$('#btn-validar').attr('disabled', 'false');
+//$('#btn_cupom_confirmar').css('display', 'none');
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
-    $('#mensagem_' + whoo).removeClass('errormsg alert');
-    $('#info_' + whoo).removeClass('infomsg alert');
-    $('#' + whoo).css({
+    $('#mensagem_' + whoo).removeClass('alert alert-warning');
+    $('#info_' + whoo).removeClass('alert alert-info');
+    /*$('#' + whoo).css({
         opacity: 0.2
-    });
+    });*/
     var formulario = $('#' + whoo).serializeArray();
-    //console.log(formulario);
+    console.log(formulario);
     $.post(URL, formulario, function(data) {
         var obj = JSON.parse(data);
-        //console.log(data);
+        console.log(data);
         if (obj.status === 'fail') {
             $('#info_' + whoo).html('');
             //overlay('on', whoo);
@@ -1160,21 +1171,43 @@ function ValidaCupom(whoo, URL)
             //overlay('off', whoo);
         } else {
             //overlay('off', whoo);
-            $('#' + whoo).css({
+            /*$('#' + whoo).css({
                 opacity: 1
-            });
-            $('#mensagem_' + whoo).removeClass('errormsg alert');
-            $('#mensagem_' + whoo).addClass('successmsg alert');
-            $('#mensagem_' + whoo).html('SUCESSO! Seu cupom foi validado.');
-            $('#info_' + whoo).addClass('infomsg alert');
+            });*/
+            $('#mensagem_' + whoo).removeClass('alert alert-warning');
+           // $('#mensagem_' + whoo).addClass('alert alert-success');
+            //$('#mensagem_' + whoo).html('SUCESSO! Seu cupom foi validado.');
+            $('#info_' + whoo).addClass('alert alert-info');
             $('#info_' + whoo).html(obj.info);
-            $('#extra_' + whoo).html(obj.extra);
-            $('#btn_cupom_descartar').css('display', 'block');
-            $('#btn_cupom_confirmar').css('display', 'block');
-            $('#btn_cupom').css('display', 'none');
-            $('#btn_cupom_confirmar').focus();
+            //$('#extra_' + whoo).html(obj.extra);
+            $('#btn-validar').attr('disabled', 'true');
+            var vl_discount_cupom = obj.config[1].discount_values;
+            $('#perc_desconto').val(vl_discount_cupom);
+
+            $('#mensagem_' + whoo).delay(4000).fadeOut(600, function() {
+                $('#info_' + whoo).fadeOut(400);
+            });
         }
     });
+}
+/*
+ **********************************************************
+ ***script para controle da confirmação do uso do cupom ***
+ **********************************************************
+ */
+function UsaCupom(cupom)
+{
+    //var vl_frete = +($("#vl_frete").val());
+    //var vl_discount_avista = $("#vl_discount_avista").val();
+    //var vl_discount_cupom = cupom.vl_desconto_cupom;
+    //var total_geral = cupom.total_compra - vl_discount_avista - vl_discount_cupom + vl_frete;
+    //atualiza o form
+   // $('#vl_discount_cupom').val(vl_discount_cupom);
+   // $('#str_vl_discount_cupom').html('R$ ' + vl_discount_cupom);
+   // $('#total_geral').html('R$ ' + total_geral);
+   // $('#ModalCupom').modal('hide');
+
+    return false;
 }
 /*
  *******************************************************
