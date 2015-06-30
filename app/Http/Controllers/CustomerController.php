@@ -13,6 +13,8 @@ use Hash;
 use Ecograph\Customer;
 use Ecograph\AddressBook;
 use Ecograph\Acesso;
+use Ecograph\Orcamento;
+use Ecograph\OrcamentoProduto;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
 use Ecograph\Libs\Utilidades;
@@ -356,10 +358,33 @@ class CustomerController extends Controller {
         $post_inputs = $request->all();
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($pai);
+        //dd($post_inputs);
+        //prepara os dados para o cliente
+            $orcamento = new Orcamento;
+            $orcamento->customer_id = Auth::user()->id;
+            $orcamento->orcamento_status = 1;
+            //dados do cliente armazenados em customers
+            //$orcamento->save();
+             //prepara os dados dos itens do orçamento
+            $OrcProduto = new OrcamentoProduto;
+            $OrcProduto->orcamento_id = $orcamento->id;
+             $OrcProduto->categories_id = $post_inputs['orc_categoria_id'];
+             $OrcProduto->produto_nome = $post_inputs['orc_subcategoria_nome'];
+              $OrcProduto->produto_papel = $post_inputs['orc_papel_nome'];
+             $OrcProduto->produto_qtd = $post_inputs['orc_pacote_qtd'];
+             $OrcProduto->produto_enoblecimento = $post_inputs['orc_enoblecimento_nome'];
+             $OrcProduto->produto_formato = $post_inputs['orc_formato_nome'];
+             $OrcProduto->produto_forma_envio = $post_inputs['orc_tipo_frete'];
+             $OrcProduto->prazo_entrega = $post_inputs['orc_enoblecimento_nome'];
+             $OrcProduto->produto_cor = $post_inputs['orc_cor_nome'];
+             $OrcProduto->produto_vl_pacote = $post_inputs['orc_pacote_valor'];
+             $OrcProduto->produto_vl_frete = $post_inputs['orc_vl_frete'];
+             $OrcProduto->produto_vl_desc = 0;
+//$OrcProduto->save();
         return view('clientes.index')
-                        ->with('title', STORE_NAME . ' Monte seu orçamento')
+                        ->with('title', STORE_NAME . ' Imprima seu orçamento')
                         ->with('page', 'imprimir')
-                        ->with('ativo', 'Orcamento')
+                        ->with('ativo', 'Imprimir')
                         ->with('post_inputs', $post_inputs)
                         ->with('rota', 'orcamento.html')
                         ->with('layout', $layout);

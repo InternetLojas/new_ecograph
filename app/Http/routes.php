@@ -16,6 +16,7 @@ Route::controllers([
 ]);
 
 Route::get('/', 'WelcomeController@index');
+
 /* ============================================================== */
 /*            Controller HOME              */
 /* ============================================================== */
@@ -228,7 +229,7 @@ Route::group(['prefix' => 'loja'], function() {
         "uses" => "StoreController@Resumo"
     ));
     Route::post("upload-resumo.html", array(
-        "as" => "loja.upload-resumo",
+        "as" => "loja.uploadresumo",
         "uses" => "StoreController@UploadResumo"
     ));
     Route::post("validacaixa", array(

@@ -76,40 +76,102 @@ class StoreController extends Controller {
     public function UploadResumo(Request $request) {
         $erros = array();
         $post_inputs = $request->all();
+        foreach ($post_inputs['files1'] as $upload) {
+            echo $upload;
+        }
+        //exit;
+        dd($request->file('files1')->UploadedFile);
         /**
          * Storage related
          */
         //$rules = array('image' => 'required'); //mimes:jpeg,bmp,png and for max size max:10000
         $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
-        if ($request->file('files1')) {
-            $rules['file1'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-            $validator = Validator::make($post_inputs['files1'], $rules);
-            if ($validator->fails()) {
-                
-            } else {
-                $fileName1 = $request->file('files1')->getClientOriginalName();
-                $request->file('files1')->move($storagePath, $fileName1);
+        if ($request->hasFile('files1')) {
+            if ($request->file('files1')->isValid()) {
+                $type = $request->file('files1')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+
+                    //$rules['files1'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                    //$validator = Validator::make($post_inputs['files1'], $rules);
+                    //if ($validator->fails()) {
+                    // }else {
+                    $fileName1 = $request->file('files1')->getClientOriginalName();
+                    $request->file('files1')->move($storagePath, $fileName1);
+                }
             }
         }
-        if ($request->file('files2')) {
-            $fileName2 = $request->file('files2')->getClientOriginalName();
-            $request->file('files2')->move($storagePath, $fileName2);
+        if ($request->hasFile('files2')) {
+            if ($request->file('files2')->isValid()) {
+                $type = $request->file('files2')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+
+                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                      $validator = Validator::make($post_inputs['files2'], $rules);
+                      if ($validator->fails()) {
+
+                      } else { */
+                    $fileName2 = $request->file('files2')->getClientOriginalName();
+                    $request->file('files2')->move($storagePath, $fileName2);
+                }
+            }
         }
-        if ($request->file('files3')) {
-            $fileName3 = $request->file('files3')->getClientOriginalName();
-            $request->file('files3')->move($storagePath, $fileName3);
+        if ($request->hasFile('files3')) {
+            if ($request->file('files3')->isValid()) {
+                $type = $request->file('files3')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+
+                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                      $validator = Validator::make($post_inputs['files2'], $rules);
+                      if ($validator->fails()) {
+
+                      } else { */
+                    $fileName3 = $request->file('files3')->getClientOriginalName();
+                    $request->file('files3')->move($storagePath, $fileName3);
+                }
+            }
         }
-        if ($request->file('files4')) {
-            $fileName4 = $request->file('files4')->getClientOriginalName();
-            $request->file('files4')->move($storagePath, $fileName4);
+        if ($request->hasFile('files4')) {
+            if ($request->file('files4')->isValid()) {
+                $type = $request->file('files4')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+
+                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                      $validator = Validator::make($post_inputs['files2'], $rules);
+                      if ($validator->fails()) {
+
+                      } else { */
+                    $fileName4 = $request->file('files4')->getClientOriginalName();
+                    $request->file('files4')->move($storagePath, $fileName4);
+                }
+            }
         }
-        if ($request->file('files5')) {
-            $fileName5 = $request->file('files5')->getClientOriginalName();
-            $request->file('files5')->move($storagePath, $fileName5);
+        if ($request->hasFile('files5')) {
+            if ($request->file('files5')->isValid()) {
+                $type = $request->file('files5')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                      $validator = Validator::make($post_inputs['files2'], $rules);
+                      if ($validator->fails()) {
+
+                      } else { */
+                    $fileName5 = $request->file('files5')->getClientOriginalName();
+                    $request->file('files5')->move($storagePath, $fileName5);
+                }
+            }
         }
-        if ($request->file('files6')) {
-            $fileName6 = $request->file('files6')->getClientOriginalName();
-            $request->file('files6')->move($storagePath, $fileName6);
+        if ($request->hasFile('files6')) {
+            if ($request->file('files6')->isValid()) {
+                $type = $request->file('files6')->getExtension();
+                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
+                      $validator = Validator::make($post_inputs['files2'], $rules);
+                      if ($validator->fails()) {
+
+                      } else { */
+                    $fileName6 = $request->file('files6')->getClientOriginalName();
+                    $request->file('files6')->move($storagePath, $fileName6);
+                }
+            }
         }
         if (count($erros) > 0) {
             $layout = \Layout::classes(0);
