@@ -605,6 +605,7 @@ function PersonalizarDesenho(guest) {
     $('#cupom_frete').css('display', 'none');
     $('#resultado').css('display', 'none');
     $('#btn-opcoes').css('display', 'none');
+    $('#btn-encerrar').attr('title','Encontre o desenho que mais lhe convem');
     $('#btn-imprimir').css('display', 'none');
     $('#btn-personalizar').css('display', 'none');
     $('#btn-enviar').css('display', 'none');
@@ -627,6 +628,7 @@ function ImprimirOrcamento(guest) {
     $('#cupom_frete').css('display', 'none');
     $('#resultado').css('display', 'none');
     $('#btn-opcoes').css('display', 'none');
+    $('#btn-encerrar').attr('title','Gere o orçamento para impressão');
     $('#btn-imprimir').css('display', 'none');
     $('#btn-personalizar').css('display', 'none');
     $('#btn-enviar').css('display', 'none');
@@ -652,9 +654,10 @@ function PDF(guest) {
     $('#cupom_frete').css('display', 'none');
     $('#resultado').css('display', 'none');
     $('#btn-opcoes').css('display', 'none');
-    $('#btn-imprimir').css('display', 'none');
+    $('#btn-encerrar').attr('title','Envie sua arte');
+    /*$('#btn-imprimir').css('display', 'none');
     $('#btn-personalizar').css('display', 'none');
-    $('#btn-enviar').css('display', 'none');
+    $('#btn-enviar').css('display', 'none');*/
     $('#cupom_frete').attr('data-acao', 'enviarpdf');
     if (guest === '1') {
         $('#logar').slideUp('fast');
@@ -754,7 +757,6 @@ function BasketSubmeter() {
 function FreteOrcamento() {
     $('#wait').css('display', 'block');
     if ($.trim($("#orc_cep").val()) !== "") {
-
         CEP = $("#orc_cep").val();
         peso = $('#orc_peso').val();
         $('#orc_peso_frete').val(peso);
@@ -764,7 +766,7 @@ function FreteOrcamento() {
             var obj = JSON.parse(data);
             //console.log(obj);
             if (obj.erro) {
-                $("#wait").hide();
+                $("#wait").fadeIn('fast');
                 $('#info_correio').addClass('alert alert-danger');
                 $('#info_correio').html('<p class="text-center text-medio">Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
                 $('#info_correio').slideDown('slow');
@@ -779,23 +781,22 @@ function FreteOrcamento() {
             labelsedex = labelsedex.replace('.', ',');
             labelsedex = "R$ " + labelsedex;
             $('#vl_sedex').html(labelsedex);
-            $('#frete_sedex').val(sedex.toFixed(2));
-            $('#wait').delay(2000).fadeIn(400);
-            $('#resultado').slideDown('slow', function() {
+            $('#frete_sedex').val(sedex.toFixed(2));           
+            $('#resultado').slideDown('slow', function() {                
                 $('#resultado').css('display', 'block');
                 $('#desconto').css('display', 'block');
-            });
+            });            
         });
     } else {
-        $("#wait").hide();
         $('#info_correio').addClass('alert alert-danger');
         $('#info_correio').html('<p class="text-center text-medio">Por favor informe o CEP de destino</p>');
         $('#info_correio').fadeOut('slow');
-        $('#info_correio').delay(4000).fadeOut('slow', function() {
+        $('#info_correio').fadeOut('slow', function() {            
             $('#orc_cep').focus();
             $('#info_correio').removeClass('alert alert-danger');
         });
     }
+    $('#wait').delay(4000).fadeIn('slow');
 }
 /*-----------------------------------------------------------------------------------*/
 /*  SetaFrete
@@ -827,7 +828,7 @@ function SetaFrete(tipo, id) {
     $('#vl_frete_escolhido').val('R$ ' + $('#' + id).val());
     $('#escolha_frete').html('R$ ' + $('#' + id).val());
     $('#btn-opcoes').slideDown('slow');
-    SetaBtnAcao(acao);
+    //SetaBtnAcao(acao);
     soma = vl_final + vl_frete;
     $('#vl_total_final').html('R$ ' + (soma.toFixed(2)).replace('.', ','));
 }

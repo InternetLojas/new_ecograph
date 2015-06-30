@@ -1833,6 +1833,21 @@ h4.title a:hover {
     color: #d00b01;
     text-decoration: none;
 }
+    .printer{position:absolute;left:23%;text-align: center}
+    @media  print {
+        body * {
+            visibility:hidden;
+        } 
+        #printable, #printable * {
+            visibility:visible;
+        }
+        #printable { /* aligning the printable area */
+            position:absolute;
+            left:40px;
+            top:10px;
+        }
+
+    }
 /*
 =======================================================================
         ESTILO PARA Pï¿½GINA CESTA.HTML
