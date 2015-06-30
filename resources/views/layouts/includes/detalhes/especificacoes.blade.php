@@ -17,9 +17,7 @@
                 <div class="well well-md">
                     <p class="text-medio" style="min-height:60px">
                         Informe o CEP para pesquisar o valor do frete:<br>
-                        <span id="wait" style="display:none;">                           
-                            <img src="images/img/loader.gif" class="img-responsive" alt="Image" width="16">  
-                        </span>
+
                     </p>
                     @include('layouts.includes.boxes.forms.form_frete_especificacao')                    
                 </div>
@@ -38,28 +36,15 @@
                     Frete: <span id="escolha_frete"></span>
                     Valor Total: <span id="vl_total_final"></span>
                 </strong>
-            </p>
-             <div id="info_encerrar"></div>   
+            </p>               
         </div>
         <div class="clearfix"></div> 
-        <div class="destaque_home" id="btn-opcoes" style="display:none">             
+        <div class="destaque_home" id="btn-opcoes" style="display:none">
+            <div id="info_encerrar"></div>
             <div class="well well-md"> 
-                <div class="text-center">
-                    <!--<button type="button" class="btn bg-smallgray fg-black no-radius text-medio" onclick="SolicitarOrcamento()">
-                        SOLICITAR ORÇAMENTO
-                    </button>-->
-                    <div class="text-center">                       
-                        <button type="button" title="Gere o orçamento para impressão" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-imprimir" onclick="Encerrar()">
-                            CONTINUAR
-                        </button>
-                        <button type="button" title="Encontre o desenho que mais lhe convem" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-personalizar" onclick="Encerrar()">
-                            CONTINUAR
-                        </button>
-                        <button type="button" title="Envie sua arte para nós" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-enviar" onclick="Encerrar()">
-                            CONTINUAR
-                        </button>
-                    </div>
-                </div>
+                <button style="margin:auto" type="button" class="btn bg-smallgray fg-black no-radius text-medio" id="btn-encerrar" onclick="Encerrar()">
+                    CONTINUAR
+                </button>
             </div>        
         </div>
         @include('layouts.includes.boxes.forms.form_orcamento') 
