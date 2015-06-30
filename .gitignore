@@ -45,8 +45,12 @@ Temporary Items
 /public/uploads/.
 /bootstrap/compiled.php
 /vendor
+/node_modules
+Homestead.yaml
 composer.phar
 composer.lock
+.project
+.env
 .env.*
 .env.php
 .DS_Store
