@@ -32,9 +32,9 @@
             <p id="label_frete" class="text-medio text-center" style="display:none;">
                 <strong>
                     Resumo: Valor - <span id="vl_final"></span>
-                    <span id="vl_desc_final"></span>
-                    Frete: <span id="escolha_frete"></span>
-                    Valor Total: <span id="vl_total_final"></span>
+                    Desconto: - <span id="vl_desc_final"></span>
+                    Frete: - <span id="escolha_frete"></span>
+                    Valor Total: - <span id="vl_total_final"></span>
                 </strong>
             </p>               
         </div>

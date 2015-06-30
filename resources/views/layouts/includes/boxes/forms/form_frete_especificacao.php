@@ -14,8 +14,10 @@
                 </div>
                 <div class="col-md-pull-1 col-md-2">                  
                     <a href="javascript:void(0)" class="btn bg-yellow fg-black no-radius" onclick="javascript:FreteOrcamento();">
-                        <span style="float:left">Calcular</span>                                                   
-                        <img id="wait" style="display:none;float:left" src="images/img/loader.gif" class="img-responsive" alt="Image" width="16">  
+                        <span style="float:left">Calcular</span> 
+                        <span style="display:block;float:left" >                                                  
+                            <img id="wait" style="display:none" src="images/img/loader.gif" class="img-responsive" alt="Image" width="16">
+                        </span>  
                     </a>
                 </div>
             </div> 

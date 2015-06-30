@@ -18,6 +18,7 @@
     <input id="orc_enoblecimento_nome" type="hidden" value="" name="orc_enoblecimento_nome">
     <input id="orc_pacote_qtd" type="hidden" value="" name="orc_pacote_qtd">
     <input id="orc_pacote_valor" type="hidden" value="" name="orc_pacote_valor">
+    <input id="orc_desconto_valor" type="hidden" value="" name="orc_desconto_valor">
     <!-- parte referente ao portifólio -->
     <input id="orc_id_perfil" type="hidden" value="" name="orc_id_perfil">
     <input id="orc_nome_perfil" type="hidden" value="" name="orc_nome_perfil">
