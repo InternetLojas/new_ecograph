@@ -19,7 +19,7 @@
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
 @font-face{
-    font-family:'Century751 No2 BT';  
+    font-family:'Century751 No2 BT';
     src:url('../font/tt1180m_.ttf?v=1.0.1') format('truetype');
 }
 body {
@@ -1630,6 +1630,9 @@ hr {
 .mg-bottom10{
     margin-bottom: 10px;
 }
+.padding-top5{
+    padding-top: 5px;
+}
 .uppercase{
     text-transform:uppercase!important;
 }
@@ -1683,7 +1686,7 @@ span.right.afasta{ float:right;margin-right:4px;}
 nav.wrapper{padding-bottom:5px;}
 .header i.fa{color:#323232}
 .clearfix{
-    clear:left;
+    clear:both;
 }
 
 /*
@@ -1692,7 +1695,7 @@ nav.wrapper{padding-bottom:5px;}
  =======================================================================
 */
 span.element-divider,
-span.element-divider-end{		
+span.element-divider-end{
     display: block;
     float: left;
     background-color: inherit;
@@ -1703,16 +1706,16 @@ span.element-divider-end{
     width: 1px !important;
     border-left: 1px #323233 solid;
     opacity: .3;
-    position: relative;                
+    position: relative;
 }
 span.element-divider:before{
     content: "|";
     visibility: hidden;
-}            
+}
 span.element-divider-end:before{
     content: "|";
     visibility: hidden;
-} 
+}
 
 .destaque_home{
     padding:0 5px;
@@ -1724,12 +1727,19 @@ span.element-divider-end:before{
     padding:0 20px;
 }
 .banner{
-   padding:0 30px;
-   display:block;
+    padding:0;
+    display:block;
 }
-.destaque_home_banner{
-    
-    background-color: #afd9ee!important;
+.banner_left,
+.banner_right{
+    display: block;
+    padding:0;
+    float: left;
+    max-width: 720px;
+max-width: 64.87179487179487%;
+}
+.banner_right{
+    max-width: 35.12820512820513%;
 }
 li.pd-5{
     padding: 2px 0;
@@ -1740,15 +1750,15 @@ span.mg-left5{
 .mg-left50{
     margin-left:50px;
 }
-table.body_cadastro{ 
+table.body_cadastro{
     width:100%;
     margin-top:-11px;
 }
-table.body_cadastro td.col-cesta-img{   
+table.body_cadastro td.col-cesta-img{
     width: 32px;
 }
 table.body_cadastro .td-content-carrinho{
-    border:1px solid #d9d5d5; 
+    border:1px solid #d9d5d5;
     padding: 10px 15px;
 }
 table.body_cadastro td.col-cesta-img{
@@ -1833,27 +1843,27 @@ h4.title a:hover {
     color: #d00b01;
     text-decoration: none;
 }
-    .printer{position:absolute;left:23%;text-align: center}
-    @media  print {
-        body * {
-            visibility:hidden;
-        } 
-        #printable, #printable * {
-            visibility:visible;
-        }
-        #printable { /* aligning the printable area */
-            position:absolute;
-            left:40px;
-            top:10px;
-        }
-
+.printer{position:absolute;left:23%;text-align: center}
+@media  print {
+    body * {
+        visibility:hidden;
     }
+    #printable, #printable * {
+        visibility:visible;
+    }
+    #printable { /* aligning the printable area */
+        position:absolute;
+        left:40px;
+        top:10px;
+    }
+
+}
 /*
 =======================================================================
         ESTILO PARA Pï¿½GINA CESTA.HTML
 =======================================================================
 */
-table.head_carrinho{ 
+table.head_carrinho{
     height:40px;
     margin-top:25px;
     width:100%;
@@ -1869,28 +1879,28 @@ table.head_carrinho td.col-cesta-title{
 table.head_carrinho td.col-cesta-title-frete{
     width: 2%;
 }
-table.body_carrinho{ 
+table.body_carrinho{
     width:100%;
 }
-table.body_carrinho td.col-cesta-img{   
+table.body_carrinho td.col-cesta-img{
     width: 35px;
 }
 table.body_carrinho td.td-content-carrinho{
-    border:1px solid #323232;  
-    font-size:0.88em;  
+    border:1px solid #323232;
+    font-size:0.88em;
 }
 table.body_carrinho td.col-cesta-img{
     vertical-align:top;
 }
 table.body_carrinho td.endereco{
-    width:25%; 
+    width:25%;
     text-align: left;
 }
 table.body_carrinho td.options{
 
     text-align: left;
 }
-.col-cesta-title-img{    
+.col-cesta-title-img{
     width: 32px;
     height: 32px;
     position: relative;
@@ -1898,7 +1908,7 @@ table.body_carrinho td.options{
     background-position:left top;
     background-repeat: no-repeat;
 }
-table.items{ 
+table.items{
     width:100%;
 }
 table.items td.vinte{
@@ -2174,7 +2184,7 @@ p.legend-editor-logos {
     font-size:90%;
 }
 p.legend-editor-logos {
-    width:100%;
+    width:59%;
 }
 /*
  =======================================================================
@@ -2192,14 +2202,14 @@ ul.list li.list-categorias a.nav-hz{
 }
 ul.list li.list-categorias{
     border-bottom:1px solid #ffffff;
-    
+
 }
 span.btn-search{
     background-color:#343434!important;
 }
 .form-group.file,
 .form-group.file_offline{
-    height:40px; 
+    height:40px;
     position: relative;
     overflow: hidden;
     max-width:60%;
@@ -2208,15 +2218,15 @@ span.btn-search{
 .form-group.file_offline{
     max-width:100%;
     height:25px;
-    
+
 }
 .form-group.file input,
-.form-group.file_offline input{ 
-    position: absolute;     
-    right: 0; 
-    z-index: 2; 
-    font-size: 100px; 
-    /* Aumenta tamanho do campo */ opacity: 0; 
+.form-group.file_offline input{
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    font-size: 100px;
+    /* Aumenta tamanho do campo */ opacity: 0;
     filter: alpha(opacity=0)
 }
 
@@ -2225,7 +2235,7 @@ span.btn-search{
     border: 1px solid #c0c0c0;
     display:block;
     width:100%;
-    padding:3px 0;    
+    padding:3px 0;
     position:absolute;
 }
 .form-group.file_offline span{
@@ -2287,8 +2297,8 @@ img.img-cart {
 //activered bullet_default hoverblue
 /*menu cinza*/
 a.activegray, button.activegray {
-    background-color: #333333;
-}
+      background-color: #333333;
+  }
 
 a.hovergray:hover {
     background-color: #0066ff;
