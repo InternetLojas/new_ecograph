@@ -30,15 +30,20 @@ class StoreController extends Controller {
      */
 
     private $layout;
+    private $fileModel;
+    private $fileTextoModel;
+    private $fileMidiaModel;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Layout $layout) {
+    public function __construct(Layout $layout,\Ecograph\File $fileModel, \Ecograph\FileTexto $fileTextoModel, \Ecograph\FileMidia $fileMidiaModel) {
         $this->layout = $layout;
-        //$this->middleware('auth');
+        $this->fileModel = $fileModel;
+        $this->fileTextoModel = $fileTextoModel;
+        $this->fileMidiaModel = $fileMidiaModel;
     }
 
     /**
@@ -61,32 +66,66 @@ class StoreController extends Controller {
         $gateway = Gateway::ativos('1')->get();
         //$gateway = Gateway::find('1');
         return view('loja.index')
-                        ->with('title', STORE_NAME . 'Resumo')
-                        ->with('page', 'resumo')
-                        ->with('ativo', 'Resumo')
-                        ->with('rota', 'loja/resumo.html')
-                        ->with('contents', Cart::content())
-                        ->with('default_address', $default_address)
-                        ->with('gateways', $gateway)
-                        ->with('post_inputs', $post_inputs)
-                        ->with('cart_total', $cart_total)
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . 'Resumo')
+            ->with('page', 'resumo')
+            ->with('ativo', 'Resumo')
+            ->with('rota', 'loja/resumo.html')
+            ->with('contents', Cart::content())
+            ->with('default_address', $default_address)
+            ->with('gateways', $gateway)
+            ->with('post_inputs', $post_inputs)
+            ->with('cart_total', $cart_total)
+            ->with('layout', $layout);
     }
 
     public function UploadResumo(Request $request) {
-        $erros = array();
+        //, \Ecograph\Http\Requests\FileMidiaRequest $midia
+
         $post_inputs = $request->all();
-        foreach ($post_inputs['files1'] as $upload) {
-            echo $upload;
+        foreach($post_inputs as $key => $input){
+            if($key !=='files'){
+                $inputs[$key] = $input;
+            }
         }
-        //exit;
-        dd($request->file('files1')->UploadedFile);
-        /**
-         * Storage related
-         */
-        //$rules = array('image' => 'required'); //mimes:jpeg,bmp,png and for max size max:10000
+        //$erros = ar
+        //$logos = $post_inputs['files'];
+        $rules = [
+            'logo1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
+            'logo2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
+            'logo3' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
+            'img1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
+            'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
+            'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf'
+        ];
+        $ok = [];
         $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
-        if ($request->hasFile('files1')) {
+        foreach($post_inputs['files'] as $key => $files){
+            if($files){
+                $logos[$key] = $files->getClientOriginalName();
+                $files->move($storagePath,  $logos[$key]);
+                $ok[] =$files->isValid();
+                //$tipo[$key] = $files->guessClientExtension();
+            }
+        }
+        $user_id = Auth::user()->id;
+        //print_r($tipo);
+        // $validation = Validator::make($tipo, $rules);
+        // if ($validation->fails()) {
+        //       dd($validation->getMessageBag()->toArray());
+        //   }
+        //   else {
+        $file = $this->fileModel->fill(['customer_id'=>$user_id]);
+        $file->save();
+        $inputs['file_id'] = $file->id;
+        $filetexto = $this->fileTextoModel->fill($inputs);
+        $filetexto->save();
+        $logos['file_id'] =  $inputs['file_id'];
+        $filemidia = $this->fileMidiaModel->fill($logos);
+        $filemidia->save();
+dd($ok);
+        //$rules = array('image' => 'required'); //mimes:jpeg,bmp,png and for max size max:10000
+       // $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
+        /*if ($request->hasFile('files1')) {
             if ($request->file('files1')->isValid()) {
                 $type = $request->file('files1')->getExtension();
                 if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
@@ -109,7 +148,7 @@ class StoreController extends Controller {
                       $validator = Validator::make($post_inputs['files2'], $rules);
                       if ($validator->fails()) {
 
-                      } else { */
+                      } else { *
                     $fileName2 = $request->file('files2')->getClientOriginalName();
                     $request->file('files2')->move($storagePath, $fileName2);
                 }
@@ -124,7 +163,7 @@ class StoreController extends Controller {
                       $validator = Validator::make($post_inputs['files2'], $rules);
                       if ($validator->fails()) {
 
-                      } else { */
+                      } else { *
                     $fileName3 = $request->file('files3')->getClientOriginalName();
                     $request->file('files3')->move($storagePath, $fileName3);
                 }
@@ -139,7 +178,7 @@ class StoreController extends Controller {
                       $validator = Validator::make($post_inputs['files2'], $rules);
                       if ($validator->fails()) {
 
-                      } else { */
+                      } else { *
                     $fileName4 = $request->file('files4')->getClientOriginalName();
                     $request->file('files4')->move($storagePath, $fileName4);
                 }
@@ -153,7 +192,7 @@ class StoreController extends Controller {
                       $validator = Validator::make($post_inputs['files2'], $rules);
                       if ($validator->fails()) {
 
-                      } else { */
+                      } else { *
                     $fileName5 = $request->file('files5')->getClientOriginalName();
                     $request->file('files5')->move($storagePath, $fileName5);
                 }
@@ -167,7 +206,7 @@ class StoreController extends Controller {
                       $validator = Validator::make($post_inputs['files2'], $rules);
                       if ($validator->fails()) {
 
-                      } else { */
+                      } else { *
                     $fileName6 = $request->file('files6')->getClientOriginalName();
                     $request->file('files6')->move($storagePath, $fileName6);
                 }
@@ -176,11 +215,11 @@ class StoreController extends Controller {
         if (count($erros) > 0) {
             $layout = \Layout::classes(0);
             return view('home.index')
-                            ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
-                            ->with('page', 'home')
-                            ->with('ativo', 'Home')
-                            ->with('rota', '/')
-                            ->with('layout', $layout);
+                ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
+                ->with('page', 'home')
+                ->with('ativo', 'Home')
+                ->with('rota', '/')
+                ->with('layout', $layout);
             // send back to the page with the input data and errors
         }
         $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
@@ -194,16 +233,16 @@ class StoreController extends Controller {
         $gateway = Gateway::ativos('1')->get();
         //$gateway = Gateway::find('1');
         return view('loja.index')
-                        ->with('title', STORE_NAME . 'Resumo')
-                        ->with('page', 'resumo')
-                        ->with('ativo', 'Resumo')
-                        ->with('rota', 'loja/resumo.html')
-                        ->with('contents', Cart::content())
-                        ->with('default_address', $default_address[0])
-                        ->with('gateways', $gateway)
-                        ->with('post_inputs', $post_inputs)
-                        ->with('cart_total', $cart_total)
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . 'Resumo')
+            ->with('page', 'resumo')
+            ->with('ativo', 'Resumo')
+            ->with('rota', 'loja/resumo.html')
+            ->with('contents', Cart::content())
+            ->with('default_address', $default_address[0])
+            ->with('gateways', $gateway)
+            ->with('post_inputs', $post_inputs)
+            ->with('cart_total', $cart_total)
+            ->with('layout', $layout);
     }
 
     public function upload() {
@@ -384,27 +423,27 @@ class StoreController extends Controller {
                 $links = $path->appends(['keyword' => $keyword])->render();
                 $layout = $this->layout->classes('0');
                 return view('produtos.index')
-                                ->with('products', $products)
-                                ->with('keyword', $keyword)
-                                ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
-                                ->with('page', 'busca')
-                                ->with('links', $links)
-                                ->with('ativo', $keyword)
-                                ->with('total', $resultado->total())
-                                ->with('rota', 'loja/busca')
-                                ->with('layout', $layout);
+                    ->with('products', $products)
+                    ->with('keyword', $keyword)
+                    ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+                    ->with('page', 'busca')
+                    ->with('links', $links)
+                    ->with('ativo', $keyword)
+                    ->with('total', $resultado->total())
+                    ->with('rota', 'loja/busca')
+                    ->with('layout', $layout);
             }
         }
 
         $layout = $this->layout->classes('0');
         return view('produtos.index')
-                        ->with('products', '')
-                        ->with('keyword', $keyword)
-                        ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
-                        ->with('page', 'naocadastrado')->with('ativo', 'busca')
-                        ->with('total', '0')->with('rota', 'busca/')
-                        ->with('layout', $layout)
-                        ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
+            ->with('products', '')
+            ->with('keyword', $keyword)
+            ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
+            ->with('page', 'naocadastrado')->with('ativo', 'busca')
+            ->with('total', '0')->with('rota', 'busca/')
+            ->with('layout', $layout)
+            ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
     }
 
 }

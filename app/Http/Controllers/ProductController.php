@@ -65,12 +65,12 @@ class ProductController extends Controller {
             }
         }
         return view('produtos.index')
-                        ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
-                        ->with('page', 'vitrine')
-                        ->with('ativo', 'Vitrine')
-                        ->with('listagem', $listagem)                       
-                        ->with('rota', 'produtos/portfolio.html')
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
+            ->with('page', 'vitrine')
+            ->with('ativo', 'Vitrine')
+            ->with('listagem', $listagem)
+            ->with('rota', 'produtos/portfolio.html')
+            ->with('layout', $layout);
     }
 
     /**
@@ -89,13 +89,13 @@ class ProductController extends Controller {
         $solicitado = array('pai' => $pai, 'filho' => $filho, 'nome_html' => $nome_html);
         //dd($solicitado);
         return view('produtos.index')
-                        ->with('title', STORE_NAME . ' Calculadora On Line')
-                        ->with('page', 'detalhes')
-                        ->with('ativo', 'Detalhes')
-                        ->with('listagem', $listagem)
-                        ->with('solicitado', $solicitado)
-                        ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html)
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . ' Calculadora On Line')
+            ->with('page', 'detalhes')
+            ->with('ativo', 'Detalhes')
+            ->with('listagem', $listagem)
+            ->with('solicitado', $solicitado)
+            ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html)
+            ->with('layout', $layout);
     }
 
     /**
@@ -109,12 +109,12 @@ class ProductController extends Controller {
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($pai);
         return view('produtos.index')
-                        ->with('title', STORE_NAME)
-                        ->with('page', 'imprimir')
-                        ->with('post_inputs', $post_inputs)
-                        ->with('ativo', 'teste')
-                        ->with('layout', $layout)
-                        ->with('rota', 'produtos/orcamento');
+            ->with('title', STORE_NAME)
+            ->with('page', 'imprimir')
+            ->with('post_inputs', $post_inputs)
+            ->with('ativo', 'teste')
+            ->with('layout', $layout)
+            ->with('rota', 'produtos/orcamento');
     }
 
     /**
@@ -130,7 +130,7 @@ class ProductController extends Controller {
         $layout = $this->layout->classes($pai);
 
         $formato_id = CategoryFormato::where('categories_id', $post_inputs['escolhido'])
-                ->lists('formato_id');
+            ->lists('formato_id');
         //dd($formato_id);
         if (count($formato_id) > 0) {
             foreach ($formato_id as $k => $valor) {
@@ -269,12 +269,12 @@ class ProductController extends Controller {
         //dd($array_categ);
         $layout = $this->layout->classes(0);
         return view('produtos.index')
-                        ->with('title', STORE_NAME)
-                        ->with('page', 'produtos')
-                        ->with('ativo', 'Produtos')
-                        ->with('layout', $layout)
-                        ->with('array_categ', $array_categ)
-                        ->with('rota', 'produtos.html');
+            ->with('title', STORE_NAME)
+            ->with('page', 'produtos')
+            ->with('ativo', 'Produtos')
+            ->with('layout', $layout)
+            ->with('array_categ', $array_categ)
+            ->with('rota', 'produtos.html');
     }
 
     /**
@@ -296,9 +296,9 @@ class ProductController extends Controller {
 //se existir produtos vinculados
         if (count($check_produtos) > 0) {
             $perfis_produtos = ProdutoPerfil::where('perfis_id', $post_inputs['orc_id_perfil'])
-                    ->wherein('templates_id', $check_produtos)
-                    ->orderby('created_at')
-                    ->paginate(NR_PRODUTOS_POR_PAGINA);
+                ->wherein('templates_id', $check_produtos)
+                ->orderby('created_at')
+                ->paginate(NR_PRODUTOS_POR_PAGINA);
         }
 
         $path = $perfis_produtos->setPath('produtos/portfolio.html');
@@ -307,17 +307,17 @@ class ProductController extends Controller {
         $layout = $this->layout->classes($pai);
         if ($perfis_produtos->total() > 0) {
             return view('produtos.index')
-                            ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
-                            ->with('parent', $pai)
-                            ->with('page', 'listagem')
-                            ->with('categorias', $categoria)
-                            ->with('perfis_produtos', $perfis_produtos)
-                            ->with('links', $path->render())
-                            ->with('post_inputs', $post_inputs)
-                            ->with('ativo', $categ_pai)
-                            ->with('total', $perfis_produtos->total())
-                            ->with('layout', $layout)
-                            ->with('rota', 'produtos/portfolio.html');
+                ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
+                ->with('parent', $pai)
+                ->with('page', 'listagem')
+                ->with('categorias', $categoria)
+                ->with('perfis_produtos', $perfis_produtos)
+                ->with('links', $path->render())
+                ->with('post_inputs', $post_inputs)
+                ->with('ativo', $categ_pai)
+                ->with('total', $perfis_produtos->total())
+                ->with('layout', $layout)
+                ->with('rota', 'produtos/portfolio.html');
         } else {
             echo 'sem produtos';
         }
@@ -330,18 +330,17 @@ class ProductController extends Controller {
      */
     public function EnviarPDF(Request $request) {
         $post_inputs = $request->all();
-        //dd($post_inputs);
+        dd($post_inputs);
         $layout = $this->layout->classes('0');
         //$contents = Cart::content();
         //dd($contents);
         return view('produtos.index')
-                        ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
-                        ->with('page', 'enviarpdf')
-                        ->with('ativo', 'Enviar PDF')
-                       
-                        ->with('post_inputs', $post_inputs)
-                        ->with('rota', 'produtos/enviarpdf.html')
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
+            ->with('page', 'enviarpdf')
+            ->with('ativo', 'Enviar PDF')
+            ->with('post_inputs', $post_inputs)
+            ->with('rota', 'produtos/enviarpdf.html')
+            ->with('layout', $layout);
     }
 
 }
