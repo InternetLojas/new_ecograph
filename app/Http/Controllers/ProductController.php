@@ -330,10 +330,9 @@ class ProductController extends Controller {
      */
     public function EnviarPDF(Request $request) {
         $post_inputs = $request->all();
-        dd($post_inputs);
+        //dd($post_inputs);
         $layout = $this->layout->classes('0');
-        //$contents = Cart::content();
-        //dd($contents);
+
         return view('produtos.index')
             ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
             ->with('page', 'enviarpdf')

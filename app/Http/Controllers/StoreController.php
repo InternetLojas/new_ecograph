@@ -33,17 +33,25 @@ class StoreController extends Controller {
     private $fileModel;
     private $fileTextoModel;
     private $fileMidiaModel;
+    private $orcamentoModel;
+    private $orcamentoProdutoModel;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Layout $layout,\Ecograph\File $fileModel, \Ecograph\FileTexto $fileTextoModel, \Ecograph\FileMidia $fileMidiaModel) {
+    public function __construct(Layout $layout,\Ecograph\File $fileModel,
+                                \Ecograph\FileTexto $fileTextoModel,
+                                \Ecograph\FileMidia $fileMidiaModel,
+                                \Ecograph\Orcamento $orcamentoModel,
+                                \Ecograph\OrcamentoProduto $orcamentoProdutoModel) {
         $this->layout = $layout;
         $this->fileModel = $fileModel;
         $this->fileTextoModel = $fileTextoModel;
         $this->fileMidiaModel = $fileMidiaModel;
+        $this->orcamentoModel = $orcamentoModel;
+        $this->orcamentoProdutoModel = $orcamentoProdutoModel;
     }
 
     /**
@@ -80,40 +88,43 @@ class StoreController extends Controller {
 
     public function UploadResumo(Request $request) {
         //, \Ecograph\Http\Requests\FileMidiaRequest $midia
-
         $post_inputs = $request->all();
         foreach($post_inputs as $key => $input){
             if($key !=='files'){
-                $inputs[$key] = $input;
+                $find_orc   = 'orc_';
+                $find_id   = '_id';
+                $pos = strpos($key, $find_orc);
+                $pos1 = strpos($key, $find_id);
+                if ($pos === false) {
+                    $inputs[$key] = $input;
+                } else if($pos1 === false){
+                    $inputs_orc[$key] = $input;
+                }
             }
         }
-        //$erros = ar
-        //$logos = $post_inputs['files'];
-        $rules = [
+        //dd($inputs_orc);
+        /*$rules = [
             'logo1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
             'logo2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
             'logo3' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
             'img1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
             'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
             'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf'
-        ];
-        $ok = [];
+        ];*/
+        $erros = [];
+        //local onde se armazena fisicamente os arquivos enviados dos clientes
         $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
         foreach($post_inputs['files'] as $key => $files){
             if($files){
                 $logos[$key] = $files->getClientOriginalName();
                 $files->move($storagePath,  $logos[$key]);
-                $ok[] =$files->isValid();
-                //$tipo[$key] = $files->guessClientExtension();
+                $erros[] =$files->isValid();
             }
         }
+        //dd($inputs_orc);
         $user_id = Auth::user()->id;
-        //print_r($tipo);
-        // $validation = Validator::make($tipo, $rules);
-        // if ($validation->fails()) {
-        //       dd($validation->getMessageBag()->toArray());
-        //   }
-        //   else {
+        $customer_name = Customer::find($user_id)->customers_firstname;
+        //preparando os arquivos para upload
         $file = $this->fileModel->fill(['customer_id'=>$user_id]);
         $file->save();
         $inputs['file_id'] = $file->id;
@@ -122,154 +133,31 @@ class StoreController extends Controller {
         $logos['file_id'] =  $inputs['file_id'];
         $filemidia = $this->fileMidiaModel->fill($logos);
         $filemidia->save();
-dd($ok);
-        //$rules = array('image' => 'required'); //mimes:jpeg,bmp,png and for max size max:10000
-       // $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
-        /*if ($request->hasFile('files1')) {
-            if ($request->file('files1')->isValid()) {
-                $type = $request->file('files1')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
+        //armazenando os dados para o orçamento
+        $orc = ['customer_id'=>$user_id,'file_id' => $inputs['file_id'],'orcamento_status'=>1];
+        $orcamento = $this->orcamentoModel->fill($orc);
+        $orcamento->save();
+        $inputs_orc['orcamento_id'] = $orcamento->id;
+        $orcamento_produto = $this->orcamentoProdutoModel->fill($inputs_orc);
+        $orcamento_produto->save();
 
-                    //$rules['files1'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                    //$validator = Validator::make($post_inputs['files1'], $rules);
-                    //if ($validator->fails()) {
-                    // }else {
-                    $fileName1 = $request->file('files1')->getClientOriginalName();
-                    $request->file('files1')->move($storagePath, $fileName1);
-                }
-            }
-        }
-        if ($request->hasFile('files2')) {
-            if ($request->file('files2')->isValid()) {
-                $type = $request->file('files2')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
-
-                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                      $validator = Validator::make($post_inputs['files2'], $rules);
-                      if ($validator->fails()) {
-
-                      } else { *
-                    $fileName2 = $request->file('files2')->getClientOriginalName();
-                    $request->file('files2')->move($storagePath, $fileName2);
-                }
-            }
-        }
-        if ($request->hasFile('files3')) {
-            if ($request->file('files3')->isValid()) {
-                $type = $request->file('files3')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
-
-                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                      $validator = Validator::make($post_inputs['files2'], $rules);
-                      if ($validator->fails()) {
-
-                      } else { *
-                    $fileName3 = $request->file('files3')->getClientOriginalName();
-                    $request->file('files3')->move($storagePath, $fileName3);
-                }
-            }
-        }
-        if ($request->hasFile('files4')) {
-            if ($request->file('files4')->isValid()) {
-                $type = $request->file('files4')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
-
-                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                      $validator = Validator::make($post_inputs['files2'], $rules);
-                      if ($validator->fails()) {
-
-                      } else { *
-                    $fileName4 = $request->file('files4')->getClientOriginalName();
-                    $request->file('files4')->move($storagePath, $fileName4);
-                }
-            }
-        }
-        if ($request->hasFile('files5')) {
-            if ($request->file('files5')->isValid()) {
-                $type = $request->file('files5')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
-                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                      $validator = Validator::make($post_inputs['files2'], $rules);
-                      if ($validator->fails()) {
-
-                      } else { *
-                    $fileName5 = $request->file('files5')->getClientOriginalName();
-                    $request->file('files5')->move($storagePath, $fileName5);
-                }
-            }
-        }
-        if ($request->hasFile('files6')) {
-            if ($request->file('files6')->isValid()) {
-                $type = $request->file('files6')->getExtension();
-                if ($type === 'jpeg' || $type === 'jpg' || $type === 'gif' || $type === 'bmp') {
-                    /* $rules['files2'] = 'mimes:jpeg,jpg,gif,png,bmp,pdf';
-                      $validator = Validator::make($post_inputs['files2'], $rules);
-                      if ($validator->fails()) {
-
-                      } else { *
-                    $fileName6 = $request->file('files6')->getClientOriginalName();
-                    $request->file('files6')->move($storagePath, $fileName6);
-                }
-            }
-        }
-        if (count($erros) > 0) {
-            $layout = \Layout::classes(0);
-            return view('home.index')
-                ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
-                ->with('page', 'home')
-                ->with('ativo', 'Home')
-                ->with('rota', '/')
-                ->with('layout', $layout);
-            // send back to the page with the input data and errors
-        }
         $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($parent);
-        //$title = 'Resumo do Pedido';
-        $cart_total = Cart::total();
-        //levanta o endereço do cliente
-        $address = Customer::with('AddressBook')->find(\Auth::user()->id)->AddressBook;
-        $default_address = $address->toarray();
-        //levanta o tipo de pagamento
-        $gateway = Gateway::ativos('1')->get();
-        //$gateway = Gateway::find('1');
+        $title = 'Resumo do Orcamento';
+
         return view('loja.index')
-            ->with('title', STORE_NAME . 'Resumo')
-            ->with('page', 'resumo')
+            ->with('title', STORE_NAME . $title)
+            ->with('page', 'resumo_orc')
             ->with('ativo', 'Resumo')
             ->with('rota', 'loja/resumo.html')
-            ->with('contents', Cart::content())
-            ->with('default_address', $default_address[0])
-            ->with('gateways', $gateway)
-            ->with('post_inputs', $post_inputs)
-            ->with('cart_total', $cart_total)
+            ->with('customer_name',$customer_name)
+            ->with('inputs', $inputs)
+            ->with('storagePath',$storagePath)
+            ->with('logos', $logos)
+            ->with('orcamento_id', $orcamento->id)
+            ->with('inputs_orc', $inputs_orc)
+            ->with('erros', $erros)
             ->with('layout', $layout);
-    }
-
-    public function upload() {
-        /**
-         * Request related
-         */
-        $file = \Request::file('documento');
-
-        $userId = \Request::get('userId');
-
-        /**
-         * Storage related
-         */
-        $storagePath = storage_path() . '/documentos/' . $userId;
-
-        $fileName = $file->getClientOriginalName();
-
-        /**
-         * Database related
-         */
-        $fileModel = new \App\File();
-        $fileModel->name = $fileName;
-
-        $user = \App\User::find($userId);
-        $user->files()->save($fileModel);
-
-        return $file->move($storagePath, $fileName);
     }
 
     /**

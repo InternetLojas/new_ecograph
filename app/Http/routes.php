@@ -196,7 +196,7 @@ Route::get("lista_perfis/{categoria}", [
 //adiciona itens no carrinho
 Route::post('adicionar', [
     "as" => "adicionar",
-    "uses" => "BasketController@Adicionar"
+    "uses" => "BasketController@Adicionar" 
 ]);
 //retorna uma view
 Route::post('basket', [

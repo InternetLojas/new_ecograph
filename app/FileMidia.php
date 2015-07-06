@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 class FileMidia extends Model {
-    protected $fillable = ['logo1','logo2','logo3', 'img1','img2','img3'];
+    protected $fillable = ['file_id', 'logo1','logo2','logo3', 'img1','img2','img3'];
 /**
     * Relationships
     */

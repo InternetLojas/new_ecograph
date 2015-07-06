@@ -40,6 +40,7 @@ Class Pages {
             'carrinhovazio' => 'loja.pages.carrinhovazio',
             'pagamento' => 'loja.pages.pagamento',
             'resumo' => 'loja.pages.resumo',
+            'resumo_orc' => 'loja.pages.resumo_orc',
             'checkout' => 'loja.pages.checkout',
             'cancelamento' => 'loja.pages.cancelamento',
             'caixa' => 'loja.pages.caixa',

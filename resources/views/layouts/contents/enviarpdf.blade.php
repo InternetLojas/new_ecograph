@@ -1,3 +1,5 @@
+
+
 <!--============================== content =================================-->
 <p class="text-medio"><b>{!!$post_inputs['orc_categoria_nome']!!} - {!!$post_inputs['orc_subcategoria_nome']!!}</b></p>
 <p class="bg-gray fg-white text-center text-medio" >
@@ -33,7 +35,7 @@
         <td class="">{!!Utilidades::toReal($post_inputs['orc_vl_frete'])!!}</td>
         <td class="">
             <div class="upload">
-                <form name="orc_offline" id="orc_offline" method="post" action="orc_offline.html" enctype="multipart/form-data" role="form">              
+                <form name="info_basket" id="info_basket" method="post" enctype="multipart/form-data" role="form">              
 
                     <div class="form-group file_offline" data-role="input-control">
                         <span>Inserir Arquivo1</span>
@@ -43,10 +45,18 @@
                         <span>Inserir Arquivo2</span>
                         <input type="file" id="arq2" name="files2" class="form-control no-radius" placehoder="inserir Arquivo 2" data-token="{!! csrf_token() !!}"/>
                     </div>
+                    @foreach($post_inputs as $key=>$valor)                                
+                        <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">
+                        @endforeach
+                        <input id="produto_id" type="hidden" value="" name="produto_id" class="form-control">
                 </form>
             </div>
         </td>
     </tr>    
 </table>
-
+    @include('layouts.includes.boxes.forms.form_basket')
+    @include('layouts.includes.modais.modal_comprar')
+<div class="pull-right">
+    <a class="btn bg-green fg-white no-radius text-center" title="Clique para finalizar sua compra" href="#" onclick="AdicionaItem();">Finalizar Compra</a>
+</div>
 

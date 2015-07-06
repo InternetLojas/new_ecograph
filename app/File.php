@@ -7,7 +7,7 @@ class File extends Model {
 /**
     * Relationships
     */
-    protected $fillable = ['custpmer_id'];
+    protected $fillable = ['customer_id'];
     public function customer()
     {
         return $this->belongsTo('Ecograph\Customer', 'customer_id');

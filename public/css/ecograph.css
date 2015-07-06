@@ -1726,6 +1726,8 @@ span.element-divider-end:before{
 .destaque_home_orcamento{
     padding:0 20px;
 }
+
+
 .banner{
     padding:0;
     display:block;
@@ -1843,7 +1845,13 @@ h4.title a:hover {
     color: #d00b01;
     text-decoration: none;
 }
-.printer{position:absolute;left:23%;text-align: center}
+
+/*
+ =======================================================================
+ CUSTOMIZAÇÃO PARA ORÇAMENTO
+ =======================================================================
+*/
+
 @media  print {
     body * {
         visibility:hidden;
@@ -1858,6 +1866,65 @@ h4.title a:hover {
     }
 
 }
+.printer{
+    width:650px;
+    text-align: center
+}
+#printable.print_orcamento{
+width:650px;
+padding: 0 2px 20px 2px;
+margin:15px auto;
+border:1px solid #9f9f9f;
+border-top:none;
+}
+#printable table.mail {
+    width: 100%;
+    background:#fff;
+    font-family:Arial, Helvetica, sans-serif !important;
+}
+table.mail td.mail-wrapper,
+table.mail td.mail-header
+{
+   width: 100%;
+   background:#fff;
+   text-align:center 
+}
+table.mail td.mail-col{
+padding-top:35px;
+padding-bottom:15px;
+}
+table.mail td.mail-first-child{
+    padding-right:20px;
+}
+table.mail td.mail-header-menu .contentEditable {
+    margin:0;
+    line-height:16px;
+    font-size:14px;
+    color:#34322f;
+    text-align:center
+}
+table.mail td.mail-product-list,
+table.mail td.mail-product-name,
+table.mail td.mail-product-footer{
+    padding: 10px 0;
+
+}
+table.mail td.mail-product-list{
+    text-align:left;
+
+}
+table.mail td.mail-product-footer p{
+    font-family: arial,sans-serif;
+    font-size:14px;color: #331c18;
+    padding-left:20px;
+}
+img.contentImgEditable
+{
+    display:block;
+    border:0;
+    width:287px
+}
+
 /*
 =======================================================================
         ESTILO PARA Pï¿½GINA CESTA.HTML

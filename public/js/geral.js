@@ -501,43 +501,43 @@ function EscolhaPerfil() {
     var categoria = $('#escolhido').val();
     var url_modal = 'lista_perfis' + '/' + categoria;
     $.getJSON(
-            url_modal,
-            function(data) {
-                console.log(data);
-                var div = '';
-                var button = '';
-                if (data.info !== 'erro') {
-                    $.each(data, function(key, val) {
-                        div += '<div class="row">';
-                        div += '<div class="col-md-12">';
-                        $.each(val, function(k, item) {
-                            //alert(item.nome_perfil);
-                            button += '<div class="umquarto bg-dark">\n\
+        url_modal,
+        function(data) {
+            console.log(data);
+            var div = '';
+            var button = '';
+            if (data.info !== 'erro') {
+                $.each(data, function(key, val) {
+                    div += '<div class="row">';
+                    div += '<div class="col-md-12">';
+                    $.each(val, function(k, item) {
+                        //alert(item.nome_perfil);
+                        button += '<div class="umquarto bg-dark">\n\
                                         <button type="button" class=" btn bg-dark fg-white no-radius" onclick="VerTemplate(\'' + item.id_perfil + '\', \'' + item.nome_perfil + '\')"  title="Escolher o template para ' + item.nome_perfil + '">\n\
                                         <img title="' + item.nome_perfil + '" src="' + item.logo_perfil + '" class="img-responsive pull-left">\n\
                                         <span class="pull-lef text-medio">' + item.nome_perfil + '</span>\n\
                                 </button></div>';
-                        });
-                        div += button + '</div></div>';
-                        button = '';
                     });
-                    $('#lista_perfis').css('display', 'block');
-                    $('#listview').html(div);
-                    $('#info_perfis').addClass('alert');
-                    $('#info_perfis').html('<p class="alert alert-info">Escolha um perfil para a categoria selecionada.</p>');
-                    $('#info_perfis').delay(3000).fadeOut(400);
-                    $('#lista_perfis').fadeIn(800);
-                    $('#ModalPerfil').modal('show');
-                } else {
-                    $('#lista_perfis').css('display', 'block');
-                    $('#listview').html();
-                    $('#info_perfis').addClass('alert');
-                    $('#info_perfis').html('<p class="alert alert-warning">Ainda não existem perfis incorporados a essa categoria.</p>');
-                    $('#info_perfis').delay(3000).fadeOut(400);
-                    $('#lista_perfis').fadeIn(800);
-                    $('#ModalPerfil').modal('show');
-                }
-            });
+                    div += button + '</div></div>';
+                    button = '';
+                });
+                $('#lista_perfis').css('display', 'block');
+                $('#listview').html(div);
+                $('#info_perfis').addClass('alert');
+                $('#info_perfis').html('<p class="alert alert-info">Escolha um perfil para a categoria selecionada.</p>');
+                $('#info_perfis').delay(3000).fadeOut(400);
+                $('#lista_perfis').fadeIn(800);
+                $('#ModalPerfil').modal('show');
+            } else {
+                $('#lista_perfis').css('display', 'block');
+                $('#listview').html();
+                $('#info_perfis').addClass('alert');
+                $('#info_perfis').html('<p class="alert alert-warning">Ainda não existem perfis incorporados a essa categoria.</p>');
+                $('#info_perfis').delay(3000).fadeOut(400);
+                $('#lista_perfis').fadeIn(800);
+                $('#ModalPerfil').modal('show');
+            }
+        });
 }
 /*-----------------------------------------------------------------------------------*/
 /*  GerarOrcamento
@@ -656,8 +656,8 @@ function PDF(guest) {
     $('#btn-opcoes').css('display', 'none');
     $('#btn-encerrar').attr('title','Envie sua arte');
     /*$('#btn-imprimir').css('display', 'none');
-    $('#btn-personalizar').css('display', 'none');
-    $('#btn-enviar').css('display', 'none');*/
+     $('#btn-personalizar').css('display', 'none');
+     $('#btn-enviar').css('display', 'none');*/
     $('#cupom_frete').attr('data-acao', 'enviarpdf');
     if (guest === '1') {
         $('#logar').slideUp('fast');
@@ -685,9 +685,9 @@ function PDF(guest) {
  } else {
  $('#logar').slideDown('fast');
  }
- 
+
  }*
- 
+
  function Personalizar(produto_id) {
  $('#produto_id').val(produto_id);
  //$produto = $('#' + add);
@@ -722,14 +722,27 @@ function PDF(guest) {
  } else {
  $('#logar').slideDown('fast');
  }
- 
+
  }*/
 
 /*-----------------------------------------------------------------------------------*/
 /*  AdicionaCarrinho 
  /*-----------------------------------------------------------------------------------*/
-function AdicionaItemCarrinho(produto_id) {
+function AdicionaItemCarrinho(produto_id) { 
     $('#produto_id').val(produto_id);
+    var URL = 'adicionar';
+    var formulario = $('#basket').serializeArray();
+    $.post(URL, formulario, function(data) {
+        $('#info_basket').addClass('alert alert-success');
+        $('#info_basket').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para a área de edição, Por favor aguarde...</p>');
+        //$('#info_basket').css('display', 'block');
+        $('#modalAdicionando').modal('show');
+        $('#info_basket').delay(3000).fadeOut(800, function() {
+            return BasketSubmeter();
+        });
+    });
+}
+function AdicionaItem() { 
     var URL = 'adicionar';
     var formulario = $('#basket').serializeArray();
     $.post(URL, formulario, function(data) {
@@ -781,17 +794,17 @@ function FreteOrcamento() {
             labelsedex = labelsedex.replace('.', ',');
             labelsedex = "R$ " + labelsedex;
             $('#vl_sedex').html(labelsedex);
-            $('#frete_sedex').val(sedex.toFixed(2));           
-            $('#resultado').slideDown('slow', function() {                
+            $('#frete_sedex').val(sedex.toFixed(2));
+            $('#resultado').slideDown('slow', function() {
                 $('#resultado').css('display', 'block');
                 $('#desconto').css('display', 'block');
-            });            
+            });
         });
     } else {
         $('#info_correio').addClass('alert alert-danger');
         $('#info_correio').html('<p class="text-center text-medio">Por favor informe o CEP de destino</p>');
         $('#info_correio').fadeOut('slow');
-        $('#info_correio').fadeOut('slow', function() {            
+        $('#info_correio').fadeOut('slow', function() {
             $('#orc_cep').focus();
             $('#info_correio').removeClass('alert alert-danger');
         });
@@ -838,7 +851,7 @@ function SetaFrete(tipo, id) {
     //SetaBtnAcao(acao);
     soma = (+valor - +(valor*perc_desconto)) + vl_frete;
     $('#vl_desc_final').html('R$ ' +((valor*perc_desconto).toFixed(2)).replace('.', ','));
-    $('#orc_desconto_valor').val(valor*perc_desconto);  
+    $('#orc_desconto_valor').val(valor*perc_desconto);
     $('#vl_total_final').html('R$ ' + (soma.toFixed(2)).replace('.', ','));
 }
 /*-----------------------------------------------------------------------------------*/
@@ -1000,8 +1013,9 @@ function RemoverItem(product)
         console.log(result);
 
         var obj = JSON.parse(result);
-        alert(obj.reload);
+
         if (obj.reload === 'true') {
+            alert(obj.reload);
             $('#info_carrinho').html('<p class="alert alert-info text-medio text-center">' + obj.info + ' <img src="images/img/loader.gif" /></p>');
             $('#info_carrinho').slideDown('fast');
             $('#info_carrinho').delay(5000).fadeIn('slow', function() {
@@ -1009,6 +1023,7 @@ function RemoverItem(product)
             });
         } else {
             $('#info_carrinho').html('<div class="alert alert-warning" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
+            $('#info_carrinho').slideUp('fast');
         }
 
     });
@@ -1110,9 +1125,9 @@ function PreparaUpload(midia) {
         progressall: function(e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
             $('#progress .progress-bar').css(
-                    'width',
-                    progress + '%'
-                    );
+                'width',
+                progress + '%'
+            );
         },
         done: function(e, data) {
             console.log(data);
@@ -1132,18 +1147,18 @@ function ValidaCupom(whoo, URL)
 {
 
     /*$('#enviando_' + whoo).show();
-    $('#' + whoo).css({
-        opacity: 0.2
-    });*/
-$('#btn-validar').attr('disabled', 'false');
+     $('#' + whoo).css({
+     opacity: 0.2
+     });*/
+    $('#btn-validar').attr('disabled', 'false');
 //$('#btn_cupom_confirmar').css('display', 'none');
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
     $('#mensagem_' + whoo).removeClass('alert alert-warning');
     $('#info_' + whoo).removeClass('alert alert-info');
     /*$('#' + whoo).css({
-        opacity: 0.2
-    });*/
+     opacity: 0.2
+     });*/
     var formulario = $('#' + whoo).serializeArray();
     console.log(formulario);
     $.post(URL, formulario, function(data) {
@@ -1172,10 +1187,10 @@ $('#btn-validar').attr('disabled', 'false');
         } else {
             //overlay('off', whoo);
             /*$('#' + whoo).css({
-                opacity: 1
-            });*/
+             opacity: 1
+             });*/
             $('#mensagem_' + whoo).removeClass('alert alert-warning');
-           // $('#mensagem_' + whoo).addClass('alert alert-success');
+            // $('#mensagem_' + whoo).addClass('alert alert-success');
             //$('#mensagem_' + whoo).html('SUCESSO! Seu cupom foi validado.');
             $('#info_' + whoo).addClass('alert alert-info');
             $('#info_' + whoo).html(obj.info);
@@ -1202,10 +1217,10 @@ function UsaCupom(cupom)
     //var vl_discount_cupom = cupom.vl_desconto_cupom;
     //var total_geral = cupom.total_compra - vl_discount_avista - vl_discount_cupom + vl_frete;
     //atualiza o form
-   // $('#vl_discount_cupom').val(vl_discount_cupom);
-   // $('#str_vl_discount_cupom').html('R$ ' + vl_discount_cupom);
-   // $('#total_geral').html('R$ ' + total_geral);
-   // $('#ModalCupom').modal('hide');
+    // $('#vl_discount_cupom').val(vl_discount_cupom);
+    // $('#str_vl_discount_cupom').html('R$ ' + vl_discount_cupom);
+    // $('#total_geral').html('R$ ' + total_geral);
+    // $('#ModalCupom').modal('hide');
 
     return false;
 }
@@ -1226,30 +1241,30 @@ function CriarConta(token) {
         padding: 10,
         onShow: function(_dialog) {
             var content = '<form id="formtipoconta" name="formtipoconta" method="post" action="tipoContaJson">\n' +
-                    '<div id="mensagem_formtipoconta"></div>\n\
-                    <div id="info_formtipoconta"></div>\n\
-                    <fieldset>\n\
-                        <label class="control-label"><span class="red">*</span>Tipo de conta:</label>\n\
-                       <div class="input-control radio default-style inline-block" data-role="input-control">\n\
-                            <label class="inline-block">\n\
-                                <input type="radio" name="customers_pf_pj" value="f" checked />\n\
-                                <span class="check"></span>\n\
-                                Pessoa Física\n\
-                            </label>\n\
-                            <label class="inline-block">\n\
-                                <input type="radio" value="j" name="customers_pf_pj" />\n\
-                                <span class="check"></span>\n\
-                                Pessoa Jurídica\n\
-                            </label>\n\
-                        </div>\n\
-                        <label>CEP</label>\n\
-                        <div class="input-control text" data-role="input-control" >\n\
-                            <input type="text" placeholder="Informe o cep" id="postcode" name="entry_postcode">\n\
-                            <input id="street" name="street" type="hidden" />\n\
-                                <input id="suburb" name="suburb" type="hidden" />\n\
-                                <input id="city" name="city" type="hidden" />\n\
-                                <input id="state" name="state" type="hidden" />\n\
-                            <input type="hidden" name="_token" value="' + token + '"/>\n\
+                '<div id="mensagem_formtipoconta"></div>\n\
+                <div id="info_formtipoconta"></div>\n\
+                <fieldset>\n\
+                    <label class="control-label"><span class="red">*</span>Tipo de conta:</label>\n\
+                   <div class="input-control radio default-style inline-block" data-role="input-control">\n\
+                        <label class="inline-block">\n\
+                            <input type="radio" name="customers_pf_pj" value="f" checked />\n\
+                            <span class="check"></span>\n\
+                            Pessoa Física\n\
+                        </label>\n\
+                        <label class="inline-block">\n\
+                            <input type="radio" value="j" name="customers_pf_pj" />\n\
+                            <span class="check"></span>\n\
+                            Pessoa Jurídica\n\
+                        </label>\n\
+                    </div>\n\
+                    <label>CEP</label>\n\
+                    <div class="input-control text" data-role="input-control" >\n\
+                        <input type="text" placeholder="Informe o cep" id="postcode" name="entry_postcode">\n\
+                        <input id="street" name="street" type="hidden" />\n\
+                            <input id="suburb" name="suburb" type="hidden" />\n\
+                            <input id="city" name="city" type="hidden" />\n\
+                            <input id="state" name="state" type="hidden" />\n\
+                        <input type="hidden" name="_token" value="' + token + '"/>\n\
                             <button type="button" class="btn-search" onclick="javascript:EnderecoCEP();"></button>\n\
                         </div>\n\
                         <label></label>\n\
