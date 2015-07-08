@@ -4,6 +4,7 @@ namespace Ecograph\Libs;
 
 use Ecograph\Category;
 use Ecograph\CategoryDescription;
+use Ecograph\CategoryProduct;
 use Ecograph\Product;
 use Ecograph\Perfil;
 use Ecograph\ProductDescription;
@@ -435,13 +436,28 @@ Class Fichas {
         }
         return false;
     }
-
+    public static function idCategoria($product) {
+        $collection = CategoryProduct::Categoria($product);
+        $categories = $collection->toArray();
+        foreach($categories as $category){
+            $id = $category['category_id'];
+        }
+        return $id;
+    }
+    public static function idparentCategoria($product) {
+        $collection = CategoryProduct::Categoria($product);
+        $categories = $collection->toArray();
+        foreach($categories as $category){
+          $id = $category['category_id'];
+        }
+        return Category::find($id)->parent_id;
+    }
     public static function nomeCategoria($id) {
         return CategoryDescription::find($id)->categories_name;
     }
 
     public static function parentCategoria($id) {
-        return Category::find($id)->parent_id;
+         return Category::find($id)->parent_id;
     }
 
     public static function infoCategoria($id) {

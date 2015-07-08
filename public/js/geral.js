@@ -404,6 +404,12 @@ function CalculaPreco(categoria, localizador) {
         $('#enoblecimento_nome').val(param);
         $('#orc_enoblecimento_id').val(enoblecimento_valor);
         $('#orc_enoblecimento_nome').val(param);
+        acabamento_valor = $('#acabamento_' + localizador).val();
+        param = $('#param_acabamento_' + localizador).text();
+        $('#acabamento_nome').val(param);
+        $('#acabamento_id').val(acabamento_valor);
+        $('#orc_acabamento_id').val(acabamento_valor);
+        $('#orc_acabamento_nome').val(param);
     } else {
         acabamento_valor = $('#acabamento_' + localizador).val();
         param = $('#param_acabamento_' + localizador).text();
@@ -751,15 +757,24 @@ function AdicionaItem() {
         //$('#info_basket').css('display', 'block');
         $('#modalAdicionando').modal('show');
         $('#info_basket').delay(3000).fadeOut(800, function() {
-            return BasketSubmeter();
+            return EditarSubmeter();
         });
     });
+}
+/*-----------------------------------------------------------------------------------*/
+/*  EditarSubmeter
+ /*-----------------------------------------------------------------------------------*/
+function EditarSubmeter() {
+    action_submeter = 'editor/personalizar.html';
+    $('#basket').attr('action', action_submeter);
+    $('#basket').attr('method', 'post');
+    $('#basket').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  BasketSubmeter
  /*-----------------------------------------------------------------------------------*/
 function BasketSubmeter() {
-    action_submeter = 'editor/personalizar.html';
+    action_submeter = 'carrinho/lista.html';
     $('#basket').attr('action', action_submeter);
     $('#basket').attr('method', 'post');
     $('#basket').submit();
@@ -1015,15 +1030,16 @@ function RemoverItem(product)
         var obj = JSON.parse(result);
 
         if (obj.reload === 'true') {
-            alert(obj.reload);
+            //alert(obj.reload);
             $('#info_carrinho').html('<p class="alert alert-info text-medio text-center">' + obj.info + ' <img src="images/img/loader.gif" /></p>');
-            $('#info_carrinho').slideDown('fast');
-            $('#info_carrinho').delay(5000).fadeIn('slow', function() {
+            $('#info_carrinho').slideDown(600);
+            //slideUp(600)
+            $('#info_carrinho').delay(5000).slideUp(600, function() {
                 document.location.href = 'carrinho/lista.html'
             });
         } else {
             $('#info_carrinho').html('<div class="alert alert-warning" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
-            $('#info_carrinho').slideUp('fast');
+            $('#info_carrinho').slideUp(700);
         }
 
     });
