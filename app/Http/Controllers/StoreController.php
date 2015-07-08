@@ -302,14 +302,17 @@ class StoreController extends Controller {
         $keyword = \Request::get('keyword');
         //$filtro = '';
         $filtro = Fichas::trataKeyword($keyword);
+
         if (is_array($filtro)) {
             $chave = Fichas::Proibidas($filtro);
             $resultado = Fichas::buscas($chave);
+            //dd($resultado);
             if ($resultado) {
                 $products = $resultado->getCollection()->all();
                 $path = $resultado->setPath('loja/busca');
                 $links = $path->appends(['keyword' => $keyword])->render();
                 $layout = $this->layout->classes('0');
+                //dd($products);
                 return view('produtos.index')
                     ->with('products', $products)
                     ->with('keyword', $keyword)

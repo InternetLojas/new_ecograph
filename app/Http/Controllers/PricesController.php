@@ -25,7 +25,7 @@ class PricesController extends Controller {
      */
     public function Precos(Request $request) {
         $post_inputs = $request->all();
-//dd($post_inputs);
+
         //identificar os pacotes a serem utilizados
         /* $pacotes_id = Pacote::where('categories_id', $post_inputs['categoria'])
           ->lists('id'); */
@@ -61,11 +61,13 @@ class PricesController extends Controller {
         $category_acabamento = CategoryAcabamento::where('categories_id', $post_inputs['categoria'])
                 ->where('acabamento_id', $post_inputs['acabamento'])
                 ->lists('id');
+        //dd($category_acabamento);
         //levantando as linhas que atendem categoria acabamento e pac_papel
         $pacote_acabamentos = Pacacabamento::where('categories_id', $post_inputs['categoria'])
                 ->where('category_acabamento_id', $category_acabamento[0])
                 ->wherein('pacote_papel_id', $pacote_papeis)
                 ->get();
+
         $acabamento = $pacote_acabamentos->toarray();
 
         $span_preco = array();

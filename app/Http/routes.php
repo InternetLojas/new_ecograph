@@ -217,6 +217,10 @@ Route::group(['prefix' => 'carrinho'], function() {
         'as' => 'carrinho.lista',
         'uses' => 'BasketController@Lista'
     ]);
+    Route::post('lista.html', [
+        'as' => 'carrinho.lista',
+        'uses' => 'BasketController@Lista'
+    ]);
 });
 
 /* ============================================================== */
