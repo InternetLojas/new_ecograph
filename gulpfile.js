@@ -12,5 +12,22 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-    mix.less('app.less');
+    mix.styles([
+        'ecograph-bootstrap.css',
+        'iconFont.css',
+        'ecograph.css'
+    ], 'public/css/main.css');
+
+    mix.scripts([
+        'geolocalizacao.js',
+        'jquery.maskedinput.js',
+        'jquery.ui.map.full.min.js'
+    ], 'public/js/alljs.js');
+
+    mix.scripts(['geral.js'],
+        'public/js/custom.js');
+
+    mix.version(['css/main.css','js/alljs.js','js/custom.js' ]);
+    mix.copy('resources/assets/fonts','public/build/fonts');
+
 });
