@@ -1,8 +1,9 @@
 <!--CHECKOUT-->
-<div class="page-region-content">
-    <div class="grid padding5">
-        <div class="row"> 
-            @include('layouts.contents.checkout')
-        </div>
+<div class="section">
+    <!--============================== content =================================-->
+    <div class="destaque_home">
+        @include('layouts.contents.checkout')
     </div>
 </div>
+
+

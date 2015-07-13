@@ -1,6 +1,6 @@
 @include('layouts.includes.modais.modal_erros_cadastro')
 {!! Form::open(array(
-'url'=> URL::to('cadastro.html'),
+'route'=> ('clientes.cadastro'),
 'method' => 'post',
 'name'=>'cadastro',
 'id'=>'cadastro',
@@ -350,7 +350,6 @@
                                     Aceito as <a class="" href="{{URL::to('/politica')}}" title="Veja nossa política de trabalho"></a>regras</a>.
                                 </label>
                                 <span id="concorde" style="display:none"><strong>Verifique</strong></span>
-
                             </div>
                             @if($tipo == 'f')
                             <input type="hidden" name="customers_pf_pj" value="f" />

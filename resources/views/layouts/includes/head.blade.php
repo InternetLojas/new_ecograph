@@ -16,12 +16,9 @@
 {{ Metatags::tagsfacebook($descricao, $detalhes) }}
 @endif
 <!-- Latest compiled and minified CSS & JS -->
-<link rel="stylesheet" href="{{ asset('/css/ecograph-bootstrap.css')}}">
 
 <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="{{ asset('/css/iconFont.css')}}">
-<link rel="stylesheet" href="{{ asset('/css/ecograph.css')}}">
-
+<link rel="stylesheet" href="{{ asset(elixir('css/main.css'))}}">
 <!-- Favicons-->
 <!--================================================== -->
 <link rel="shortcut icon" href="images/icons/favicon.ico">

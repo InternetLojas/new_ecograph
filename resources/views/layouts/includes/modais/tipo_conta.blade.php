@@ -4,7 +4,7 @@
             {!! 
             Form::open(
             array(
-            'url'=> URL::to('tipoContaJson'),
+            'route'=> 'clientes.tipoContaJson',
             'method' => 'post', 
             'id'=>'formtipoconta', 
             'name'=>'formtipoconta',

@@ -6,7 +6,7 @@
     </p>
     <span style="font-size:90%">Selecione as opções:</span>
 </div>
-
+<div id="info_calculadora"></div>
 <!--tabela de cálculo dos preços-->
 @include('layouts.includes.detalhes.tabela')
 @include('layouts.includes.detalhes.especificacoes')

@@ -1,5 +1,5 @@
 <div class="destaque_home">
-    <h1 class="text-center text-muted">Quem é a Ecograph</h1>
+    <h1 class="title-border text-center text-muted">Quem é a Ecograph</h1>
     <div class="row">
         <div class="col-md-12">                            
             <p class="text-center text-mediobig">

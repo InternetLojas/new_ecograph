@@ -6,7 +6,10 @@
                 <h4 class="modal-title">Parabéns - Item adicionado</h4>
             </div>
             <div class="modal-body">
-                O produto foi adicionado ao carriho. Aguarde estamos redirecionando para o resumo.
+                <p>
+                    O produto foi adicionado ao carriho.<br>
+                    Aguarde estamos redirecionando para o <span id="para"></span>.
+                </p>
                 <div id="info_basket"></div>
             </div>
             <div class="modal-footer">               
