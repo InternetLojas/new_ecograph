@@ -23,11 +23,11 @@ Route::get('/', 'WelcomeController@index');
 
 Route::group(['prefix' => '/'], function() {
     Route::get('', [
-        'as' => '/index',
+        'as' => 'index',
         'uses' => 'HomeController@index'
     ]);
     Route::get('inicio', [
-        'as' => '/index',
+        'as' => 'index',
         'uses' => 'HomeController@index'
     ]);
     /*     * *se houver o login deve-se verificar o carrinho** */
@@ -36,7 +36,7 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'BasketController@Verifica'
     ]);
     Route::get('home.html', [
-        'as' => '/index',
+        'as' => 'index',
         'uses' => 'HomeController@index'
     ]);
     Route::get('index.html', [
@@ -44,51 +44,44 @@ Route::group(['prefix' => '/'], function() {
         'uses' => 'HomeController@index'
     ]);
     Route::get('contato.html', [
-        'as' => '/contato',
-        'uses' => 'HomeController@contato'
+        'as' => 'contato',
+        'uses' => 'HomeController@Contato'
     ]);
     Route::get('entrega.html', [
-        'as' => '/entrega',
-        'uses' => 'HomeController@entrega'
+        'as' => 'entrega',
+        'uses' => 'HomeController@Entrega'
     ]);
-
+    //retorna a view de produtos
     Route::get('produtos.html', [
-        'as' => 'produtos.produtos',
+        'as' => 'produtos',
         'uses' => 'ProductController@Produtos'
     ]);
-
+    //retorna a view de orçamento
     Route::post('orcamento.html', [
         'as' => 'orcamento',
-        'uses' => 'CustomerController@orcamento'
+        'uses' => 'CustomerController@Orcamento'
     ]);
+    //retorna a view de informações de omo comprar
     Route::get('como-comprar.html', [
         'as' => 'comocomprar',
-        'uses' => 'HomeController@comocomprar'
+        'uses' => 'HomeController@ComoComprar'
     ]);
-
     //retorna a view do missão
     Route::get('missao.html', [
-        "as" => "/missao",
+        "as" => "missao",
         "uses" => "HomeController@Missao"
     ]);
     //retorna a view do certificacao
     Route::get('certificacao.html', [
-        "as" => "/certificacao",
+        "as" => "certificacao",
         "uses" => "HomeController@Certificacao"
     ]);
     //retorna a view do carrinho de compras
     Route::get('carrinho.html', [
-        "as" => "/carrinho",
+        "as" => "carrinho",
         "uses" => "BasketController@Carrinho"
     ]);
-
-//retorna a view do carrinho de compras
-   // Route::post('resumo.html', [
-  //      "as" => "resumo",
-     //   "uses" => "BasketController@Resumo"
-  //  ]);
 });
-
 
 /* ============================================================== */
 /*                        Controller CUSTOMER                     */
@@ -99,36 +92,37 @@ Route::group(['prefix' => '/'], function() {
 Route::group(['prefix' => 'clientes'], function() {
     Route::get('minha-conta.html', [
         'as' => 'clientes.conta',
-        'uses' => 'CustomerController@conta'
+        'uses' => 'CustomerController@Conta'
     ]);
     Route::get('logout.html', [
         'as' => 'clientes.logout',
-        'uses' => 'CustomerController@logout'
+        'uses' => 'CustomerController@Logout'
     ]);
     Route::get('login.html', [
         'as' => 'clientes.login',
-        'uses' => 'CustomerController@login'
+        'uses' => 'CustomerController@Login'
     ]);
     Route::get('conta/sucesso.html', [
         'as' => 'clientes.conta.sucesso',
         'uses' => 'CustomerController@ContaCriada'
     ]);
+    /*     * *controla o modal com o form formtipoconta retorna JSON* */
+    Route::post('tipoContaJson', array(
+        "as" => 'clientes.tipoContaJson',
+        "uses" => 'CustomerController@TipoContaJson'
+    ));
+    /*     * *através da modal o cliente posta o cep e tipo para criar a conta */
+    Route::post('criarconta.html', array(
+        "as" => 'criarconta',
+        "uses" => 'CustomerController@CriarConta'
+    ));
+    /*     * *quando o cliente preenche o cadastro e envia os dados* */
+    Route::post('cadastro.html', array(
+        "as" => 'clientes.cadastro',
+        "uses" => 'CustomerController@Cadastro'
+    ));
 });
-/* * *controla o modal com o form formtipoconta retorna JSON* */
-Route::post('tipoContaJson', array(
-    "as" => 'tipoContaJson',
-    "uses" => 'CustomerController@TipoContaJson'
-));
-/* * *através da modal o cliente posta o cep e tipo para criar a conta* */
-Route::post('criarconta', array(
-    "as" => 'criarconta',
-    "uses" => 'CustomerController@CriarConta'
-));
-/* * *quando o cliente preenche o cadastro e envia os dados* */
-Route::post('cadastro.html', array(
-    "as" => 'cadastro.cadastro',
-    "uses" => 'CustomerController@Cadastro'
-));
+
 
 /* * *verifica o cupom informado e dá o desconto* */
 Route::post('desconto', array(
@@ -141,7 +135,6 @@ Route::post('desconto', array(
 /* ============================================================== */
 //Route::resource('/produtos', 'ProductController');
 
-
 Route::group(['prefix' => 'produtos'], function() {
     Route::post('orcamento', [
         'as' => 'produtos.orcamento',
@@ -152,19 +145,18 @@ Route::group(['prefix' => 'produtos'], function() {
         'uses' => 'ProductController@EnviarPDF'
     ]);
     Route::post('portfolio.html', [
-        'as' => 'produtos.portfolio',
-        'uses' => 'ProductController@Listagem'
+        'as' => 'portfolio',
+        'uses' => 'ProductController@Portfolio'
     ]);
     Route::get('portfolio.html', [
         'as' => 'produtos.index',
         'uses' => 'ProductController@Index'
     ]);
-});
-
-Route::get('produtos/detalhes/{pai}/{filho}/{nome_categoria}', [
+    Route::get('detalhes/{pai}/{filho}/{nome_categoria}', [
     "as" => "produtos.detalhes",
     "uses" => "ProductController@Detalhes"
 ]);
+});
 
 /* ============================================================== */
 /*            Controller DE RETORNO JSON                          */
@@ -182,7 +174,6 @@ Route::post('calcula_frete/{cep}', [
     "as" => "calcula_preco/{cep}",
     "uses" => "PricesController@Fretes"
 ]);
-
 Route::get("lista_perfis/{categoria}", [
     "as" => "lista_perfis/{categoria}",
     "uses" => "PerfilController@Lista"
@@ -196,7 +187,7 @@ Route::get("lista_perfis/{categoria}", [
 //adiciona itens no carrinho
 Route::post('adicionar', [
     "as" => "adicionar",
-    "uses" => "BasketController@Adicionar" 
+    "uses" => "BasketController@Adicionar"
 ]);
 //retorna uma view
 Route::post('basket', [
@@ -213,13 +204,13 @@ Route::get('basket/remover', [
 ]);
 Route::group(['prefix' => 'carrinho'], function() {
     /*     * Retorna uma página com o resumo de uma compra* */
-    Route::get('lista.html', [
-        'as' => 'carrinho.lista',
-        'uses' => 'BasketController@Lista'
+    Route::get('carrinho.html', [
+        'as' => 'carrinho.listar',
+        'uses' => 'BasketController@Listar'
     ]);
     Route::post('lista.html', [
         'as' => 'carrinho.lista',
-        'uses' => 'BasketController@Lista'
+        'uses' => 'BasketController@Adicionar'
     ]);
 });
 

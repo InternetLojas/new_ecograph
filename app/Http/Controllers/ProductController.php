@@ -2,7 +2,6 @@
 
 namespace Ecograph\Http\Controllers;
 
-use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
@@ -19,7 +18,6 @@ use Ecograph\Papel;
 use Ecograph\Acabamento;
 use Ecograph\Pacformato;
 use Ecograph\Pacote;
-use Cart;
 use Ecograph\ProdutoPerfil;
 use Ecograph\Category;
 use Ecograph\CategoryProduct;
@@ -282,7 +280,7 @@ class ProductController extends Controller {
      * selecionados
      * @return Json
      */
-    public function Listagem(Request $request) {
+    public function Portfolio(Request $request) {
         $post_inputs = $request->all();
         //dd($post_inputs);
         //quem é o pai da categoria enviada

@@ -41,8 +41,8 @@ HTML::macro('extras_images', function($extras_images, $html = '') {
 
 HTML::macro('testemunhos', function($qtd ) {
     $html = "<ul id=\"navmenu-v\" class=\"nav nav-list\">" .
-            Utilidades::testemunhos($qtd) .
-            "</ul>";
+        Utilidades::testemunhos($qtd) .
+        "</ul>";
     $html .="<div class=\"clearfix\"></div>";
     $html .= "<br><a href=\"" . URL::to('testemunhos/') . "\" title=\"Saiba mais...\" >Saiba mais...</a>";
     return $html;
@@ -112,8 +112,8 @@ HTML::macro('customers_state', function($customers_state, $total_clientes) {
 
 HTML::macro('tag_clouds', function() {
     $html = "<ul class=\"unstyled\">" .
-            Utilidades::tagsclouds() .
-            "</ul>";
+        Utilidades::tagsclouds() .
+        "</ul>";
     return $html;
 });
 
@@ -139,14 +139,14 @@ HTML::macro('hidden_payment', function($k, $vl, $gateway_desconto, $valor_descon
 HTML::macro('radio_payment', function($k, $vl_frete, $vl, $id_desconto) {
     $html = '';
     $classes = Confdesconto::where('descontoacrescimo_id', $id_desconto)
-                    ->where('desconto_key', 'classe_autorizada')->first();
+        ->where('desconto_key', 'classe_autorizada')->first();
     $classes_autorizadas = $classes->toarray();
     $autorizadas = explode(";", $classes_autorizadas['desconto_value']);
     if (in_array($vl->class, $autorizadas)) {
         $params_valor_minimo = Confdesconto::where('descontoacrescimo_id', $id_desconto)
-                        ->where('desconto_key', 'valor_minimo')->first();
+            ->where('desconto_key', 'valor_minimo')->first();
         $params_valor_desconto = Confdesconto::where('descontoacrescimo_id', $id_desconto)
-                        ->where('desconto_key', 'valor_desconto')->first();
+            ->where('desconto_key', 'valor_desconto')->first();
         $valor_minimo = $params_valor_minimo->desconto_value;
         $valor_desconto = $params_valor_desconto->desconto_value;
 
@@ -186,7 +186,7 @@ Form::macro('google_map', function($geolocation, $attributes = array()) {
 
     switch ($coord_type) {
         case "LatLng" : {
-                $html .= "function initialize() {
+            $html .= "function initialize() {
                                 var coords = new google.maps.LatLng($geolocation);
                                 var mapOptions = {
                                     mapTypeId: google.maps.MapTypeId.$map_type,
@@ -196,9 +196,9 @@ Form::macro('google_map', function($geolocation, $attributes = array()) {
 
                                 var map = new google.maps.Map(document.getElementById(\"$render_to_div\"), mapOptions);
                           }";
-            }
+        }
         default: {
-                $html .= "function initialize() {
+            $html .= "function initialize() {
                             var map = new google.maps.Map(document.getElementById(\"$render_to_div\"), {
                                                       mapTypeId: google.maps.MapTypeId.$map_type,
                                                       zoom: $zoom_level
@@ -216,7 +216,7 @@ Form::macro('google_map', function($geolocation, $attributes = array()) {
                                                  }
                                               });
                          }";
-            }
+        }
     }
 
 //$html .= "google.maps.event.addDomListener(window, \"load\", initialize);";
@@ -391,7 +391,7 @@ HTML::macro('slider_full', function($group) {
         $form .= "<button data-original-title=\"Carrinho\" class=\"btn btn-orange tooltip-test\" onclick=\"this.form.submit();\" title=\"Comprar " . Utilidades::truncate(ProductDescription::find($slide['products_id'])->products_name) . " \"> Comprar</button>
                 " . Form::close();
         $html .= '<li style="border:1px solid #dcdcdd;padding:1px;">'
-                . HTML::image('images/slider/' . $banner, $banner, array('width' => '100%')) . '
+            . HTML::image('images/slider/' . $banner, $banner, array('width' => '100%')) . '
                         <div class="intro">
                                 <h1 class="header_text">' . Utilidades::truncate(ProductDescription::find($slide['products_id'])->products_name) . '</h1>
                                 <p><span>' . $preco . '</span></p>
@@ -426,7 +426,7 @@ HTML::macro('thumb_perfil_enviar', function($perfis, $product, $nome) {
     foreach ($perfis as $perfil_id) {
         $perfil = Perfil::find($perfil_id);
         $thumb .= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">' . "\n" .
-                '<div class="thumbnail">' . "\n";
+            '<div class="thumbnail">' . "\n";
         $thumb .= '<a href="' . URL::to('enviar/') . '/' . $product . '/' . $perfil_id . '/' . URLAmigaveis::Slug($nome, '-', true) . '.html" class="">' . "\n";
         $thumb .= HTML::image($perfil->logo_perfil, $perfil->logo_perfil, array('title' => $perfil->nome_perfil)) . "\n";
         $thumb .= '</a>' . "\n";

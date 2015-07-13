@@ -174,8 +174,8 @@ class StoreController extends Controller {
         //$rules['discount_avista_id'] = 'required|numeric';
         $rules['discount_cupom'] = 'numeric';
         $rules['total_compra'] = 'required|numeric';
-        $rules['frete'] = 'required|numeric';
-        $rules['tipo_frete'] = 'required';
+        $rules['orc_vl_frete'] = 'required|numeric';
+        $rules['orc_tipo_frete'] = 'required';
         $validation = Validator::make($post_inputs, $rules);
         if ($validation->fails()) {
             foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {

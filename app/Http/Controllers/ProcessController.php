@@ -34,7 +34,7 @@ class ProcessController extends Controller {
         //puxa as configurações necessárias para o processo de pagamento
         $start = $class::start();
         //prepara o ambiente espedífico da classe
-        $before = $class::before($start, $inputs['tipo_frete'], $inputs['frete']);
+        $before = $class::before($start, $inputs['orc_tipo_frete'], $inputs['orc_vl_frete']);
         $before["id_pedido"] = 900;
         $before["redirect"] = "true";
         //preparativos para mostrar a página
@@ -65,8 +65,8 @@ class ProcessController extends Controller {
                         ->with('submeter', $submeter)
                         ->with('total_compra', $inputs['total_compra'])
                         ->with('discount_cupom', $inputs['discount_cupom'])
-                        ->with('vl_frete', $inputs['frete'])
-                        ->with('tipo_frete', $inputs['tipo_frete'])
+                        ->with('vl_frete', $inputs['orc_vl_frete'])
+                        ->with('tipo_frete', $inputs['orc_tipo_frete'])
                         ->with('html', $html)
                         ->with('class', $class_id)
                         ->with('layout', $layout);
@@ -104,7 +104,7 @@ class ProcessController extends Controller {
         $post_inputs = \Request::except('_token');
 		$payment = $post_inputs['payment'];
 		$payment_id = Gateway::Id($payment)->get();
-	
+
 		//gera a pedido especifico e recebe o identificador do novo pedido
         //ou recebe false quando não foi possivel gerar o pedido
         $order_id = Checkout::order($payment, $payment_id->toarray()[0]['id']);

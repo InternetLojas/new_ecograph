@@ -119,7 +119,7 @@ Class Checkout {
     static function item($new_order_id) {
         $orderitem = Null;
         foreach (Cart::content() as $itens) {
-        	dd($itens);
+        	//dd($itens);
             //controla o estoque
             $stock = Product::find($itens->id);
             $stock->products_quantity -= $itens->quantity;
@@ -136,7 +136,7 @@ Class Checkout {
             $orderitem->tax = '0.00';
             //$orderitem->save();
         }
-		dd($orderitem);
+		//dd($orderitem);
 		//$orderitem = Null;
         if (is_object($orderitem)) {
             return true;

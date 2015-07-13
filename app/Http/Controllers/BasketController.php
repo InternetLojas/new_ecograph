@@ -57,9 +57,9 @@ class BasketController extends Controller {
         $userId = \Auth::user()->id;
         $carrinho = Customer::with('basketes')->find($userId);
         if (count($carrinho->basketes->toarray()) > 0) {
-            return redirect(url('/carrinho/lista.html'));
+            return redirect(route('carrinho.listar'));
         } else {
-            return redirect(url('/home.html'));
+            return redirect(route('index'));
         }
     }
 
@@ -243,26 +243,92 @@ class BasketController extends Controller {
             $this->basket_item->pacote_id = '23';
             $this->basket_item->save();
         }
-        return json_encode(array('action' => true,
-            'info' => 'Item adicionado no carrinho com sucesso',
-            'total_itens' => Cart::count()
-        ));
-    }
-
-    public function Listar(Request $request) {
-        //dd($request);
-        $cart = Cart::content();
-        foreach ($cart->toarray() as $row) {
-            foreach ($row as $item) {
-                $contents[] = $row;
-            }
-        }
-        //dd($contents);
+        //return json_encode(array('action' => true,
+        //    'info' => 'Item adicionado no carrinho com sucesso',
+        //    'total_itens' => Cart::count()
+        //));
+        $contents = Cart::content();
         $gateways = Gateway::ativos('1')->get();
         $classes = Utilidades::Descontos();
         $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
         $desc_acrescimo_id = $desc_acrescimo->toarray();
-        $layout = $this->layout->classes(Fichas::parentCategoria(0));
+        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+        //levanta o endereço do cliente
+        $customers_default_address_id = Customer::find(Auth::user()->id);
+        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
+
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Itens no carrinho')
+            ->with('page', 'carrinho')
+            ->with('ativo', 'carrinho')
+            ->with('contents', $contents->toarray())
+            ->with('post_inputs', $post_inputs)
+            ->with('gateways', $gateways)
+            ->with('classes', $classes)
+            ->with('desc_acrescimo_id', $desc_acrescimo_id)
+            ->with('cart_total', Cart::total())
+            ->with('default_address', $default_address)
+            ->with('rota', 'carrinho.html')
+            ->with('layout', $layout);
+    }
+
+    public function Listar() {
+        $carrinho = $this->basket
+            ->where('customer_id', Auth::user()->id)
+            ->get();
+        $lista = $carrinho->toarray();
+
+        if (count($lista) > 0) {
+            foreach ($lista as $key => $valor) {
+                $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
+                $option_itens = $basket_option->toarray();
+                //dd( $lista);
+                $item = array('id' => $valor['products_id'],
+                    'name' => Fichas::nomeProduto($valor['products_id']),
+                    'price' => str_replace('R$ ', '', $valor['final_price']),
+                    'quantity' => $valor['quantity'],
+                    'image' => Fichas::ImgProduto($valor['products_id'])
+                );
+                $cat = CategoryProduct::Categoria($valor['products_id']);
+                $categoria = $cat->toarray();
+                $option = array('categoria_id' => $categoria[0]['category_id'],
+                    'categoria' => $categoria[0]['products_name'],
+                    'formato_id' => $option_itens[0]['formato_id'],
+                    'formato' => 'descobrir categ',
+                    'papel_id' => $option_itens[0]['papel_id'],
+                    'papel' => 'descobrir categ',
+                    'acabamento_id' => $option_itens[0]['acabamento_id'],
+                    'acabamento' => 'descobrir categ',
+                    'unidade' => '120',
+                    'perfil' => $categoria[0]['products_name'],
+                    'perfil_id' => '22'
+                );
+                Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
+            }
+        }
+        $contents = Cart::content();
+        $gateways = Gateway::ativos('1')->get();
+        $classes = Utilidades::Descontos();
+        $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
+        $desc_acrescimo_id = $desc_acrescimo->toarray();
+        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+        //levanta o endereço do cliente
+        $customers_default_address_id = Customer::find(Auth::user()->id);
+        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
+
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Itens no carrinho')
+            ->with('page', 'carrinho')
+            ->with('ativo', 'carrinho')
+            ->with('contents', $contents->toarray())
+            ->with('post_inputs', '')
+            ->with('gateways', $gateways)
+            ->with('classes', $classes)
+            ->with('desc_acrescimo_id', $desc_acrescimo_id)
+            ->with('cart_total', Cart::total())
+            ->with('default_address', $default_address)
+            ->with('rota', 'carrinho.listar')
+            ->with('layout', $layout);
     }
 
     public function Resumo(Request $request) {
