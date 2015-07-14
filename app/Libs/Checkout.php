@@ -21,10 +21,11 @@ Class Checkout {
      * Retorna o identificados do novo pedido ou retorna false
      * @return order_id ou false
      */
-    static function order($payment_method, $gateway_id) {
+    static function order($payment_method, $pgmt) {
 
         $customer = Customer::find(Auth::user()->id);
         $default_address = Addressbook::find($customer->customers_default_address_id);
+
 
         //$ip = $HTTP_SERVER['HTTP_CLIENT_IP'];
         //$ip = '127.0.0.1';
@@ -73,7 +74,7 @@ Class Checkout {
             'billing_state' => $default_address->entry_state,
             'billing_state_code' => $default_address->entry_state_code,
             'billing_country' => 'Brasil',
-            'payment_method' => Gateway::find($gateway_id)->title,
+            'payment_method' => $pgmt['title'],
             'currency' => 'BRL',
             'currency_value' => '1.0000'
         );

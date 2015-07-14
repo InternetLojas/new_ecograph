@@ -100,15 +100,22 @@ class ProcessController extends Controller {
     }
 
     public function Pedido() {
-
         $post_inputs = \Request::except('_token');
 		$payment = $post_inputs['payment'];
-		$payment_id = Gateway::Id($payment)->get();
-
+		$pgmtoClass = Gateway::Id($payment)->get();
+        $collection = compact('pgmtoClass');
+        foreach($collection as $gateway){
+            foreach($gateway as $item){
+                $pgmto = $item->toArray();
+                break;
+            }
+        }
+        //dd($pgmto);
 		//gera a pedido especifico e recebe o identificador do novo pedido
         //ou recebe false quando não foi possivel gerar o pedido
-        $order_id = Checkout::order($payment, $payment_id->toarray()[0]['id']);
-        //gera a pedido especifico
+        $order_id = Checkout::order($payment, $pgmto);
+
+        /***gera a pedido especifico
         //$order_id = 1; //$this->order($class);
         // //gera os valores totais, descontos e acrescimos
         //$this->ordemtotal($order_id);
@@ -121,20 +128,17 @@ class ProcessController extends Controller {
 
         //puxa as configurações necessárias para o processo de pagamento retorna um array
         //$start = $class::start();
-        //$this->start = $start;
-
-        
+        //$this->start = $start;*/
         if ($order_id) {
-            
             //prossegue na criacação dos itens do pedido
             $item= Checkout::Item($order_id);
-			//dd($item);
+			//caso true - criou o item de pedido;
             if ($item) {
                 //cria um sessão do identificador do pedido utilizado
                 Session::put('neworder_id', $order_id);
-                $data['url_action'] = 'loja/finalizacao';
+                $data['url_action'] = route('loja.finalizacao',['status'=>$pgmto['status'],'gateway'=>$pgmto['class']]);
                 //identifica se é um gateway interno ou externo
-                $gateway_externo = Gateway::find($payment_id->toarray()[0]['id'])->gateway_externo;
+                $gateway_externo = Gateway::find($pgmto['id'])->gateway_externo;
                 //cria um sessão da classe trabalhada
                 Session::put('newclass', $payment);
                 if ($gateway_externo == 0) {

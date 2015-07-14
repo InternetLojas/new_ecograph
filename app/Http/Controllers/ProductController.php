@@ -79,6 +79,8 @@ class ProductController extends Controller {
     public function Detalhes($pai, $filho, $nome_html) {
         $layout = $this->layout->classes($pai);
         $lista = Fichas::CategoriasPais();
+        $listagem = '';
+        $solicitado = '';
         foreach ($lista as $categorias) {
             foreach ($categorias['prole']['filhos'] as $key => $item) {
                 $listagem[] = array($item['id'], $item['nome_filho']);

@@ -263,7 +263,7 @@ class StoreController extends Controller {
                 if ($data['status'] == 'pass') {
                     //cria um sessão do identificador do pedido utilizado
                     Session::put('neworder_id', $order_id);
-                    $data['url_action'] = URL::to('loja/finalizacao');
+                    $data['url_action'] = route('loja.finalizacao');
                     //identifica se é um gateway interno ou externo
                     $gateway_externo = Gateway::find($post_inputs['payment'])->gateway_externo;
                     //cria um sessão da classe trabalhada
@@ -296,6 +296,29 @@ class StoreController extends Controller {
             );
             return json_encode($data);
         }
+    }
+
+    public function Finalizacao($status, $gateway) {
+        //echo '<p>Pedido nr  ' . Session::get('neworder_id') . '</p>';
+        $class = Session::get('newclass');
+        //envio do email
+        //EnvioEmail::novopedido(Session::get('neworder_id'));
+        return $class::Redireciona($status);
+
+        //gateway devolve
+        ////necessito do id do produto que foi gerado para esse gateway
+        //recebe os dados para gerar os dados de pagamento
+        //utilizar a função redireciona das classes
+        //utilizar o gateway para instanciar a classe pertinente
+        //$parametros = Session::get('parametros');
+        //identifica a classe;
+        //$class = $parametros['class'];
+        //chama o javascript específico
+        //$jv = $class::html($url_envio);
+        //chama o redirecionamento
+        //$redireciona = $class::redireciona($parametros, $jv);
+        //return false;
+        //return $redireciona;
     }
 
     public function Busca() {

@@ -444,6 +444,7 @@ Class Fichas {
         }
         return $id;
     }
+
     public static function idparentCategoria($product) {
         $collection = CategoryProduct::Categoria($product);
         $categories = $collection->toArray();

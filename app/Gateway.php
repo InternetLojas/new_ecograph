@@ -22,7 +22,7 @@ class Gateway extends Model {
     }
 
     public function scopeId($query, $class) {
-        return $query->where('class', '=', $class);
+        return $query->where('class', $class);
     }
 
     public function scopeClass($query, $class) {

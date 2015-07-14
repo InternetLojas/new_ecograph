@@ -250,6 +250,11 @@ Route::group(['prefix' => 'loja'], function() {
         "as" => "loja.caixa",
         "uses" => "StoreController@Caixa"
     ));
+    //executa o processamento do pedido e o pagamento
+    Route::post('loja/finalizacao/{status}/{gateway}', array(
+        "as" => 'loja.finalizacao',
+        "uses" => 'StoreController@Finalizacao'
+    ));
 });
 
 /* ============================================================== */
