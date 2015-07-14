@@ -1,10 +1,8 @@
 {!! Form::open(array(
-'url'=> URL::to('loja/pedido'),
+'route'=> 'loja.pedido',
 'method' => 'post',
 'name'=>'formpedido',
 'id'=>'formpedido')) !!}
-<div id="mensagem_formpedido"></div>
-<div id="info_formpedido"></div>
 <fieldset>                     
     <div class="control-group">
         <input type="hidden" name="payment" id="payment" value="{{ $gateway }}" />

@@ -102,9 +102,9 @@
             });
             @endif
             @if($page === 'detalhes')
-            @if(isset($solicitado))
+            <!--if(isset($solicitado))-->
             Calculadora('{!! $solicitado['filho'] !!}', '{!! Fichas::nomeCategoria($solicitado['filho']) !!}');
-                    @endif
+            <!--endif-->
                     var $btn_imprimir = $('#btn_imprimir');
             $btn_imprimir.on('click', function() {
                 GerarOrcamento();
