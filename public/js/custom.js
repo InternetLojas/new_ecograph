@@ -1236,57 +1236,57 @@ function UsaCupom(cupom){
  ***   script para controle da página de carrinho    ***
  *******************************************************
  *
-function CriarConta(token) {
-//$("#createFlatWindow").on('click', function(){
-    $.Dialog({
-        overlay: true,
-        shadow: true,
-        flat: false,
-        title: 'Criar uma conta',
-        content: '',
-        width: 500,
-        padding: 10,
-        onShow: function(_dialog) {
-            var content = '<form id="formtipoconta" name="formtipoconta" method="post" action="tipoContaJson">\n' +
-                '<div id="mensagem_formtipoconta"></div>\n\
-                <div id="info_formtipoconta"></div>\n\
-                <fieldset>\n\
-                    <label class="control-label"><span class="red">*</span>Tipo de conta:</label>\n\
-                   <div class="input-control radio default-style inline-block" data-role="input-control">\n\
-                        <label class="inline-block">\n\
-                            <input type="radio" name="customers_pf_pj" value="f" checked />\n\
-                            <span class="check"></span>\n\
-                            Pessoa Física\n\
-                        </label>\n\
-                        <label class="inline-block">\n\
-                            <input type="radio" value="j" name="customers_pf_pj" />\n\
-                            <span class="check"></span>\n\
-                            Pessoa Jurídica\n\
-                        </label>\n\
-                    </div>\n\
-                    <label>CEP</label>\n\
-                    <div class="input-control text" data-role="input-control" >\n\
-                        <input type="text" placeholder="Informe o cep" id="postcode" name="entry_postcode">\n\
-                        <input id="street" name="street" type="hidden" />\n\
-                            <input id="suburb" name="suburb" type="hidden" />\n\
-                            <input id="city" name="city" type="hidden" />\n\
-                            <input id="state" name="state" type="hidden" />\n\
-                        <input type="hidden" name="_token" value="' + token + '"/>\n\
-                            <button type="button" class="btn-search" onclick="javascript:EnderecoCEP();"></button>\n\
-                        </div>\n\
-                        <label></label>\n\
-                        <div class="input-control text" data-role="input-control" >\n\
-                            <button type="button" class="small warning fg-white" id="btn_tipoconta">Enviar os dados</button>\n\
-                        </div>\n\
-                    </fieldset>\n\
-                    </form>';
-            $.Dialog.title("Crie sua conta");
-            $.Dialog.content(content);
-            $.Metro.initInputs();
-        }
-    });
-//});
-}*/
+ function CriarConta(token) {
+ //$("#createFlatWindow").on('click', function(){
+ $.Dialog({
+ overlay: true,
+ shadow: true,
+ flat: false,
+ title: 'Criar uma conta',
+ content: '',
+ width: 500,
+ padding: 10,
+ onShow: function(_dialog) {
+ var content = '<form id="formtipoconta" name="formtipoconta" method="post" action="tipoContaJson">\n' +
+ '<div id="mensagem_formtipoconta"></div>\n\
+ <div id="info_formtipoconta"></div>\n\
+ <fieldset>\n\
+ <label class="control-label"><span class="red">*</span>Tipo de conta:</label>\n\
+ <div class="input-control radio default-style inline-block" data-role="input-control">\n\
+ <label class="inline-block">\n\
+ <input type="radio" name="customers_pf_pj" value="f" checked />\n\
+ <span class="check"></span>\n\
+ Pessoa Física\n\
+ </label>\n\
+ <label class="inline-block">\n\
+ <input type="radio" value="j" name="customers_pf_pj" />\n\
+ <span class="check"></span>\n\
+ Pessoa Jurídica\n\
+ </label>\n\
+ </div>\n\
+ <label>CEP</label>\n\
+ <div class="input-control text" data-role="input-control" >\n\
+ <input type="text" placeholder="Informe o cep" id="postcode" name="entry_postcode">\n\
+ <input id="street" name="street" type="hidden" />\n\
+ <input id="suburb" name="suburb" type="hidden" />\n\
+ <input id="city" name="city" type="hidden" />\n\
+ <input id="state" name="state" type="hidden" />\n\
+ <input type="hidden" name="_token" value="' + token + '"/>\n\
+ <button type="button" class="btn-search" onclick="javascript:EnderecoCEP();"></button>\n\
+ </div>\n\
+ <label></label>\n\
+ <div class="input-control text" data-role="input-control" >\n\
+ <button type="button" class="small warning fg-white" id="btn_tipoconta">Enviar os dados</button>\n\
+ </div>\n\
+ </fieldset>\n\
+ </form>';
+ $.Dialog.title("Crie sua conta");
+ $.Dialog.content(content);
+ $.Metro.initInputs();
+ }
+ });
+ //});
+ }*/
 
 /*
  *******************************************************
@@ -1300,91 +1300,79 @@ function chamar_gateway() {
 /*  controla A GERAÇÃO DE UM NOVO PEDIDO
  /*-----------------------------------------------------------------------------------*/
 function GerarPedido(whoo) {
-
     var payment = $('#payment').val();
     var discount_cupom = $('#discount_cupom').val();
     var total_compra = $('#total_compra').val();
     var vl_frete = $('#vl_frete').val();
     var tipo_frete = $('#tipo_frete').val();
-    if (payment === '' || discount_cupom === '' || total_compra === '' || vl_frete === '' || tipo_frete === '') {
-        $('#mensagem_' + whoo).addClass('errormsg alert');
-        $('#mensagem_' + whoo).html('ERRO!');
-        $('#mensagem_' + whoo).delay(2000).fadeOut(600, function() {
-            $('#info_' + whoo).addClass('infomsg alert');
-            $('#info_' + whoo).html('Por favor! Verifique os valores para tipo de pagamento, valor para desconto a vista, valor do frete e o total da compra.');
-        });
-        console.log($('#info_' + whoo));
-        return false;
-    } else {
-        var url = $('#' + whoo).attr('action');
-        var formulario = $('#' + whoo).serializeArray();
-        $('#fase_' + whoo).fadeIn(200);
-        $.post(url, formulario, function(data) {
-            var obj = JSON.parse(data);
+    var url = $('#' + whoo).attr('action');
+    var formulario = $('#' + whoo).serializeArray();
+    $.post(url, formulario, function(data) {
+        var obj = JSON.parse(data);
+        if (obj.status === 'fail') {
+            CheckoutFail(obj, whoo);
+        } else {
+            CheckoutSucess(obj, whoo);
+        }
+    });
+}
 
-            if (obj.status === 'fail') {
-                CheckoutFail(obj, whoo);
-            } else {
-                var url_externa = obj.url_externa;
-                var url_interna = obj.url_interna;
-                var neworder_id = obj.neworder_id;
-                var submeter = obj.submeter;
-                //alert(submeter);
-                $('#neworder_id').html('\'' + neworder_id + '\'');
-                $('#mensagem_' + whoo).html('');
-                $('#info_' + whoo).html('');
-                $('#fase_' + whoo).fadeIn('fast');
-                $('#fase0_' + whoo).delay(2000).fadeIn(400);
-                $('#fase0_' + whoo).delay(4000).fadeOut(600, function() {
-                    $('#fase1_' + whoo).delay(4000).fadeIn(600);
-                    $('#fase1_' + whoo).delay(2000, function() {
-                        $('#fase2_' + whoo).delay(4000).fadeIn(600);
-                        $('#fase2_' + whoo).delay(2000, function() {
-                            $('#fase3_' + whoo).delay(4000).fadeIn(600);
-                            $('#fase3_' + whoo).delay(2000, function() {
-                                if (submeter) {
-                                    //alert('submeter');
-                                    //$('#formfinalizacao').attr('action', url_externa);
-                                     CheckoutSubmeter(obj, 'formcheckout', 'formfinalizacao',url_externa);
-                                } else {
-                                    //alert('oeouroeur');
-                                    CheckoutNao_Submeter(obj, whoo, 'formfinalizacao', payment);
-                                }
-                            });
-                        });
-                    });
-                });
-            }
+function CheckoutSucess(obj, whoo) {
+    console.log(obj);
+    var url_action = obj.url_action;
+    var neworder_id = obj.neworder_id;
+    var submeter = obj.submeter;
+    $('#neworder_id').html(neworder_id);
+    $('#fase0_' + whoo).delay(2000).fadeOut(400, function() {
+        $('#fase2_' + whoo).delay(2000).fadeIn(400);
+        $('#fase1_' + whoo).delay(2000).fadeIn(400, function() {
+
         });
-    }
+    });
+    /*$('#fase1_' + whoo).delay(2000).fadeOut(600, function() {
+
+    });
+    $('#fase2_' + whoo).delay(2000).fadeOut(600, function() {
+        $('#fase3_' + whoo).delay(2000).fadeIn(400);
+    });
+    $('#fase3_' + whoo).delay(2000).fadeOut(600, function() {
+        if (submeter) {
+           // alert('submeter');
+            //$('#formfinalizacao').attr('action', url_externa);
+            //CheckoutSubmeter(obj, 'formcheckout', 'formfinalizacao');
+        } else {
+           // alert('oeouroeur');
+            //CheckoutNao_Submeter(obj, whoo, 'formfinalizacao', payment);
+        }
+    });*/
 }
 
 /*
  **  Acessa checkout externo **
  */
-function CheckoutSubmeter(obj, form_interno,finalizacao, url_externa) {
+function CheckoutSubmeter(obj, form_interno,finalizacao) {
     console.log(obj);
     var metodo = 'post';
     $('#' + form_interno).serializeArray();
     $('#mensagem_' + form_interno).html('');
     $('#info_' + form_interno).html('');
-/*
-    if (obj.form) {
-        var inputs_hidden = '';
-        var form = JSON.parse(obj.form);
-        console.log(form);
-        $.each(form, function(index, value) {
-            inputs_hidden = inputs_hidden + '<input type="hidden" id="' + index + '" name="' + index + '" value="' + value + '" />\n';
-        });
-        $('#input_' + form_externo).html(inputs_hidden);
-        $('#' + form_externo).attr('method', metodo);
-        $('#' + form_externo).attr('action', obj.url_externa);
-        $('#info_' + form_externo).html('Transferindo para ' + payment + ' em 10s');
-    } else {*/
-        //console.log(form);
-        $('#' + form_interno).attr('method', metodo);
-        $('#' + form_interno).attr('action', obj.url_action);
-        //overlay('on', '#' + form_externo);
+    /*
+     if (obj.form) {
+     var inputs_hidden = '';
+     var form = JSON.parse(obj.form);
+     console.log(form);
+     $.each(form, function(index, value) {
+     inputs_hidden = inputs_hidden + '<input type="hidden" id="' + index + '" name="' + index + '" value="' + value + '" />\n';
+     });
+     $('#input_' + form_externo).html(inputs_hidden);
+     $('#' + form_externo).attr('method', metodo);
+     $('#' + form_externo).attr('action', obj.url_externa);
+     $('#info_' + form_externo).html('Transferindo para ' + payment + ' em 10s');
+     } else {*/
+    //console.log(form);
+    $('#' + form_interno).attr('method', metodo);
+    $('#' + form_interno).attr('action', obj.url_action);
+    //overlay('on', '#' + form_externo);
 
 
     //}

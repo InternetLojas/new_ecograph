@@ -1418,7 +1418,7 @@
  */
 @font-face{
     font-family:'Century751 No2 BT';
-    src:url('../font/tt1180m_.ttf?v=1.0.1') format('truetype');
+    src:url('../fonts/tt1180m_.ttf?v=1.0.1') format('truetype');
 }
 body {
     height: 100%;
@@ -3070,10 +3070,13 @@ span.right.afasta{ float:right;margin-right:4px;}
     width:100%;
 }
 .pre-header{
-    padding:5px;
+    padding:0 5px;
     background-color:#808080;
 }
-.pre-header .btn-group >a{
+.pre-header ul.list-group li.list-group-item{
+    border:none;
+}
+.pre-header ul.list-group li.list-group-item >a{
     border:none;
     background-color: transparent;
     color: #FFFFFF;
