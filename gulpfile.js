@@ -20,7 +20,6 @@ elixir(function(mix) {
 
     mix.scripts([
         'geolocalizacao.js',
-        'jquery.maskedinput.js',
         'jquery.ui.map.full.min.js'
     ], 'public/js/alljs.js');
 
