@@ -33,10 +33,16 @@ class ProcessController extends Controller {
         $class = Gateway::find($inputs['payment'])->class;
         //puxa as configurações necessárias para o processo de pagamento
         $start = $class::start();
+
         //prepara o ambiente espedífico da classe
         $before = $class::before($start, $inputs['orc_tipo_frete'], $inputs['orc_vl_frete']);
-        $before["id_pedido"] = 900;
+
+
+        $before["id_pedido"] = $inputs['order_id'];
         $before["redirect"] = "true";
+
+
+
         //preparativos para mostrar a página
         $html = $class::html($before);
 
@@ -53,26 +59,27 @@ class ProcessController extends Controller {
         } else {
             $submeter = true;
         }
+
         $layout = $this->layout->classes('0');
         return view('loja.index')
-                        ->with('title', STORE_NAME . ' Checkout ' . $title_class)
-                        ->with('page', 'checkout')
-                        ->with('ativo', $title_class)
-                        ->with('gateway', $title_class)
-                        ->with('payment', $payment)
-                        ->with('class_payment', $class_payment)
-                        ->with('rota', 'loja/checkout.html')
-                        ->with('submeter', $submeter)
-                        ->with('total_compra', $inputs['total_compra'])
-                        ->with('discount_cupom', $inputs['discount_cupom'])
-                        ->with('vl_frete', $inputs['orc_vl_frete'])
-                        ->with('tipo_frete', $inputs['orc_tipo_frete'])
-                        ->with('html', $html)
-                        ->with('class', $class_id)
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . ' Checkout ' . $title_class)
+            ->with('page', 'checkout')
+            ->with('ativo', $title_class)
+            ->with('gateway', $title_class)
+            ->with('payment', $payment)
+            ->with('class_payment', $class_payment)
+            ->with('rota', 'loja.checkout')
+            ->with('submeter', $submeter)
+            ->with('total_compra', $inputs['total_compra'])
+            ->with('discount_cupom', $inputs['discount_cupom'])
+            ->with('vl_frete', $inputs['orc_vl_frete'])
+            ->with('tipo_frete', $inputs['orc_tipo_frete'])
+            ->with('html', $html)
+            ->with('class', $class_id)
+            ->with('layout', $layout);
     }
 
-    public function Checkout() {
+   /* public function Checkout() {
         $inputs = \Request::all();
         $layout = $this->layout->classes(0);
         //$payment = Gateway::find($inputs['payment']);
@@ -88,86 +95,52 @@ class ProcessController extends Controller {
             $submeter = true;
         }
         return view('loja.index')
-                        ->with('title', STORE_NAME . ' Checkout ' . $title_class)
-                        ->with('page', 'checkout')
-                        ->with('ativo', $title_class)
-                        ->with('gateway', $title_class)
-                        ->with('class_payment', $class_payment)
-                        ->with('rota', 'loja/checkout.html')
-                        ->with('submeter', $submeter)
-                        ->with('class', $class_id)
-                        ->with('layout', $layout);
-    }
+            ->with('title', STORE_NAME . ' Checkout ' . $title_class)
+            ->with('page', 'checkout')
+            ->with('ativo', $title_class)
+            ->with('gateway', $title_class)
+            ->with('class_payment', $class_payment)
+            ->with('rota', 'loja/checkout.html')
+            ->with('submeter', $submeter)
+            ->with('class', $class_id)
+            ->with('layout', $layout);
+    }*/
 
     public function Pedido() {
-        $post_inputs = \Request::except('_token');
-		$payment = $post_inputs['payment'];
-		$pgmtoClass = Gateway::Id($payment)->get();
-        $collection = compact('pgmtoClass');
-        foreach($collection as $gateway){
-            foreach($gateway as $item){
-                $pgmto = $item->toArray();
-                break;
-            }
-        }
-        //dd($pgmto);
-		//gera a pedido especifico e recebe o identificador do novo pedido
-        //ou recebe false quando não foi possivel gerar o pedido
-        $order_id = Checkout::order($payment, $pgmto);
+        $inputs = \Request::except('_token');
 
-        /***gera a pedido especifico
-        //$order_id = 1; //$this->order($class);
-        // //gera os valores totais, descontos e acrescimos
-        //$this->ordemtotal($order_id);
-        //
-        // 
-        //$this->post_inputs = $post_inputs;
-        //identifica a classe a ser utilizada
-       // $class = Gateway::where('payment',$post_inputs['payment'])->class;
-        //$this->class = $class;
+//identifica a classe a ser utilizada
+        $class = Gateway::find($inputs['id_payment'])->class;
+        $order_id = Checkout::order($inputs['payment'], $class);
 
-        //puxa as configurações necessárias para o processo de pagamento retorna um array
-        //$start = $class::start();
-        //$this->start = $start;*/
+        //gera os valores totais, descontos e acrescimos
+        $value = [
+            Cart::total(),
+            $inputs['vl_frete'],
+            0,
+            $inputs['discount_cupom'],
+            0,
+            $inputs['total_compra']
+        ];
+
+        Checkout::OrderTotal($order_id,$value);
+        //prossegue na criacação dos itens do pedido
+
+        Checkout::Item($order_id);
+
         if ($order_id) {
-            //prossegue na criacação dos itens do pedido
-            $item= Checkout::Item($order_id);
-			//caso true - criou o item de pedido;
-            if ($item) {
-                //cria um sessão do identificador do pedido utilizado
-                Session::put('neworder_id', $order_id);
-                $data['url_action'] = route('loja.finalizacao',['status'=>$pgmto['status'],'gateway'=>$pgmto['class']]);
-                //identifica se é um gateway interno ou externo
-                $gateway_externo = Gateway::find($pgmto['id'])->gateway_externo;
-                //cria um sessão da classe trabalhada
-                Session::put('newclass', $payment);
-                if ($gateway_externo == 0) {
-                    //o formulário n necessita ser submetido
-                    $submeter = false;
-                } else {
-                    //o formulário precisa ser submetido
-                    $submeter = true;
-                }
-                $data['submeter'] = $submeter;
+            //caso true - criou o item de pedido;
+                $data['status'] = 'success';
+                $data['url_interna'] = '';
+                $data['url_externa'] = 'https://www.bcash.com.br/checkout/pay/';
+                $data['metodo'] = 'post';
+                $data['submeter'] = true;
                 $data['neworder_Id'] = $order_id;
-                //echo '<pre>';print_r($data);exit;
-                //if($dat)
-                //tudo ok as sessões desse pedido no carrinho são eliminadas
-                //Basket::where('customer_id', '=', Auth::user()->id)->delete();
-                //Session::forget('carrinho');
-                //Cart::destroy();
-                return json_encode($data);
-            } else {
-                //return json_encode($data);
-            }
-            //return json_encode($data);
+            return json_encode($data);
+        } else{
+           return false;
         }
-        $erros[] = 'Não foi possivel criar o pedido';
-        $data = array('status' => 'fail',
-            'info' => 'Erro de dados',
-            'erro' => $erros
-        );
-        return json_encode($data);
+
     }
 
 }

@@ -190,136 +190,24 @@ class StoreController extends Controller {
             );
             return json_encode($data);
         }
+        //$class = Gateway::find($post_inputs['payment'])->class;
+        //puxa as configurações necessárias para o processo de pagamento retorna um array
 
-        $submit = 'loja/process';
+        $submit = route('loja.process');
         $data = array('status' => 'pass',
             'info' => 'Dados verificados. Aguarde redirecionamento ...',
-            'erro' => '',
+            'metodo' => 'post',
+            'forma_pagamento' => $post_inputs['forma_pagamento'],
+            'id_pagamento' => $post_inputs['payment'],
+            'orc_desconto_valor' => $post_inputs['orc_desconto_valor'],
+            'url_externa' => 'https://www.bcash.com.br/checkout/pay/',
             'loadurl' => $submit
         );
+
+        //echo '<pre>';print_r($data);exit;
         return json_encode($data);
     }
 
-    /**
-     * Prepara ambiente para processamento do pagamento.
-     *
-     * @return json
-     */
-    public function Caixa() {
-
-        $erros = array();
-        //check if its our form
-        if (Session::token() !== Input::get('_token')) {
-            $erros[] = 'Esse formulário ja havia sido postado.';
-            $data = array('status' => 'fail',
-                'info' => 'Erro de sessão',
-                'erro' => $erros,
-                'loadurl' => ''
-            );
-            return json_encode($data);
-        }
-        //destroy a sessão anterior de pagamento
-        //Session::forget('parametros');
-        $post_inputs = Input::all(Input::except('_token'));
-        //regras a serem validadas
-        $rules['payment'] = 'required|numeric';
-        $rules['vl_discount_avista'] = 'required|numeric';
-        $rules['discount_avista_id'] = 'required|numeric';
-        $rules['total_compra'] = 'required|numeric';
-        $rules['vl_discount_cupom'] = 'numeric';
-        $rules['vl_frete'] = 'required|numeric';
-        $rules['tipo_frete'] = 'required';
-        $validation = Validator::make($post_inputs, $rules);
-        if ($validation->fails()) {
-            foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
-                foreach ($erro as $key => $value) {
-                    $erros[] = $value;
-                }
-            }
-        }
-        if (count($erros) > 0) {
-            $data = array('status' => 'fail',
-                'info' => 'Erro de dados',
-                'erro' => $erros
-            );
-            return json_encode($data);
-        } else {
-            $this->post_inputs = $post_inputs;
-            //identifica a classe a ser utilizada
-            $class = Gateway::find($post_inputs['payment'])->class;
-            $this->class = $class;
-
-            //puxa as configurações necessárias para o processo de pagamento retorna um array
-            $start = $class::start();
-            $this->start = $start;
-
-            //gera a pedido especifico e recebe o identificador do novo pedido
-            //ou recebe false quando não foi possivel gerar o pedido
-            $order_id = Checkout::order($class, $post_inputs['payment']);
-            if ($order_id) {
-                $this->order_id = $order_id;
-                //prossegue na criacação dos itens do pedido
-                $data = $this->ItemsPedido();
-                if ($data['status'] == 'pass') {
-                    //cria um sessão do identificador do pedido utilizado
-                    Session::put('neworder_id', $order_id);
-                    $data['url_action'] = route('loja.finalizacao');
-                    //identifica se é um gateway interno ou externo
-                    $gateway_externo = Gateway::find($post_inputs['payment'])->gateway_externo;
-                    //cria um sessão da classe trabalhada
-                    Session::put('newclass', $class);
-                    if ($gateway_externo == 0) {
-                        //o formulário n necessita ser submetido
-                        $submeter = false;
-                    } else {
-                        //o formulário precisa ser submetido
-                        $submeter = true;
-                    }
-                    $data['submeter'] = $submeter;
-                    $data['neworder_Id'] = $order_id;
-                    //echo '<pre>';print_r($data);exit;
-                    //if($dat)
-                    //tudo ok as sessões desse pedido no carrinho são eliminadas
-                    //Basket::where('customer_id', '=', Auth::user()->id)->delete();
-                    //Session::forget('carrinho');
-                    //Cart::destroy();
-                    return json_encode($data);
-                } else {
-                    return json_encode($data);
-                }
-                //return json_encode($data);
-            }
-            $erros[] = 'Não foi possivel criar o pedido';
-            $data = array('status' => 'fail',
-                'info' => 'Erro de dados',
-                'erro' => $erros
-            );
-            return json_encode($data);
-        }
-    }
-
-    public function Finalizacao($status, $gateway) {
-        //echo '<p>Pedido nr  ' . Session::get('neworder_id') . '</p>';
-        $class = Session::get('newclass');
-        //envio do email
-        //EnvioEmail::novopedido(Session::get('neworder_id'));
-        return $class::Redireciona($status);
-
-        //gateway devolve
-        ////necessito do id do produto que foi gerado para esse gateway
-        //recebe os dados para gerar os dados de pagamento
-        //utilizar a função redireciona das classes
-        //utilizar o gateway para instanciar a classe pertinente
-        //$parametros = Session::get('parametros');
-        //identifica a classe;
-        //$class = $parametros['class'];
-        //chama o javascript específico
-        //$jv = $class::html($url_envio);
-        //chama o redirecionamento
-        //$redireciona = $class::redireciona($parametros, $jv);
-        //return false;
-        //return $redireciona;
-    }
 
     public function Busca() {
         $keyword = \Request::get('keyword');

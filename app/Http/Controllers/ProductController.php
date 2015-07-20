@@ -116,6 +116,69 @@ class ProductController extends Controller {
             ->with('layout', $layout)
             ->with('rota', 'produtos/orcamento');
     }
+    /**
+     * *
+     * apresenta a página prodtuos
+     * @return view
+     */
+    public function EnviarPDF(Request $request) {
+        $post_inputs = $request->all();
+        //dd($post_inputs);
+        $layout = $this->layout->classes('0');
+
+        return view('produtos.index')
+            ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
+            ->with('page', 'enviarpdf')
+            ->with('ativo', 'Enviar PDF')
+            ->with('post_inputs', $post_inputs)
+            ->with('rota', 'produtos/enviarpdf.html')
+            ->with('layout', $layout);
+    }
+    /**
+     * mostra a página de modelos dos produtos
+     * selecionados
+     * @return Json
+     */
+    public function Portfolio(Request $request) {
+        $post_inputs = $request->all();
+
+        //quem é o pai da categoria enviada
+        $pai = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
+        $categ_pai = Fichas::nomecategoria($pai);
+        $cat = Category::where('parent_id', $pai)->get();
+        $categoria = $cat->toarray();
+
+        //verificar se existe o produto para a categoria solicitada
+        $check_produtos = CategoryProduct::where('category_id', $post_inputs['orc_subcategoria_id'])->lists('product_id');
+//se existir produtos vinculados
+        if (count($check_produtos) > 0) {
+            $perfis_produtos = ProdutoPerfil::where('perfis_id', $post_inputs['orc_id_perfil'])
+                ->wherein('templates_id', $check_produtos)
+                ->orderby('created_at')
+                ->paginate(NR_PRODUTOS_POR_PAGINA);
+        }
+
+        $path = $perfis_produtos->setPath('produtos/portfolio.html');
+
+        //$produtos = $perfis_produtos->toarray();
+        $layout = $this->layout->classes($pai);
+        if ($perfis_produtos->total() > 0) {
+            return view('produtos.index')
+                ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
+                ->with('parent', $pai)
+                ->with('page', 'listagem')
+                ->with('categorias', $categoria)
+                ->with('perfis_produtos', $perfis_produtos)
+                ->with('links', $path->render())
+                ->with('post_inputs', $post_inputs)
+                ->with('ativo', $categ_pai)
+                ->with('total', $perfis_produtos->total())
+                ->with('layout', $layout)
+                ->with('rota', 'produtos/portfolio.html');
+        } else {
+            echo 'sem produtos';
+        }
+    }
 
     /**
      * prepara a configuração de preços e pesos.
@@ -277,69 +340,5 @@ class ProductController extends Controller {
             ->with('rota', 'produtos.html');
     }
 
-    /**
-     * mostra a página de modelos dos produtos
-     * selecionados
-     * @return Json
-     */
-    public function Portfolio(Request $request) {
-        $post_inputs = $request->all();
-        //dd($post_inputs);
-        //quem é o pai da categoria enviada
-        $pai = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
-        $categ_pai = Fichas::nomecategoria($pai);
-        $cat = Category::where('parent_id', $pai)->get();
-        $categoria = $cat->toarray();
-        //dd($categoria);
-        //verificar se existe o produto para a categoria solicitada
-        $check_produtos = CategoryProduct::where('category_id', $post_inputs['orc_subcategoria_id'])->lists('product_id');
-//se existir produtos vinculados
-        if (count($check_produtos) > 0) {
-            $perfis_produtos = ProdutoPerfil::where('perfis_id', $post_inputs['orc_id_perfil'])
-                ->wherein('templates_id', $check_produtos)
-                ->orderby('created_at')
-                ->paginate(NR_PRODUTOS_POR_PAGINA);
-        }
-
-        $path = $perfis_produtos->setPath('produtos/portfolio.html');
-
-        //$produtos = $perfis_produtos->toarray();
-        $layout = $this->layout->classes($pai);
-        if ($perfis_produtos->total() > 0) {
-            return view('produtos.index')
-                ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
-                ->with('parent', $pai)
-                ->with('page', 'listagem')
-                ->with('categorias', $categoria)
-                ->with('perfis_produtos', $perfis_produtos)
-                ->with('links', $path->render())
-                ->with('post_inputs', $post_inputs)
-                ->with('ativo', $categ_pai)
-                ->with('total', $perfis_produtos->total())
-                ->with('layout', $layout)
-                ->with('rota', 'produtos/portfolio.html');
-        } else {
-            echo 'sem produtos';
-        }
-    }
-
-    /**
-     * *
-     * apresenta a página prodtuos
-     * @return view
-     */
-    public function EnviarPDF(Request $request) {
-        $post_inputs = $request->all();
-        //dd($post_inputs);
-        $layout = $this->layout->classes('0');
-
-        return view('produtos.index')
-            ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
-            ->with('page', 'enviarpdf')
-            ->with('ativo', 'Enviar PDF')
-            ->with('post_inputs', $post_inputs)
-            ->with('rota', 'produtos/enviarpdf.html')
-            ->with('layout', $layout);
-    }
 
 }

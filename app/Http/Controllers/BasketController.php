@@ -15,9 +15,15 @@ use Ecograph\CategoryProduct;
 use Ecograph\Descontoacrescimo;
 use Ecograph\Basket;
 use Ecograph\Formato;
+use Ecograph\Papel;
+use Ecograph\Acabamento;
+use Ecograph\Core;
+use Ecograph\Enoblecimento;
+use Ecograph\ProdutoPerfil;
 use Ecograph\Pacote;
 use Ecograph\BasketIten;
 use Ecograph\AddressBook;
+use Session;
 use Cart;
 use Auth;
 
@@ -50,140 +56,133 @@ class BasketController extends Controller {
 
     /**
      * Verifica se existe produtos do carrinho antigo.
-     *
+     * Situação ocorre quando o cliente se loja
      * @return View
      */
     public function Verifica() {
         $userId = \Auth::user()->id;
-        $carrinho = Customer::with('basketes')->find($userId);
-        if (count($carrinho->basketes->toarray()) > 0) {
-            return redirect(route('carrinho.listar'));
+        $customer = Customer::find($userId);
+        $customer_basket = $customer->basket->toArray();
+        //verifica se tem uma sessão com produtos
+        if(Cart::count()==0){
+            //tem itens Antigo
+            // se sim carrega itens antigo
+            if (count($customer_basket) > 0) {
+                return redirect()->route('basket.sessao.old');
+            }else{
+                //se não redireciona para index
+                return redirect()->route('index');
+            }
         } else {
-            return redirect(route('index'));
+            //tem itens Antigo
+            //se sim carrega itens antigo mais a sessão
+            if (count($customer_basket) > 0) {
+                return redirect()->route('basket.sessao.new',['customer_basket'=>$customer_basket]);
+            }else{
+                //se não redireciona para index
+                return redirect()->route('index');
+            }
         }
+        //if (!Session::has('cart')){
+        //    Session::set('cart',Cart::content());
+        //}
     }
 
-    /* somente quando loga */
+    /**
+     * @param Request $request
+     * @return $this
+     * Se se loga e tem itens antigo carrega a sessão de carrinho
+     */
+    public function SessaoOld(){
+        $userId = \Auth::user()->id;
+        $customer = Customer::find($userId);
+        $customer_basket = $customer->basket->toArray();
+        //dd($customer_basket);
+        $this->getCart($customer_basket);
 
-    public function Lista() {
-        //$cart = Cart::content();
-        //dd($cart);
-        $carrinho = $this->basket
-            ->where('customer_id', Auth::user()->id)
-            ->get();
-        $lista = $carrinho->toarray();
+        $contents = Cart::content();
+        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
 
-        if (count($lista) > 0) {
-            foreach ($lista as $key => $valor) {
-                $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
-                $option_itens = $basket_option->toarray();
-                //dd( $lista);
+        //levanta o endereço do cliente
+        $default_address = AddressBook::find($customer->customers_default_address_id);
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Itens no carrinho')
+            ->with('page', 'carrinho')
+            ->with('ativo', 'carrinho')
+            ->with('post_inputs', '')
+            ->with('contents', $contents->toarray())
+            ->with('cart_total', Cart::total())
+            ->with('default_address', $default_address)
+            ->with('rota', 'carrinho.html')
+            ->with('layout', $layout);
+    }
+
+    /**
+     * @param Request $request
+     * @return $this
+     * Se se loga e tem itens antigo carrega a sessão de carrinho
+     */
+    public function SessaoNew($customer_basket){
+        $this->getCart($customer_basket);
+        /*foreach ($customer_basket as $key => $valor) {
+            //procura o produto na sessão do carrinho
+            $rowId = Cart::search(['id' => $valor['products_id']]); // Returns an array of rowid(s) of found item(s) or false on failure
+            //se achar o produto aumenta a quantidade
+            if($rowId){
+                $row = Cart::get($rowId);
+                $row_qtd = $valor['quantity']+$row['quantity'];
+                $row_total = ($valor['price']/$valor['quantity'])*$row_qtd;
+                Cart::update($rowId, array('quantity' => $row_qtd, 'price'=>$row_total));
+            } else {
                 $item = array('id' => $valor['products_id'],
                     'name' => Fichas::nomeProduto($valor['products_id']),
                     'price' => str_replace('R$ ', '', $valor['final_price']),
                     'quantity' => $valor['quantity'],
                     'image' => Fichas::ImgProduto($valor['products_id'])
                 );
+                $basket_items = $this->basket->find($valor['id']);
+                $option_itens = $basket_items->BasketIten->toArray();
                 $cat = CategoryProduct::Categoria($valor['products_id']);
                 $categoria = $cat->toarray();
                 $option = array('categoria_id' => $categoria[0]['category_id'],
                     'categoria' => $categoria[0]['products_name'],
                     'formato_id' => $option_itens[0]['formato_id'],
-                    'formato' => 'descobrir categ',
+                    'formato' => Formato::find($option_itens[0]['formato_id'])->valor,
                     'papel_id' => $option_itens[0]['papel_id'],
-                    'papel' => 'descobrir categ',
+                    'papel' => Papel::find($option_itens[0]['papel_id'])->valor,
                     'acabamento_id' => $option_itens[0]['acabamento_id'],
-                    'acabamento' => 'descobrir categ',
-                    'unidade' => '120',
+                    'acabamento' => Acabamento::find($option_itens[0]['acabamento_id'])->valor,
+                    'cor_id' => $option_itens[0]['acabamento_id'],
+                    'cor' => Core::find($option_itens[0]['cor_id'])->valor,
+                    'enoblecimento_id' => $option_itens[0]['acabamento_id'],
+                    'enoblecimento' => Enoblecimento::find($option_itens[0]['enoblecimento_id'])->valor,
+                    'unidade' => Pacote::find($option_itens[0]['pacote_id'])->quantity,
                     'perfil' => $categoria[0]['products_name'],
-                    'perfil_id' => '22'
+                    'perfil_id' => ProdutoPerfil::find($valor['products_id'])->perfis_id
                 );
                 Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
             }
-            $contents = Cart::content();
-            $gateways = Gateway::ativos('1')->get();
-            $classes = Utilidades::Descontos();
-            $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-            $desc_acrescimo_id = $desc_acrescimo->toarray();
-            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-            //levanta o endereço do cliente
-            $customers_default_address_id = Customer::find(Auth::user()->id);
-            $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
+        }*/
 
-            return view('clientes.index')
-                ->with('title', STORE_NAME . ' Itens no carrinho')
-                ->with('page', 'carrinho')
-                ->with('ativo', 'carrinho')
-                ->with('contents', $contents->toarray())
-                ->with('post_inputs', '')
-                ->with('gateways', $gateways)
-                ->with('classes', $classes)
-                ->with('desc_acrescimo_id', $desc_acrescimo_id)
-                ->with('cart_total', Cart::total())
-                ->with('default_address', $default_address)
-                ->with('rota', 'carrinho.html')
-                ->with('layout', $layout);
-        } else {
-            if(Cart::count()==0)
-            {
-                $layout = $this->layout->classes(0);
-                return view('clientes.index')
-                    ->with('title', STORE_NAME . ' Carrinho Vazio')
-                    ->with('page', 'carrinhovazio')
-                    ->with('ativo', 'Carrinho Vazio')
-                    ->with('rota', 'carrinho/lista.html')
-                    ->with('layout', $layout);
-            }else {
-                $cart = Cart::content();
+        $contents = Cart::content();
+        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
 
-                foreach ($cart->toarray() as $row) {
-                    //dd($row);
-                    //foreach ($row as $item) {
-                    $this->basket->customer_id = Auth::user()->id;
-                    $this->basket->products_id = $row['id'];
-                    $this->basket->quantity = $row['qty'];
-                    $this->basket->products_model = Fichas::modelProduto($row['id']);
-                    $this->basket->final_price = $row['qty'] * $row['price'];
-                    $this->basket->save();
-                    //itens da cesta
-                    $this->basket_item->basket_id = $this->basket->id;
-                    $this->basket_item->formato_id = $row['options']['formato_id'];
-                    $this->basket_item->papel_id = $row['options']['papel_id'];
-                    $this->basket_item->acabamento_id = $row['options']['acabamento_id'];
-                    $this->basket_item->pacote_id = '23';
-                    $this->basket_item->save();
-
-                }
-                $contents = Cart::content();
-                $gateways = Gateway::ativos('1')->get();
-                $classes = Utilidades::Descontos();
-                $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-                $desc_acrescimo_id = $desc_acrescimo->toarray();
-                $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-                //levanta o endereço do cliente
-                $customers_default_address_id = Customer::find(Auth::user()->id);
-                $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
-
-                return view('clientes.index')
-                    ->with('title', STORE_NAME . ' Itens no carrinho')
-                    ->with('page', 'carrinho')
-                    ->with('ativo', 'carrinho')
-                    ->with('contents', $contents->toarray())
-                    ->with('post_inputs', '')
-                    ->with('gateways', $gateways)
-                    ->with('classes', $classes)
-                    ->with('desc_acrescimo_id', $desc_acrescimo_id)
-                    ->with('cart_total', Cart::total())
-                    ->with('default_address', $default_address)
-                    ->with('rota', 'carrinho.html')
-                    ->with('layout', $layout);
-            }
-        }
+        //levanta o endereço do cliente
+        $default_address = AddressBook::find($customer->customers_default_address_id);
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Itens no carrinho')
+            ->with('page', 'carrinho')
+            ->with('ativo', 'carrinho')
+            ->with('post_inputs', '')
+            ->with('contents', $contents->toarray())
+            ->with('cart_total', Cart::total())
+            ->with('default_address', $default_address)
+            ->with('rota', 'carrinho.html')
+            ->with('layout', $layout);
     }
-
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
-
+        //dd($post_inputs);
         $valor = str_replace('R$ ', '',$post_inputs['orc_pacote_valor']);
         $price = str_replace(',', '.',$valor);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
@@ -201,10 +200,15 @@ class BasketController extends Controller {
             'papel' => $post_inputs['orc_papel_nome'],
             'acabamento_id' => $post_inputs['orc_acabamento_id'],
             'acabamento' => $post_inputs['orc_acabamento_nome'],
+            'cor_id' => $post_inputs['orc_cor_id'],
+            'cor' => $post_inputs['orc_cor_nome'],
+            'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
+            'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
             'unidade' => $post_inputs['orc_pacote_qtd'],
             'perfil' => $post_inputs['orc_nome_perfil'],
             'perfil_id' => $post_inputs['orc_id_perfil']
         );
+
         Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
         $carrinho = $this->basket->where('customer_id', Auth::user()->id)->get();
         if (count($carrinho->toarray()) > 0) {
@@ -243,15 +247,7 @@ class BasketController extends Controller {
             $this->basket_item->pacote_id = '23';
             $this->basket_item->save();
         }
-        //return json_encode(array('action' => true,
-        //    'info' => 'Item adicionado no carrinho com sucesso',
-        //    'total_itens' => Cart::count()
-        //));
         $contents = Cart::content();
-        $gateways = Gateway::ativos('1')->get();
-        $classes = Utilidades::Descontos();
-        $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-        $desc_acrescimo_id = $desc_acrescimo->toarray();
         $layout = $this->layout->classes(Fichas::parentCategoria('12'));
         //levanta o endereço do cliente
         $customers_default_address_id = Customer::find(Auth::user()->id);
@@ -261,180 +257,158 @@ class BasketController extends Controller {
             ->with('title', STORE_NAME . ' Itens no carrinho')
             ->with('page', 'carrinho')
             ->with('ativo', 'carrinho')
-            ->with('contents', $contents->toarray())
             ->with('post_inputs', $post_inputs)
-            ->with('gateways', $gateways)
-            ->with('classes', $classes)
-            ->with('desc_acrescimo_id', $desc_acrescimo_id)
-            ->with('cart_total', Cart::total())
-            ->with('default_address', $default_address)
-            ->with('rota', 'carrinho.html')
-            ->with('layout', $layout);
-    }
-
-    public function Listar() {
-        $carrinho = $this->basket
-            ->where('customer_id', Auth::user()->id)
-            ->get();
-        $lista = $carrinho->toarray();
-
-        if (count($lista) > 0) {
-            foreach ($lista as $key => $valor) {
-                $basket_option = $this->basket_item->where('basket_id', $valor['id'])->get();
-                $option_itens = $basket_option->toarray();
-                //dd( $lista);
-                $item = array('id' => $valor['products_id'],
-                    'name' => Fichas::nomeProduto($valor['products_id']),
-                    'price' => str_replace('R$ ', '', $valor['final_price']),
-                    'quantity' => $valor['quantity'],
-                    'image' => Fichas::ImgProduto($valor['products_id'])
-                );
-                $cat = CategoryProduct::Categoria($valor['products_id']);
-                $categoria = $cat->toarray();
-                $option = array('categoria_id' => $categoria[0]['category_id'],
-                    'categoria' => $categoria[0]['products_name'],
-                    'formato_id' => $option_itens[0]['formato_id'],
-                    'formato' => 'descobrir categ',
-                    'papel_id' => $option_itens[0]['papel_id'],
-                    'papel' => 'descobrir categ',
-                    'acabamento_id' => $option_itens[0]['acabamento_id'],
-                    'acabamento' => 'descobrir categ',
-                    'unidade' => '120',
-                    'perfil' => $categoria[0]['products_name'],
-                    'perfil_id' => '22'
-                );
-                Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
-            }
-        }
-        $contents = Cart::content();
-        $gateways = Gateway::ativos('1')->get();
-        $classes = Utilidades::Descontos();
-        $desc_acrescimo = Descontoacrescimo::where('class', 'discount_avista')->get();
-        $desc_acrescimo_id = $desc_acrescimo->toarray();
-        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-        //levanta o endereço do cliente
-        $customers_default_address_id = Customer::find(Auth::user()->id);
-        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
-
-        return view('clientes.index')
-            ->with('title', STORE_NAME . ' Itens no carrinho')
-            ->with('page', 'carrinho')
-            ->with('ativo', 'carrinho')
             ->with('contents', $contents->toarray())
-            ->with('post_inputs', '')
-            ->with('gateways', $gateways)
-            ->with('classes', $classes)
-            ->with('desc_acrescimo_id', $desc_acrescimo_id)
             ->with('cart_total', Cart::total())
             ->with('default_address', $default_address)
-            ->with('rota', 'carrinho.listar')
+            ->with('rota', 'basket.listar')
             ->with('layout', $layout);
     }
+    public function Basket() {
+        if(Cart::count()>0){
+            $contents = Cart::content();
+            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+            $userId = \Auth::user()->id;
+            $customer = Customer::find($userId);
+            //levanta o endereço do cliente
+            $default_address = AddressBook::find($customer->customers_default_address_id);
 
-    public function Resumo(Request $request) {
-        $post_inputs = $request->all();
-        $contents = Cart::content();
-        //
-        //dd($post_inputs);
-        $layout = $this->layout->classes(Fichas::parentCategoria($post_inputs['orc_subcategoria_id']));
-        //levanta o endereço do cliente
-        $customers_default_address_id = Customer::find(Auth::user()->id);
-        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
-
-        return view('clientes.index')
-            ->with('title', STORE_NAME . ' Seu resumo')
-            ->with('page', 'resumo')
-            ->with('ativo', 'Resumo')
-            ->with('contents', $contents->toarray())
-            ->with('post_inputs', $post_inputs)
-            ->with('cart_total', Cart::total())
-            ->with('default_address', $default_address)
-            ->with('rota', 'resumo.html')
-            ->with('layout', $layout);
-    }
-
-    public function Atualizar() {
-        $parans = \Request::all();
-        $content = Cart::content();
-        if ($parans['quantity'] == 0) {
-            return json_encode(array('action' => 'false', 'info' => 'Informe uma quantidade acima de zero.'));
+            return view('clientes.index')
+                ->with('title', STORE_NAME . ' Itens no carrinho')
+                ->with('page', 'carrinho')
+                ->with('ativo', 'carrinho')
+                ->with('post_inputs', '')
+                ->with('contents', $contents->toarray())
+                ->with('cart_total', Cart::total())
+                ->with('default_address', $default_address)
+                ->with('rota', 'carrinho.html')
+                ->with('layout', $layout);
         }
-        foreach ($content as $item) {
-            if ($parans['product_id'] == $item->id) {
-                Cart::update($item->rowid, array('quatity' => $parans['quantity']));
-                $final_price = $this->basket
-                    ->where('customer_id', Auth::user()->id)
-                    ->where('products_id', $parans['product_id'])
-                    ->get();
-                foreach ($final_price as $items) {
-                    $price = $items->final_price;
-                }
-
-                /* $carrinho = 
-                  $lista = $carrinho->toarray();
-                  $basket_option = $this->basket_item->where('basket_id', $lista[0]['id'])->get(); */
-                $this->basket
-                    ->where('customer_id', Auth::user()->id)
-                    ->where('products_id', $parans['product_id'])
-                    ->update(['quantity' => $parans['quantity'],
-                        'final_price' => $price * $parans['quantity']]);
-                //$carrinho->delete();
-
-                break;
-            }
-        }
-        //Session::put('success', 'Item atualizado com sucesso!');
-        if (Cart::count() > 0) {
-            return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' Atualizado para ' . $parans['quantity']));
-        } else {
-            return json_encode(array('action' => 'true', 'info' => 'Produto ' . $parans['product_id'] . ' Atualizado para ' . $parans['quantity'] . ' vamos redirecionar para carrinho vazio.'));
+        else {
+            $layout = $this->layout->classes(0);
+            return view('clientes.index')
+                ->with('title', STORE_NAME . ' Carrinho Vazio')
+                ->with('page', 'carrinhovazio')
+                ->with('ativo', 'Carrinho Vazio')
+                ->with('rota', 'carrinho.lista')
+                ->with('layout', $layout);
         }
     }
+    public function Listar(Request $request) {
+        if(Cart::count()>0){
+            $post_inputs = $request->all();
+            $contents = Cart::content();
+            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+            $userId = \Auth::user()->id;
+            $customer = Customer::find($userId);
+            //levanta o endereço do cliente
+            $default_address = AddressBook::find($customer->customers_default_address_id);
 
+            return view('clientes.index')
+                ->with('title', STORE_NAME . ' Itens no carrinho')
+                ->with('page', 'carrinho')
+                ->with('ativo', 'carrinho')
+                ->with('post_inputs', $post_inputs)
+                ->with('contents', $contents->toarray())
+                ->with('cart_total', Cart::total())
+                ->with('default_address', $default_address)
+                ->with('rota', 'basket.listar')
+                ->with('layout', $layout);
+        }
+        else {
+            $layout = $this->layout->classes(0);
+            return view('clientes.index')
+                ->with('title', STORE_NAME . ' Carrinho Vazio')
+                ->with('page', 'carrinhovazio')
+                ->with('ativo', 'Carrinho Vazio')
+                ->with('rota', 'carrinho.lista')
+                ->with('layout', $layout);
+        }
+    }
     public function Remover() {
         $parans = \Request::all();
-        $content = Cart::content();
-        //dd($content);
-        foreach ($content as $item) {
-            if ($item->id == $parans['product_id']) {
-                //Cart::update($item->rowid, array('quatity' => $parans['quantity']));
-                $carrinho = $this->basket
-                    ->where('customer_id', Auth::user()->id)
-                    ->where('products_id', $parans['product_id'])
-                    ->lists('id');
-                //dd($carrinho);
-                if(count($carrinho)>0)
-                {
-                    //foreach ($carrinho as $items) {
-                    $id = $carrinho[0]['id'];
-                    //}
-                    //elimina os item do carrinho
-                    $this->basket_item->where('basket_id', $id)->delete();
-                    //elimina a entrada com a linha de produto do carrinho
-                    $this->basket
-                        ->where('customer_id', Auth::user()->id)
-                        ->where('products_id', $parans['product_id'])->delete();
-                    $rowId = $item->rowid;
-                    Cart::remove($rowId);
-
-                    return json_encode(array(
-                        'reload' => 'true',
-                        'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
-                } else {
-                    Cart::destroy();
-                    return json_encode(array(
-                        'reload' => 'true',
-                        'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
-
+        //procura a linha do carrinho
+        $rowId = Cart::search(array('id' => $parans['product_id'] )); // Returns an array of rowid(s) of found item(s) or false on failure
+        //dd($rowId);
+        if(!Auth::user()) {
+            Cart::remove($rowId[0]);
+        } else {
+            $userId = \Auth::user()->id;
+            $customer = Customer::find($userId);
+            $customer_basket = $customer->basket->toArray();
+            if($customer_basket){
+                foreach($customer_basket as $item){
+                    $row = $this->basket_item->find($item['id']);
+                    if($row)
+                        $row->delete();
                 }
-                break;
+                $row = $this->basket->find($customer_basket[0]['id']);
+                if($row)
+                    $row->delete();
             }
+            if($rowId)
+                Cart::remove($rowId[0]);
         }
         return json_encode(array(
-            'reload' => 'false',
-            'info' => 'Produto ' . $parans['product_id'] . ' removido.'));
-
+            'reload' => 'true',
+            'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
 
     }
 
+    /**
+     * @param $customer_basket
+     */
+    public function getCart($customer_basket)
+    {
+        foreach ($customer_basket as $key => $valor) {
+            //procura o produto na sessão do carrinho
+            $rowId = Cart::search(['id' => $valor['products_id']]); // Returns an array of rowid(s) of found item(s) or false on failure
+            //se achar o produto aumenta a quantidade
+            if($rowId){
+                $row = Cart::get($rowId);
+                $row_qtd = $valor['quantity']+$row['quantity'];
+                $row_total = ($valor['price']/$valor['quantity'])*$row_qtd;
+                Cart::update($rowId, array('quantity' => $row_qtd, 'price'=>$row_total));
+            }
+            $item = array('id' => $valor['products_id'],
+                'name' => \Ecograph\ProductDescription::find($valor['products_id'])->products_name,
+                'price' => str_replace('R$ ', '', $valor['final_price']),
+                'quantity' => $valor['quantity'],
+                'image' => Fichas::ImgProduto($valor['products_id'])
+            );
+            $basket_items = $this->basket->find($valor['id']);
+            $option_itens = $basket_items->BasketIten->toArray();
+            $cat = CategoryProduct::Categoria($valor['products_id']);
+            $categoria = $cat->toarray();
+            $cor_id = $option_itens[0]['cor_id'];
+            $enoblecimento_id = $option_itens[0]['enoblecimento_id'];
+            if ($cor_id != 0) {
+                $cor_nome = Core::find($option_itens[0]['cor_id'])->valor;
+            } else {
+                $cor_nome = '';
+            }
+            if ($enoblecimento_id != 0) {
+                $enoblecimento_nome = Enoblecimento::find($option_itens[0]['enoblecimento_id'])->valor;
+            } else {
+                $enoblecimento_nome = '';
+            }
+            $option = array('categoria_id' => $categoria[0]['category_id'],
+                'categoria' => $categoria[0]['products_name'],
+                'formato_id' => $option_itens[0]['formato_id'],
+                'formato' => Formato::find($option_itens[0]['formato_id'])->valor,
+                'papel_id' => $option_itens[0]['papel_id'],
+                'papel' => Papel::find($option_itens[0]['papel_id'])->valor,
+                'acabamento_id' => $option_itens[0]['acabamento_id'],
+                'acabamento' => Acabamento::find($option_itens[0]['acabamento_id'])->valor,
+                'cor_id' => $cor_id,
+                'cor' => $cor_nome,
+                'enoblecimento_id' => $enoblecimento_id,
+                'enoblecimento' => $enoblecimento_nome,
+                'unidade' => Pacote::find($option_itens[0]['pacote_id'])->quantity,
+                'perfil' => $categoria[0]['products_name'],
+                'perfil_id' => ProdutoPerfil::find($valor['products_id'])->perfis_id
+            );
+            Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
+        }
+    }
 }

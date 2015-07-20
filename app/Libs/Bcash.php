@@ -5,7 +5,7 @@ namespace Ecograph\Libs;
 use Ecograph\Libs\Payments;
 use Ecograph\Gateway;
 use Ecograph\Customer;
-use Ecograph\Addressbook;
+use Ecograph\AddressBook;
 use Auth;
 use Cart;
 
@@ -53,18 +53,18 @@ Class Bcash extends Payments {
             $preco = $itens['price'] * $itens['qty'];
             $dados["produto_codigo_" . ($i + 1)] = $itens['name'];
             $dados["produto_descricao_" . ($i + 1)] = $itens['options']['categoria'] . '<br>' .
-                    $itens['options']['formato'] . '<br>' .
-                    $itens['options']['papel'] . '<br>' .
-                    $itens['options']['acabamento'] . '<br>' .
-                    $itens['options']['perfil'] . '<br>' .
-                    $itens['options']['unidade'];
+                $itens['options']['formato'] . '<br>' .
+                $itens['options']['papel'] . '<br>' .
+                $itens['options']['acabamento'] . '<br>' .
+                $itens['options']['perfil'] . '<br>' .
+                $itens['options']['unidade'];
             $dados["produto_qtde_" . ($i + 1)] = $itens['qty'];
             $dados["produto_valor_" . ($i + 1)] = $preco;
             $i++;
         }
 
         $customer = Customer::find(Auth::user()->id);
-        $default_address = Addressbook::find($customer->customers_default_address_id);
+        $default_address = AddressBook::find($customer->customers_default_address_id);
 
         $dados["email"] = $customer->email;
         $dados["nome"] = $customer->customers_firstname . " " . $customer->customers_lastname;
@@ -124,16 +124,16 @@ Class Bcash extends Payments {
         Cart::destroy();
 
         return View::make('loja.index')
-                        ->with('title', STORE_NAME . ' Ckeckout Bcash')
-                        ->with('page', 'caixa')
-                        ->with('ativo', 'checkout')
-                        ->with('dados', $dados)
-                        ->with('gateway', 'Bcash')
-                        ->with('html', $html)
-                        ->with('url_envio', '')
-                        ->with('rota', 'loja/index')
-                        ->with('message', Session::get('messages'))
-                        ->with('class', LAYOUT);
+            ->with('title', STORE_NAME . ' Ckeckout Bcash')
+            ->with('page', 'caixa')
+            ->with('ativo', 'checkout')
+            ->with('dados', $dados)
+            ->with('gateway', 'Bcash')
+            ->with('html', $html)
+            ->with('url_envio', '')
+            ->with('rota', 'loja/index')
+            ->with('message', Session::get('messages'))
+            ->with('class', LAYOUT);
         ;
     }
 

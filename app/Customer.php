@@ -53,7 +53,7 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
         return $this->hasMany('Ecograph\AddressBook');
     }
 
-    public function Basketes() {
+    public function Basket() {
         return $this->hasMany('Ecograph\Basket');
     }
 

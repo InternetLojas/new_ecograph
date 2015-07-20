@@ -29,9 +29,9 @@ class Basket extends Model {
 
     /* Relationships
     */
-    public function customer()
+    public function Customer()
     {
-        return $this->belongsTo('Ecograph\Customer', 'customer_id');
+        return $this->belongsTo('Ecograph\Customer');
     }
 
      public function BasketIten() {

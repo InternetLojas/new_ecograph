@@ -1,2 +1,0 @@
-@include('layouts.contents.categorias')
-

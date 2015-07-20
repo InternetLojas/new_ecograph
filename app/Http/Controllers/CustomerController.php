@@ -74,21 +74,17 @@ class CustomerController extends Controller {
     public function Conta() {
         if (Auth::user()->id) {
             // get the customer
-            $customers = Customer::find(Auth::user()->id);
-            //$address = Customer::find(Auth::user()->id)->address;
-            $address = Customer::with('AddressBook')->find(\Auth::user()->id)->AddressBook;
-            $default_address = $address->toarray();
+            $customer = Customer::find(Auth::user()->id);
+            $order = $customer->Order;
+            $address =$customer->AddressBook;
         }
-        //$address = array();
-        //dd($customers);
-        return view('clientes.index')
+        return view('clientes.index',compact('order', 'address'))
                         ->with('title', STORE_NAME . ' Minha Conta')
-                        ->with('message', 'Bem Vindo :' . Customer::find(Auth::user()->id)->customers_firstname)
+                        ->with('message', 'Bem Vindo :' . $customer->customers_firstname)
                         ->with('page', 'minhaconta')
                         ->with('ativo', 'Minha Conta')
                         ->with('rota', 'minhaconta')
-                        ->with('customers', $customers)
-                        ->with('address', $default_address);
+                        ->with('customers', $customer);
     }
 
     /**
@@ -98,49 +94,20 @@ class CustomerController extends Controller {
      * @param
      * @return json
      */
-    public function TipoContaJson(Request $request) {
-        $erros = array();
-        $post_inputs = $request->all();
-        //regras a serem validadas
-        $rules['entry_postcode'] = 'required|min:8';
-        $validation = Validator::make($post_inputs, $rules);
-        if ($validation->fails()) {
-            foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
-                foreach ($erro as $key => $value) {
-                    $erros[] = $value;
-                }
-            }
-        }
-        if (count($erros) > 0) {
-            $data = array('status' => 'fail', 'info' => 'Erro de dados', 'erro' => $erros, 'loadurl' => '');
-            return json_encode($data);
-        } else {
-            $cep = $post_inputs['entry_postcode'];
-            //$endereco = Utilidades::BuscaEndereco($cep);
-            if ($post_inputs['street'] !== '') {
-                $submit = route('criarconta');
-                $data = array('status' => 'pass', 
-                    'info' => 'Aguarde redirecionamento ...', 
-                    'erro' => '', 
-                    'loadurl' => $submit);
-
-                return json_encode($data);
-            } else {
-                $erros[] = 'Não encontramos endereço para o CEP ' . $cep;
-                $data = array('status' => 'fail', 
-                    'info' => 'Erro de sessão', 
-                    'erro' => $erros, 
-                    'loadurl' => '');
-                return json_encode($data);
-            }
-        }
+    public function ContaCriada() {
+        $layout = $this->layout->classes(0);
+        return View::make('clientes.index')
+            ->with('title', STORE_NAME . ' Sua conta foi criada')
+            ->with('page', 'contacriada')
+            ->with('ativo', 'Sucesso')
+            ->with('layout', $layout)
+            ->with('rota', 'clientes/conta/sucesso.html');
     }
 
     /**
-     * *através da modal o cliente posta o cep e tipo para criar a conta.
-     * apresenta o formulário de cadastro
-     * utiliza função javascript CheckCadastro
-     * @return view
+     * quando o cliente preenche o cadastro e envia os dados.
+     * utiliza função javascript CheckCadastro() para validacao
+     * @return json
      */
     public function CriarConta(Request $request) {
         if (isset($request['customers_pf_pj'])) {
@@ -178,11 +145,11 @@ class CustomerController extends Controller {
                             ->with('layout', $layout);
         }
     }
-
     /**
-     * quando o cliente preenche o cadastro e envia os dados.
-     * utiliza função javascript CheckCadastro() para validacao
-     * @return json
+     * *através da modal o cliente posta o cep e tipo para criar a conta.
+     * apresenta o formulário de cadastro
+     * utiliza função javascript CheckCadastro
+     * @return view
      */
     public function Cadastro(Request $request) {
         $erros = array();
@@ -309,52 +276,49 @@ class CustomerController extends Controller {
         }
         //return json_encode($data);
     }
-
-    public function TratarEmail($check, $customer) {
-        $erro = array();
-        if ($check) {
-            //session::put('nova_conta_uf', $address->entry_state);
-            if (EnvioEmail::NovoCadastro($customer)) {
-                //Session::put('success', '. Enviarmos uma email com suas informações.');
-                $data = array('status' => 'pass',
-                    'info' => 'Sua conta foi criada com sucesso. Enviarmos uma email com suas informações.',
-                    'erro' => '',
-                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
-            } else {
-                $data = array('status' => 'pass',
-                    'info' => 'Sua conta foi criada com sucesso. No entanto não conseguimos enviar um email com suas informações.',
-                    'erro' => '',
-                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
-                //Session::put('error', 'Sua conta foi criada com sucesso, mas não conseguimos enviar um email com suas informações.');
-            }
-        } else {
-            $erro[] = 'Não foi possível enviar os dados para o servidor.';
-            $data = array('status' => 'fail',
-                'info' => 'Erro na criação da conta',
-                'erro' => $erro,
-                'loadurl' => URL::to('cliente/conta/sucesso.html'));
-            //Session::put('error', 'Erro na criação da conta. Por favor tente novamente.');
-            //return Redirect::to('inicio')->withError();
-        }
-        return json_encode($data);
-    }
-
     /**
      * Script CheckCadastro faz validação de alguns campos antes de postar.
      *
      * @return Response
      */
-    public function ContaCriada() {
-        $layout = $this->layout->classes(0);
-        return View::make('clientes.index')
-                        ->with('title', STORE_NAME . ' Sua conta foi criada')
-                        ->with('page', 'contacriada')
-                        ->with('ativo', 'Sucesso')
-                        ->with('layout', $layout)
-                        ->with('rota', 'clientes/conta/sucesso.html');
-    }
+    public function TipoContaJson(Request $request) {
+        $erros = array();
+        $post_inputs = $request->all();
+        //regras a serem validadas
+        $rules['entry_postcode'] = 'required|min:8';
+        $validation = Validator::make($post_inputs, $rules);
+        if ($validation->fails()) {
+            foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
+                foreach ($erro as $key => $value) {
+                    $erros[] = $value;
+                }
+            }
+        }
+        if (count($erros) > 0) {
+            $data = array('status' => 'fail', 'info' => 'Erro de dados', 'erro' => $erros, 'loadurl' => '');
+            return json_encode($data);
+        } else {
+            $cep = $post_inputs['entry_postcode'];
+            //$endereco = Utilidades::BuscaEndereco($cep);
+            if ($post_inputs['street'] !== '') {
+                $submit = route('criarconta');
+                $data = array('status' => 'pass',
+                    'info' => 'Aguarde redirecionamento ...',
+                    'erro' => '',
+                    'loadurl' => $submit);
 
-    /**
+                return json_encode($data);
+            } else {
+                $erros[] = 'Não encontramos endereço para o CEP ' . $cep;
+                $data = array('status' => 'fail',
+                    'info' => 'Erro de sessão',
+                    'erro' => $erros,
+                    'loadurl' => '');
+                return json_encode($data);
+            }
+        }
+    }
+        /**
      * Mosta página orcamento.
      *
      * @return View
@@ -393,6 +357,34 @@ class CustomerController extends Controller {
                         ->with('post_inputs', $post_inputs)
                         ->with('rota', 'orcamento.html')
                         ->with('layout', $layout);
+    }
+    public function TratarEmail($check, $customer) {
+        $erro = array();
+        if ($check) {
+            //session::put('nova_conta_uf', $address->entry_state);
+            if (EnvioEmail::NovoCadastro($customer)) {
+                //Session::put('success', '. Enviarmos uma email com suas informações.');
+                $data = array('status' => 'pass',
+                    'info' => 'Sua conta foi criada com sucesso. Enviarmos uma email com suas informações.',
+                    'erro' => '',
+                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
+            } else {
+                $data = array('status' => 'pass',
+                    'info' => 'Sua conta foi criada com sucesso. No entanto não conseguimos enviar um email com suas informações.',
+                    'erro' => '',
+                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
+                //Session::put('error', 'Sua conta foi criada com sucesso, mas não conseguimos enviar um email com suas informações.');
+            }
+        } else {
+            $erro[] = 'Não foi possível enviar os dados para o servidor.';
+            $data = array('status' => 'fail',
+                'info' => 'Erro na criação da conta',
+                'erro' => $erro,
+                'loadurl' => URL::to('cliente/conta/sucesso.html'));
+            //Session::put('error', 'Erro na criação da conta. Por favor tente novamente.');
+            //return Redirect::to('inicio')->withError();
+        }
+        return json_encode($data);
     }
 
 }

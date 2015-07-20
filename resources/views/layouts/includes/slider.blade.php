@@ -1,1 +1,0 @@
-{{HTML::slider(3)}}

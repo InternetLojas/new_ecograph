@@ -5,9 +5,10 @@ namespace Ecograph\Libs;
 use Ecograph\Libs\Payments;
 use Ecograph\Gateway;
 use Ecograph\Customer;
-use Ecograph\Addressbook;
+use Ecograph\AddressBook;
 use Ecograph\Order;
 use Ecograph\OrderIten;
+use Ecograph\OrderTotal;
 use Ecograph\Product;
 use Ecograph\Ordersituacao;
 use Auth;
@@ -22,15 +23,12 @@ Class Checkout {
      * @return order_id ou false
      */
     static function order($payment_method, $pgmt) {
-
         $customer = Customer::find(Auth::user()->id);
-        $default_address = Addressbook::find($customer->customers_default_address_id);
-
-
+        $default_address = AddressBook::find($customer->customers_default_address_id);
         //$ip = $HTTP_SERVER['HTTP_CLIENT_IP'];
-        //$ip = '127.0.0.1';
+        $ip = '127.0.0.1';
         $request = \Request::instance();
-        $request->setTrustedProxies(array('127.0.0.1')); // only trust proxy headers coming from the IP addresses on the array (change this to suit your needs)
+        $request->setTrustedProxies(array($ip)); // only trust proxy headers coming from the IP addresses on the array (change this to suit your needs)
         $ip = $request->getClientIp();
         $array_customer = array('customer_id' => Auth::user()->id,
             'customers_name' => $customer->customers_firstname . ' ' . $customer->customers_lastname,
@@ -74,7 +72,7 @@ Class Checkout {
             'billing_state' => $default_address->entry_state,
             'billing_state_code' => $default_address->entry_state_code,
             'billing_country' => 'Brasil',
-            'payment_method' => $pgmt['title'],
+            'payment_method' => $pgmt,
             'currency' => 'BRL',
             'currency_value' => '1.0000'
         );
@@ -86,15 +84,15 @@ Class Checkout {
             $array_billing['billing_company'] = $default_address->entry_company;
         }
 
-        $orders_status = Ordersituacao::status($payment_method)->get();
-        //print_r($orders_status);exit;
+        $orders_status = Ordersituacao::status($pgmt)->get();
+        $status_id = '';
         foreach ($orders_status as $status) {
-            $status_id = $status->id;
+            $status_id = $status['id'];
         }
 
-        $array_order_status = array('payment_method' => $payment_method,
-            'orders_status' => $status_id,
-            'orders_status_finished_at' => 'now()'
+        $array_order_status = array(
+            'payment_method' => $payment_method,
+            'orders_status' => $status_id
         );
 
         $array_order = array_merge($array_customer, $array_delivery, $array_billing, $array_order_status);
@@ -102,14 +100,9 @@ Class Checkout {
         foreach ($array_order as $key => $valor) {
             $order->$key = $valor;
         }
-        return 1;
-//if($order->save()){
-        //return $order->id;
-//}
-        //exit;
-        //$order->save();
-//return false;
-        //return $order->id;
+        $order->save();
+        return $order->id;
+
     }
 
     /**
@@ -120,7 +113,7 @@ Class Checkout {
     static function item($new_order_id) {
         $orderitem = Null;
         foreach (Cart::content() as $itens) {
-        	//dd($itens);
+            //dd($itens);
             //controla o estoque
             $stock = Product::find($itens->id);
             $stock->products_quantity -= $itens->quantity;
@@ -135,16 +128,16 @@ Class Checkout {
             $orderitem->price = $itens->price;
             $orderitem->final_price = $preco;
             $orderitem->tax = '0.00';
-            //$orderitem->save();
+            $orderitem->save();
         }
-		//dd($orderitem);
-		//$orderitem = Null;
+        //dd($orderitem);
+        //$orderitem = Null;
         if (is_object($orderitem)) {
             return true;
         } else {
             return false;
         }
-        
+
     }
 
     /**
@@ -152,9 +145,9 @@ Class Checkout {
      * Retorna o identificados do novo pedido ou retorna false
      * @return true ou false
      */
-    static function ordemtotal($new_order_id, $value) {
+    static function OrderTotal($new_order_id, $value) {
         $response = true;
-        $totalcolluns = array(
+        $colluns = array(
             'title' => array(
                 'Sub-total',
                 'Frete',
@@ -173,18 +166,15 @@ Class Checkout {
             ),
             'value' => $value
         );
+       //dd($colluns);
 
-        foreach ($totalcolluns['title'] as $key => $collun) {
+        foreach ($colluns['title'] as $key => $collun) {
             $ordertotais = new OrderTotal();
-            //foreach ($collun as $k=>$value){
-            $ordertotais->orders_id = $new_order_id;
-            $ordertotais->title = $totalcolluns['title'][$key];
-            $ordertotais->text = $totalcolluns['text'][$key];
-            $ordertotais->value = $totalcolluns['value'][$key];
-            //if (!$ordertotais->save()) {
-            //$response = false;
-            //}
-            //}
+            $ordertotais->order_id = $new_order_id;
+            $ordertotais->title = $colluns['title'][$key];
+            $ordertotais->text = $colluns['text'][$key];
+            $ordertotais->value = $colluns['value'][$key];
+            $ordertotais->save();
         }
         return $response;
     }
