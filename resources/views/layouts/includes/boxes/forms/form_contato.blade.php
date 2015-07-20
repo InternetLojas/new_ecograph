@@ -1,5 +1,5 @@
 {!! Form::open(array(
-'url'=>URL::to('email/contato'),
+'url'=>route('email.contato'),
 'method'=>'post',
 'id' => 'contato',
 'name'=>'contato',

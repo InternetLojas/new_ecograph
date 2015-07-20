@@ -22,7 +22,7 @@
     @if(Cart::count()>0)
     <li class="col-xs-4 text-center">
         <i class="fa lg icon-cart pull-left"></i>
-        <a href="{{ route('carrinho.listar') }}" data-hint="Saiba mais sobre seus produtos no carrinho"  class="fg-gray"><span class="">{{Cart::count()}} item(s) - {{ Utilidades::toreal(Cart::total()) }}</span></a>
+        <a href="{{ route('basket') }}" data-hint="Saiba mais sobre seus produtos no carrinho"  class="fg-gray"><span class="">{{Cart::count()}} item(s) - {{ Utilidades::toreal(Cart::total()) }}</span></a>
     </li>
     @else
     <li class="col-xs-4 text-center">

@@ -1,4 +1,4 @@
-<!-- PORTFOLIO-->
+<!-- VITRINE-->
 <div class="row">
     <div class="destaque_home">
         <!--============================== content =================================-->

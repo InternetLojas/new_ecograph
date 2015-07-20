@@ -18,7 +18,8 @@
 <!-- Latest compiled and minified CSS & JS -->
 
 <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="{{ asset(elixir('css/main.css'))}}">
+<link rel="stylesheet" href="{{ asset(elixir('css/main.css')) }}">
+<!--<link rel="stylesheet" href="asset('build/css/main-bd6737ce.css')">-->
 <!-- Favicons-->
 <!--================================================== -->
 <link rel="shortcut icon" href="images/icons/favicon.ico">

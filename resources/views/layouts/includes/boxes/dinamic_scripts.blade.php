@@ -97,8 +97,7 @@
             @if($page === 'carrinho')
             var $btn_resumo = $('#btn_resumo');
             $btn_resumo.on('click', function() {
-                var url = $('#formresumo').attr('action');
-                ValidaCaixa('formresumo', url);
+               ValidaCaixa('formresumo');
             });
             @endif
             @if($page === 'detalhes')

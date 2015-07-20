@@ -4,7 +4,7 @@
         <div class=" col-md-12">
             <!-- Search -->
             {!! Form::open(array(
-            'url'=>url::to('loja/busca'), 
+            'url'=>route('loja.busca'),
             'method' => 'get', 
             'name'=>'search',
             'class'=>'form-horizontal',

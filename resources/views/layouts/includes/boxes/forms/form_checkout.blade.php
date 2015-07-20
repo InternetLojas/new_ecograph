@@ -1,6 +1,4 @@
 {!! Form::open(array(
-'url'=> URL::to('loja/caixa'),
-'method' => 'post',
 'name'=>'formcheckout',
 'id'=>'formcheckout')) !!}
 <fieldset>                     
@@ -10,4 +8,4 @@
         @endforeach
     </div>
 </fieldset>
-{!!Form::close()!!} 
+{!!Form::close()!!}

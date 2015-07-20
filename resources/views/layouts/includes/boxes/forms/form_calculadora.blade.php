@@ -1,4 +1,4 @@
-<form id="calculadora" name="calculadora" method="POST" action="{!!URL::to('calcula_preco')!!}">
+<form id="calculadora" name="calculadora" method="POST" action="{{route('calcula_preco')}}">
     <div id="peso_selecionado"></div>
     <input type="hidden" name="categoria" id="categ_selecionada" value="" />
     <input type="hidden" name="cor_nome" id="cor_nome" value="" />

@@ -1,7 +1,7 @@
 <div id="mensagem_formresumo"></div>
 <div id="info_formresumo"></div>
 {!! Form::open(array(
-'url'=>'/loja/process', 
+'url'=>route('loja.process'),
 'method' => 'post',
 'id' => 'formresumo', 
 'name' => 'formresumo')) !!}

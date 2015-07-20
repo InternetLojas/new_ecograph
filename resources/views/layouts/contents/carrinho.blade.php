@@ -20,7 +20,7 @@
     @include('layouts.includes.carrinho.info_pagamento')
     {!!
     Form::open(
-    array('url'=>URL::to('loja/validacaixa'),
+    array('route'=>('loja.validacaixa'),
     'method' => 'post',
     'id' => 'formresumo',
     'name' => 'formresumo',
@@ -31,12 +31,13 @@
             @foreach($post_inputs as $key=>$valor)
                 <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">
             @endforeach
-            <input type="hidden" name="forma_pagamento" id="forma_pagamento" value="Bcash" />
-            <input type="hidden" name="payment" id="payment"  value="2" />
-            <input type="hidden" name="discount_cupom" id="discount_cupom" value="0" />
-            <input type="hidden" name="vl_frete" id="vl_frete" value="{{$post_inputs['orc_vl_frete']}}" />
+                <input type="hidden" name="order_id" id="order_id" value="2" />
+            <input type="hidden" name="payment" id="payment" value="2" />
+                <input type="hidden" name="forma_pagamento" id="forma_pagamento" value="Bcash" />
             <input type="hidden" name="total_compra" id="total_compra" value="{{Cart::total()+$post_inputs['orc_vl_frete']-$post_inputs['orc_desconto_valor']}}" />
-            <input type="hidden" name="tipo_frete" id="tipo_frete" value="{{$post_inputs['orc_tipo_frete']}}" />
+            <input type="hidden" name="discount_cupom" id="discount_cupom" value="{{$post_inputs['orc_desconto_valor']}}" />
+            <input type="hidden" name="frete" id="frete" value="{{ $post_inputs['orc_vl_frete'] }}" />
+            <input type="hidden" name="tipo_frete" value="{{ $post_inputs['orc_tipo_frete'] }}" /><input type="hidden" name="tipo_frete" value="{{ $post_inputs['orc_tipo_frete'] }}" />
         </div>
     </fieldset>
     <div id="mensagem_formresumo"></div>
@@ -74,7 +75,10 @@
     {!!form::close()!!}
 @else
     <div class="row">
-        <a href="{{URL::route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn bg-dark fg-white no-radius pull-right" >
+        <button type="button" data-original-title="Ir para o caixa" title="Efetuar o pagamento" class="btn btn-red pull-right tooltip-test" id="btn_resumo">
+            <i class="icon-ok-circle icon-white"></i> Caixa
+        </button>
+        <a href="{{route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn bg-dark fg-white no-radius pull-right" style="margin-right:5px">
             <i class="icon-arrow-left icon-white"></i> Início
         </a>
     </div>

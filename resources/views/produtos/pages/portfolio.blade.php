@@ -1,5 +1,5 @@
 <!-- PORTFOLIO-->
-<div class="row">
+<div class="section">
     <div class="destaque_home">
         <!--============================== content =================================-->
         <div class="col-md-2 col-lg-2">

@@ -1,5 +1,4 @@
 
-<div class="">
     <div class="title_content">
         <h1>
             Pesquisa por - 
@@ -44,4 +43,3 @@
             <a class="btn btn-lg bg-green fg-white pull-right no-radius" href="index.html"  data-hint="Clique para continua">Continuar</a>
         </div>
     </div>
-</div>
