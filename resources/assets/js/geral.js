@@ -734,7 +734,7 @@ function PDF(guest) {
  /*-----------------------------------------------------------------------------------*/
 function AdicionaItemCarrinho(produto_id) {
     $('#produto_id').val(produto_id);
-    var URL = 'adicionar';
+    var URL = 'basket/adicionar';
     var formulario = $('#basket').serializeArray();
     $.post(URL, formulario, function(data) {
         $('#info_basket').addClass('alert alert-success');
@@ -772,7 +772,7 @@ function EditarSubmeter() {
 /*  BasketSubmeter
  /*-----------------------------------------------------------------------------------*/
 function BasketSubmeter() {
-    action_submeter = 'carrinho/lista.html';
+    action_submeter = 'basket/listar.html';
     $('#basket').attr('action', action_submeter);
     $('#basket').attr('method', 'post');
     $('#basket').submit();
@@ -1021,7 +1021,6 @@ function AtualizarCarrinho(product){
 function RemoverItem(product){
     $.get('basket/remover', {'product_id': product}, function(result) {
         console.log(result);
-
         var obj = JSON.parse(result);
 
         if (obj.reload === 'true') {
@@ -1030,7 +1029,7 @@ function RemoverItem(product){
             $('#info_carrinho').slideDown(600);
             //slideUp(600)
             $('#info_carrinho').delay(5000).slideUp(600, function() {
-                document.location.href = 'carrinho/lista.html'
+                document.location.href = 'basket.html'
             });
         } else {
             $('#info_carrinho').html('<div class="alert alert-warning" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
@@ -1040,6 +1039,39 @@ function RemoverItem(product){
     });
 
 }
+
+function ValidaCaixa(whoo){
+    VerificaConcorde(whoo);
+    $('#mensagem_' + whoo).html('');
+    $('#info_' + whoo).html('');
+        var formulario = $('#' + whoo).serializeArray();
+        var url_validacao = $('#' + whoo).attr('action');//'loja/validacaixa';
+        $.post(url_validacao, formulario, function(data) {
+            //alert(url_validacao);
+            var obj = JSON.parse(data);
+            alert(obj.loadurl);
+            if (obj.status === 'fail') {
+                $('#mensagem_' + whoo).addClass('alert strong');
+                $('#mensagem_' + whoo).html(obj.info);
+                $('#info_' + whoo).addClass('padding5 bg-cyan fg-white strong');
+                $('#info_' + whoo).html('<strong>' + obj.erro + '</strong>');
+                $('#info_' + whoo).delay(5000).fadeOut(800);
+            }
+            else {
+                $('#mensagem_' + whoo).addClass('alert success');
+                $('#info_' + whoo).addClass('alert info');
+                $('#mensagem_' + whoo).html('SUCESSO');
+                $('#info_' + whoo).html(obj.info);
+                $('#' + whoo).attr('action', obj.loadurl);
+                $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
+                    $('#' + whoo).submit();
+                });
+            }
+        });
+
+    return false;
+}
+
 /*******************************************************
  ***     script para controle da página de resumo    ***
  *******************************************************
@@ -1054,54 +1086,6 @@ function VerificaConcorde(whoo) {
         $('#info_' + whoo).delay(5000).fadeOut(800);
         return false;
     }
-}
-function ValidaCaixa(whoo, URL){
-    VerificaConcorde(whoo);
-    var payment = $('#payment').val();
-    var discount_cupom = $('#discount_cupom').val();
-    var total_compra = $('#total_compra').val();
-    var vl_frete = $('#vl_frete').val();
-    var tipo_frete = $('#tipo_frete').val();
-    $('#mensagem_' + whoo).html('');
-    $('#info_' + whoo).html('');
-    if (payment === '' || discount_cupom === '' || total_compra === '' || vl_frete === '' || tipo_frete === '') {
-        $('#mensagem_' + whoo).html('');
-        $('#info_' + whoo).html('');
-        $('#mensagem_' + whoo).addClass('errormsg alert');
-        $('#mensagem_' + whoo).html('ERRO!');
-        $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
-            //$('#enviando_' + whoo).delay(1000).fadeOut(500);
-            $('#info_' + whoo).addClass('infomsg alert');
-            $('#info_' + whoo).html('Por favor! Verifique os dados informados.');
-        });
-        $('#mensagem_' + whoo).delay(3000).fadeOut(400);
-        $('#info_' + whoo).delay(5000).fadeOut(800);
-    } else {
-        var formulario = $('#' + whoo).serializeArray();
-        var url_validacao = 'loja/validacaixa';
-        $.post(url_validacao, formulario, function(data) {
-            console.log(url_validacao);
-            var obj = JSON.parse(data);
-            if (obj.status === 'fail') {
-                $('#mensagem_' + whoo).addClass('alert strong');
-                $('#mensagem_' + whoo).html(obj.info);
-                $('#info_' + whoo).addClass('padding5 bg-cyan fg-white strong');
-                $('#info_' + whoo).html('<strong>' + obj.erro + '</strong>');
-                $('#info_' + whoo).delay(5000).fadeOut(800);
-            }
-            else {
-                $('#mensagem_' + whoo).addClass('successmsg alert');
-                $('#info_' + whoo).addClass('infomsg alert');
-                $('#mensagem_' + whoo).html('SUCESSO');
-                $('#info_' + whoo).html(obj.info);
-                $('#' + whoo).attr('action', obj.loadurl);
-                $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
-                    $('#' + whoo).submit();
-                });
-            }
-        });
-    }
-    return false;
 }
 /*-----------------------------------------------------------------------------------*/
 /*  Carregar os dados para fazer upload
@@ -1231,62 +1215,6 @@ function UsaCupom(cupom){
 
     return false;
 }
-/*
- *******************************************************
- ***   script para controle da página de carrinho    ***
- *******************************************************
- *
- function CriarConta(token) {
- //$("#createFlatWindow").on('click', function(){
- $.Dialog({
- overlay: true,
- shadow: true,
- flat: false,
- title: 'Criar uma conta',
- content: '',
- width: 500,
- padding: 10,
- onShow: function(_dialog) {
- var content = '<form id="formtipoconta" name="formtipoconta" method="post" action="tipoContaJson">\n' +
- '<div id="mensagem_formtipoconta"></div>\n\
- <div id="info_formtipoconta"></div>\n\
- <fieldset>\n\
- <label class="control-label"><span class="red">*</span>Tipo de conta:</label>\n\
- <div class="input-control radio default-style inline-block" data-role="input-control">\n\
- <label class="inline-block">\n\
- <input type="radio" name="customers_pf_pj" value="f" checked />\n\
- <span class="check"></span>\n\
- Pessoa Física\n\
- </label>\n\
- <label class="inline-block">\n\
- <input type="radio" value="j" name="customers_pf_pj" />\n\
- <span class="check"></span>\n\
- Pessoa Jurídica\n\
- </label>\n\
- </div>\n\
- <label>CEP</label>\n\
- <div class="input-control text" data-role="input-control" >\n\
- <input type="text" placeholder="Informe o cep" id="postcode" name="entry_postcode">\n\
- <input id="street" name="street" type="hidden" />\n\
- <input id="suburb" name="suburb" type="hidden" />\n\
- <input id="city" name="city" type="hidden" />\n\
- <input id="state" name="state" type="hidden" />\n\
- <input type="hidden" name="_token" value="' + token + '"/>\n\
- <button type="button" class="btn-search" onclick="javascript:EnderecoCEP();"></button>\n\
- </div>\n\
- <label></label>\n\
- <div class="input-control text" data-role="input-control" >\n\
- <button type="button" class="small warning fg-white" id="btn_tipoconta">Enviar os dados</button>\n\
- </div>\n\
- </fieldset>\n\
- </form>';
- $.Dialog.title("Crie sua conta");
- $.Dialog.content(content);
- $.Metro.initInputs();
- }
- });
- //});
- }*/
 
 /*
  *******************************************************
@@ -1300,97 +1228,71 @@ function chamar_gateway() {
 /*  controla A GERAÇÃO DE UM NOVO PEDIDO
  /*-----------------------------------------------------------------------------------*/
 function GerarPedido(whoo) {
-    var payment = $('#payment').val();
-    var discount_cupom = $('#discount_cupom').val();
-    var total_compra = $('#total_compra').val();
-    var vl_frete = $('#vl_frete').val();
-    var tipo_frete = $('#tipo_frete').val();
+    orc_desconto_valor = $('#orc_desconto_valor').val();
+    $('#discount_cupom').val(orc_desconto_valor);
     var url = $('#' + whoo).attr('action');
     var formulario = $('#' + whoo).serializeArray();
     $.post(url, formulario, function(data) {
         var obj = JSON.parse(data);
         if (obj.status === 'fail') {
-            CheckoutFail(obj, whoo);
+            CheckOutFail(obj, whoo);
         } else {
-            CheckoutSucess(obj, whoo);
+            CheckOutSucess(obj, whoo);
         }
+
     });
 }
-
-function CheckoutSucess(obj, whoo) {
+/*
+ **  Erros do checkout **
+ */
+function CheckOutFail(obj, whoo) {
+    $('#mensagem_' + whoo).html('');
+    $('#info_' + whoo).html('');
+    $('#mensagem_' + whoo).addClass('alert warning');
+    $('#mensagem_' + whoo).html('ERRO!');
+    $('#mensagem_' + whoo).delay(2000).fadeOut(600, function() {
+        $('#info_' + whoo).addClass('alert info');
+        $('#info_' + whoo).html('Por favor! Não foi possivel fazer o requerimento.');
+        $('#info_' + whoo).fadeOut('800');
+        $('#info_' + whoo).fadeOut('800');
+    });
+}
+function CheckOutSucess(obj, whoo) {
     console.log(obj);
-    var url_action = obj.url_action;
-    var neworder_id = obj.neworder_id;
+    var neworder_Id = obj.neworder_Id;
     var submeter = obj.submeter;
-    $('#neworder_id').html(neworder_id);
-    $('#fase0_' + whoo).delay(2000).fadeOut(600);
-    /*$('#fase0_' + whoo).delay(2000).fadeOut(600, function() {
-        $('#fase2_' + whoo).delay(2000).fadeIn(400);
-        $('#fase1_' + whoo).delay(2000).fadeIn(400, function() {
-
-        });
-    });*/
-    /*$('#fase1_' + whoo).delay(2000).fadeOut(600, function() {
-
-    });
-    $('#fase2_' + whoo).delay(2000).fadeOut(600, function() {
-        $('#fase3_' + whoo).delay(2000).fadeIn(400);
-    });
-    $('#fase3_' + whoo).delay(2000).fadeOut(600, function() {
-        if (submeter) {
-           // alert('submeter');
-            //$('#formfinalizacao').attr('action', url_externa);
-            //CheckoutSubmeter(obj, 'formcheckout', 'formfinalizacao');
-        } else {
-           // alert('oeouroeur');
-            //CheckoutNao_Submeter(obj, whoo, 'formfinalizacao', payment);
+    $('#order_id').val(neworder_Id);
+    $('#fase1_' + whoo).fadeIn(600);
+    $('#fase2_' + whoo).delay(3000).fadeIn(600);
+    $('#fase3_' + whoo).delay(6000).fadeIn(600);
+    $('#fase1_' + whoo).delay(9000).fadeOut(400, function() {
+        if(submeter){
+            CheckoutSubmeter(obj, 'formcheckout');
+        }else {
+            alert('sdsdjjs');
         }
-    });*/
+    });
+
 }
 
 /*
  **  Acessa checkout externo **
  */
-function CheckoutSubmeter(obj, form_interno,finalizacao) {
-    console.log(obj);
-    var metodo = 'post';
-    $('#' + form_interno).serializeArray();
-    $('#mensagem_' + form_interno).html('');
-    $('#info_' + form_interno).html('');
-    /*
-     if (obj.form) {
-     var inputs_hidden = '';
-     var form = JSON.parse(obj.form);
-     console.log(form);
-     $.each(form, function(index, value) {
-     inputs_hidden = inputs_hidden + '<input type="hidden" id="' + index + '" name="' + index + '" value="' + value + '" />\n';
-     });
-     $('#input_' + form_externo).html(inputs_hidden);
-     $('#' + form_externo).attr('method', metodo);
-     $('#' + form_externo).attr('action', obj.url_externa);
-     $('#info_' + form_externo).html('Transferindo para ' + payment + ' em 10s');
-     } else {*/
-    //console.log(form);
-    $('#' + form_interno).attr('method', metodo);
-    $('#' + form_interno).attr('action', obj.url_action);
-    //overlay('on', '#' + form_externo);
-
-
-    //}
-    $('#fase3_' + finalizacao).delay(4000).fadeIn(600, function() {
-        $('#info_' + finalizacao).html('Transferindo para BCash em 10s');
-        $('#processando').slideUp('slow', function() {
-            $('#processamento_finalizado').slideDown('slow');
-            $('#fase4_'+finalizacao).show();
-            $('#neworder_Id').html(obj.neworder_Id);
-            $('#enviando_' + form_externo).css('display', 'block');
-            setTimeout($('#' + form_externo).submit(), 100 * 1000);
-        });
+function CheckoutSubmeter(obj, form_interno) {
+     $('#processamento_info').slideUp('slow',function(){
+        $('#processamento_finalizado').slideDown('last');
+        $('#'+form_interno).attr('method', obj.metodo);
+        $('#'+form_interno).attr('action', obj.url_externa);
+        $('#neworder_Id').html(obj.neworder_Id);
     });
+    setTimeout(function(){
+       $('#'+form_interno).submit()
+    },10000);
+   
 }
 /*-----------------------------------------------------------------------------------*/
 /*  VERIFICA SE O GATEWAY USADO NECESSITA USAR URL EXTERNA
- /*-----------------------------------------------------------------------------------*/
+ /*-----------------------------------------------------------------------------------*
 function CheckoutNao_Submeter(obj, whoo, form_externo, payment) {
     //var metodo = obj.metodo;
     var $btn_boleto = $('#btn_boleto');
@@ -1402,14 +1304,14 @@ function CheckoutNao_Submeter(obj, whoo, form_externo, payment) {
     $('#info_' + form_externo).html('');
     $('#fase3_' + whoo).delay(4000).fadeOut(400, function() {
         //overlay('off', whoo);
-        $('#processando').slideUp('slow', function() {
+        $('#processamento_info').slideUp('slow', function() {
             $('#processamento_finalizado').slideDown();
-            $('#fase4_formfinalizacao').show();
+            //$('#fase4_formfinalizacao').show();
             $('#neworder_Id').html(obj.neworder_Id);
             $('#enviando_' + form_externo).css('display', 'block');
         });
     });
-}
+}*/
 
 /*
  ******************************************************
