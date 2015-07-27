@@ -1,7 +1,7 @@
 @extends('diretoria.main_admin')
 @section('content')
     <div class="container">
-        <h1>Acabamentos</h1>
+        <h1>Formatos</h1>
         <a href="#"  class="btn btn-default" > New Attribute </a>
         <table class="table table-hover">
             <thead>
@@ -11,18 +11,17 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($acabamentos as $acabamento)
+            @foreach($formatos as $formato)
                 <tr>
-                    <td>{!!$acabamento->id!!}</td>
-                    <td>{!!$acabamento->valor!!}</td>
+                    <td>{!!$formato->id!!}</td>
+                    <td>{!!$formato->valor!!}</td>
                     <td>
-                        <a href="#" title="Editar categoria {{$acabamento->valor}}">edit</a> |
-                        <a href="#" title="Eliminar categoria {{$acabamento->valor}}">delete</a>
+                        <a href="#" title="Editar categoria {{$formato->valor}}">edit</a> |
+                        <a href="#" title="Eliminar categoria {{$formato->valor}}">delete</a>
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-        {!! $acabamentos->render() !!}
     </div>
 @stop
