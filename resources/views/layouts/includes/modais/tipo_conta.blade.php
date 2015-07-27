@@ -21,7 +21,7 @@
                 @include('layouts.includes.boxes.forms.form_modal_tipo_conta')
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-small bg-gray no-radius" data-dismiss="modal" title="Fechar a janela"><i class="icon-off"></i> Fechar</button>
+                <button type="button" class="btn btn-small btn-success no-radius" data-dismiss="modal" title="Fechar a janela"><i class="icon-off"></i> Fechar</button>
             </div>       
             {!!form::close()!!}
         </div>

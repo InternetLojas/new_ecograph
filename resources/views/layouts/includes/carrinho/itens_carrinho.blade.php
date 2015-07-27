@@ -37,7 +37,7 @@
                             <td class="text-medio options">
                                 {!!$itens['name']!!}<br>
                                 @foreach ($itens['options'] as $key=>$vl)
-                                @if($key != 'categoria' && $key != 'categoria_id' && $key != 'formato_id' && $key != 'papel_id' && $key != 'acabamento_id' &&  $key != 'perfil' && $key != 'perfil_id')
+                                @if($key != 'categoria' && $key != 'categoria_id' && $key != 'formato_id' && $key != 'papel_id' && $key != 'acabamento_id' && $key != 'cor_id' && $key != 'enoblecimento_id' &&  $key != 'perfil' && $key != 'perfil_id')
                                 <b class='fg-crimson'>{!! $key !!}</b> - {!! $vl !!}<br>
                                 @endif
                                 @endforeach
@@ -50,13 +50,17 @@
                             </td>
                             <td class="text-medio">
                                 @if(is_array($post_inputs))
-                                {!!Utilidades::toReal($post_inputs['orc_tipo_frete'])!!}
+                                {!!Utilidades::toReal($post_inputs['orc_vl_frete'])!!}
                                 @endif
                             </td>
-                            <td class="text-medio">Desconto</td>
                             <td class="text-medio">
                                 @if(is_array($post_inputs))
-                                {!!Utilidades::toReal($cart_total+$post_inputs['orc_tipo_frete'])!!}
+                                {!!Utilidades::toReal($post_inputs['orc_desconto_valor'])!!}
+                                @endif
+                            </td>
+                            <td class="text-medio">
+                                @if(is_array($post_inputs))
+                                {!!Utilidades::toReal(Cart::total()+$post_inputs['orc_vl_frete']-$post_inputs['orc_desconto_valor'])!!}
                                 @endif
                             </td>
                             <td class="text-medio">

@@ -32,7 +32,7 @@
                                     <td class="mail-pattern" style="padding-bottom:20px" width="560" align="left">
                                         <h3>Orçamento Online Nº {!!$orcamento_id!!}</h3>
                                         <p class="text-medio fg-gray">
-                                            Prezado {!!$customer_name!!}.<br>
+                                            Prezado {!!$customer->customers_firstname!!}.<br>
                                             Vimos através desta apresentar nossa proposta orçamentária para a confecção do(s) serviço(s) conforme especificação abaixo:
                                         </p>
                                     </td>

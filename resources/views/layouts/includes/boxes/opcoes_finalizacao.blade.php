@@ -36,6 +36,4 @@
             <small>Envie seu arquivo PDF.</small>
         </button>
     </div>
-    <div class="clearfix"></div>
-
 </div>

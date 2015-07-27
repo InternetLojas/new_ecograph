@@ -1,5 +1,6 @@
 <!--<form name="form_upload" id="form_upload" method="post" role="form" action="editor/upload" enctype="multipart/form-data">-->
-    <div class="form-group file" data-role="form-group">
+    <div>
+    	<div class="form-group file" data-role="form-group">
         <span>Inserir Logotipo1</span>
         <input type="file" id="logo1" name="files[logo1]" class="form-control no-radius" placehoder="inserir Logotipo 1"/>
     </div>
@@ -22,5 +23,6 @@
     <div class="form-group file" data-role="input-control">
         <span>Inserir imagem3</span>
         <input type="file" id="img3" name="files[img3]" class="form-control no-radius" placehoder="inserir Imagem 3"/>
+    </div>
     </div>    
 <!--</form>-->

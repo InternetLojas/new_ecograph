@@ -38,25 +38,26 @@
                 </div>
             </div>
             <!--============================== conteúdo =================================-->
-            <!-- ====================    SCRIPTS   ========================== -->
-            <footer class="section section-primary">
-                @include('layouts.includes.footer')
-            </footer>
             <div class="section">
                 <div class="container">
                     <!-- ====================    MODAL   ========================== -->
                     @if($page != 'novaconta' && !Auth::user())
                         @include('layouts.includes.modais.tipo_conta')
                         @endif
-                                <!-- ====================    SCRIPTS   ========================== -->
-                    @section('script')
-                        @include('layouts.includes.scripts')
-                    @show()
-                    @section('dinamic-script')
-                        @include('layouts.includes.boxes.dinamic_scripts')
-                    @show()
-                    <!-- =====================  END SCRIPTS  ======================== -->
+
                 </div>
             </div>
+            <!-- ====================    footer   ========================== -->
+            <footer class="section section-primary">
+                @include('layouts.includes.footer')
+            </footer>
+            <!-- ====================    SCRIPTS   ========================== -->
+        @section('script')
+            @include('layouts.includes.scripts')
+        @show()
+        @section('dinamic-script')
+            @include('layouts.includes.boxes.dinamic_scripts')
+        @show()
+        <!-- =====================  END SCRIPTS  ======================== -->
         </body>
 </html>

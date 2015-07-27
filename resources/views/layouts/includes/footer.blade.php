@@ -83,4 +83,3 @@
     </div>
 </div>
 <!-- javascript================================================== -->
-@include('layouts.includes.scripts') 

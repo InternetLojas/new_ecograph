@@ -5,53 +5,45 @@
         <img src="images/icons/icone-box-car.jpg" class="img-responsive pull-left" />
     </div>
     <div class="title_content">
-        <h3><span class="text-medio">Orçamento On Line</span></h3>
+        <h3><span class="text-medio">Loja:produto </span><br>Cesta de compras</h3>
     </div>
 </div>
-@if($errors)
-    <ul class="alert alert-warning">
-        @foreach($errors as $key => $erro)
-            <li>
-                {!! $erro !!}
-            </li>
-        @endforeach
-    </ul>
-    @endif
+<div id="info_carrinho"></div>
+<!--================= tabela dos produtos do carrinho ===================-->
+@include('layouts.includes.carrinho.itens_carrinho')
+@include('layouts.includes.boxes.forms.form_carrinho')
+<!--================= informações sobre entrega ==========================-->
+@include('layouts.includes.carrinho.info_endereco')
+@if(is_array($post_inputs))
+    @include('layouts.includes.carrinho.info_prazos')
+    @include('layouts.includes.carrinho.info_cupom')
+    @include('layouts.includes.carrinho.info_pagamento')
+    {!!
+    Form::open(
+    array('route'=>('loja.validacaixa'),
+    'method' => 'post',
+    'id' => 'formresumo',
+    'name' => 'formresumo',
+    'class'=>'form-inline'))
+    !!}
+    <fieldset>
+        <div class="control-group">
+            @foreach($inputs_orc as $key=>$valor)
+                <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">
+            @endforeach
+            <input type="hidden" name="order_id" id="order_id" value="2" />
+            <input type="hidden" name="payment" id="payment" value="2" />
+            <input type="hidden" name="forma_pagamento" id="forma_pagamento" value="Bcash" />
+            <input type="hidden" name="total_compra" id="total_compra" value="{{Cart::total()+$post_inputs['orc_vl_frete']-$post_inputs['orc_desconto_valor']}}" />
+            <input type="hidden" name="discount_cupom" id="discount_cupom" value="{{$post_inputs['orc_desconto_valor']}}" />
+            <input type="hidden" name="frete" id="frete" value="{{ $post_inputs['orc_vl_frete'] }}" />
+            <input type="hidden" name="tipo_frete" value="{{ $post_inputs['orc_tipo_frete'] }}" />
+        </div>
+    </fieldset>
+    <div id="mensagem_formresumo"></div>
+    <div id="info_formresumo"></div>
 
-            <!--================= tabela dos produtos para orçamento ===================-->
-    <div id="printable" class="print_orcamento">
-        <table class="table mail" border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tbody>
-            <tr>
-                <td class="mail-wrapper" valign="top" width="100%" align="center">
-                    <!--============================== header =================================-->
-                    @include('layouts.includes.imprimir.header')
-                    <!--============================ end header ===============================-->
-                    <!--============================== especificacao =================================-->
-                    @include('layouts.includes.imprimir.especificacao')
-                    <!--============================== especificacao =================================-->
-                    <!--============================== frete =================================-->
-                    @include('layouts.includes.imprimir.frete')
-                    <!--============================== frete =================================-->
-                </td>
-            </tr>
-            <tr>
-                <td class="mail-product-footer" valign="top" width="100%" align="center">
-                    <!--Footer-->
-                    <!--============================== footer =================================-->
-                    @include('layouts.includes.imprimir.footer')
-                    <!--============================== footer =================================-->
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="printer">
-        <img src="images/theme/printer.jpg" alt="calculadora.png"  width="90" class="img-responsive" />
-        <a class="btn bg-green fg-white no-radius text-center" title="Clique para imprimir" href="#" onclick="window.print();">Imprimir Orçamento</a>
-    </div>
-    <!--================= informações sobre entrega ==========================-->
-
-
-
+    {!!form::close()!!}
+@endif
+@include('layouts.includes.resumo.ficha_resumo')
 

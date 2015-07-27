@@ -13,18 +13,19 @@
             </label>
         </div>
     </div>
-</div> 
+</div>
 <div class="form-group">
-    <div class="col-md-2">
+    <div class="col-sm-1">
         <label for="entry_postcode" class="control-label">CEP</label>
     </div>
-    <div class="col-md-4">
+    <div class="col-sm-4">
         <input id="postcode" name="entry_postcode" type="text" class="form-control input-group input-group-lg no-radius size4" placehoder="CEP" required />
-
     </div>
-    <a class="btn col-md-1 bg-dark fg-white no-radius" onclick="EnderecoCEP();">
-        <i class="fa fa-search" style="color:#ffffff"></i>
-    </a>
+    <div class="col-sm-3">
+        <a class="btn bg-dark fg-white no-radius" onclick="EnderecoCEP();">
+            <i class="fa fa-search" style="color:#ffffff"></i>
+        </a>
+    </div>
 </div>
 <div class="form-group">
     <input id="street" name="street" type="hidden" />
@@ -33,9 +34,9 @@
     <input id="state" name="state" type="hidden" />
     <input name="_token" value="{!!csrf_token()!!}"  type="hidden" />
     @if (Session::has('facebook_id'))
-    {{$get_me =  Session::get('me')}}
-    {!! Form::hidden('customers_firstname', $get_me['first_name']) !!}
-    {!! Form::hidden('customers_lastname', $get_me['last_name']) !!}
-    {!! Form::hidden('email', $get_me['email']) !!}
+        {{$get_me =  Session::get('me')}}
+        {!! Form::hidden('customers_firstname', $get_me['first_name']) !!}
+        {!! Form::hidden('customers_lastname', $get_me['last_name']) !!}
+        {!! Form::hidden('email', $get_me['email']) !!}
     @endif
 </div> 

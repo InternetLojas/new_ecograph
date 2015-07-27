@@ -1,3 +1,4 @@
+<div id="info_listagem"></div>
 @foreach($perfis_produtos->items() as $key=> $row)
 <div class = "col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
     <div class="thumbnail border no-radius">
@@ -13,8 +14,11 @@
                 <p class="fg-dark">
                     {!!Fichas::nomeproduto($row['original']['id'])!!}
                 </p>
-                <button type="button" onclick="AdicionaItemCarrinho('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
+                <button type="button" onclick="Comprar('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="{{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
                     <i class="icon-cart on-left"></i>Comprar
+                </button>
+                <button type="button" onclick="Editar('{{$row['original']['id']}}');" class="btn btn-warning fg-white no-radius" title="{{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
+                    <i class="icon-cart on-left"></i>Editar
                 </button>
             </div>
         </div>
