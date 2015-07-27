@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Slider extends Model {
 
-    protected $fillable = [];
+    protected $fillable = [
+        'palco_id',
+        'categories_id',
+        'descricao'
+    ];
 
-    public function scopePromo($query, $palco_id) {
-        return $query->where('palco_id', '=', $palco_id);
+    public function Palco(){
+        return $this->BelongsTo('Ecograph\Palco');
     }
 
 }

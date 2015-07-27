@@ -1,5 +1,6 @@
 <?php
 namespace Ecograph\Libs;
+use Illuminate\Support\Facades\Config;
 use Mail;
 class EnvioEmail {
 

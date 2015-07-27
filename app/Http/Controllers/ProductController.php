@@ -36,16 +36,14 @@ class ProductController extends Controller {
       |
      */
 
-    private $layout;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Layout $layout) {
-        $this->layout = $layout;
-        //$this->middleware('auth');
+    public function __construct() {
+      //
     }
 
     /**
@@ -54,8 +52,7 @@ class ProductController extends Controller {
      * @return view
      */
     public function index() {
-        //$category = Category::pai();
-        $layout = $this->layout->classes('0');
+    
         $lista = Fichas::CategoriasPais();
         foreach ($lista as $categorias) {
             foreach ($categorias['prole']['filhos'] as $key => $item) {
@@ -67,8 +64,7 @@ class ProductController extends Controller {
             ->with('page', 'vitrine')
             ->with('ativo', 'Vitrine')
             ->with('listagem', $listagem)
-            ->with('rota', 'produtos/portfolio.html')
-            ->with('layout', $layout);
+            ->with('rota', 'produtos/portfolio.html');
     }
 
     /**
@@ -77,7 +73,7 @@ class ProductController extends Controller {
      * @return view
      */
     public function Detalhes($pai, $filho, $nome_html) {
-        $layout = $this->layout->classes($pai);
+        
         $lista = Fichas::CategoriasPais();
         $listagem = '';
         $solicitado = '';
@@ -94,8 +90,7 @@ class ProductController extends Controller {
             ->with('ativo', 'Detalhes')
             ->with('listagem', $listagem)
             ->with('solicitado', $solicitado)
-            ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html)
-            ->with('layout', $layout);
+            ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html);
     }
 
     /**
@@ -107,13 +102,11 @@ class ProductController extends Controller {
     public function Orcamento(Request $request) {
         $post_inputs = $request->all();
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
-        $layout = $this->layout->classes($pai);
-        return view('produtos.index')
+            return view('produtos.index')
             ->with('title', STORE_NAME)
             ->with('page', 'imprimir')
             ->with('post_inputs', $post_inputs)
             ->with('ativo', 'teste')
-            ->with('layout', $layout)
             ->with('rota', 'produtos/orcamento');
     }
     /**
@@ -123,16 +116,13 @@ class ProductController extends Controller {
      */
     public function EnviarPDF(Request $request) {
         $post_inputs = $request->all();
-        //dd($post_inputs);
-        $layout = $this->layout->classes('0');
-
+    
         return view('produtos.index')
             ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
             ->with('page', 'enviarpdf')
             ->with('ativo', 'Enviar PDF')
             ->with('post_inputs', $post_inputs)
-            ->with('rota', 'produtos/enviarpdf.html')
-            ->with('layout', $layout);
+            ->with('rota', 'produtos/enviarpdf.html');
     }
     /**
      * mostra a página de modelos dos produtos
@@ -160,8 +150,6 @@ class ProductController extends Controller {
 
         $path = $perfis_produtos->setPath('produtos/portfolio.html');
 
-        //$produtos = $perfis_produtos->toarray();
-        $layout = $this->layout->classes($pai);
         if ($perfis_produtos->total() > 0) {
             return view('produtos.index')
                 ->with('title', STORE_NAME . $post_inputs['orc_categoria_nome'])
@@ -173,7 +161,6 @@ class ProductController extends Controller {
                 ->with('post_inputs', $post_inputs)
                 ->with('ativo', $categ_pai)
                 ->with('total', $perfis_produtos->total())
-                ->with('layout', $layout)
                 ->with('rota', 'produtos/portfolio.html');
         } else {
             echo 'sem produtos';
@@ -190,9 +177,8 @@ class ProductController extends Controller {
         $post_inputs = $request->all();
         // dd($post_inputs);
         $pai = Fichas::parentCategoria($post_inputs['escolhido']);
-        $layout = $this->layout->classes($pai);
 
-        $formato_id = CategoryFormato::where('categories_id', $post_inputs['escolhido'])
+        $formato_id = CategoryFormato::where('category_id', $post_inputs['escolhido'])
             ->lists('formato_id');
         //dd($formato_id);
         if (count($formato_id) > 0) {
@@ -212,20 +198,20 @@ class ProductController extends Controller {
             return $json_data;
         }
         $cores = '';
-        $cor_id = CategoryCore::where('categories_id', $post_inputs['escolhido'])->lists('cor_id');
+        $cor_id = CategoryCore::where('category_id', $post_inputs['escolhido'])->lists('cor_id');
         foreach ($cor_id as $k => $valor) {
             $cores[] = array('id' => $valor, 'nome' => Core::find($valor)->valor);
         }
-        $papel_id = CategoryPapel::where('categories_id', $post_inputs['escolhido'])->lists('papel_id');
+        $papel_id = CategoryPapel::where('category_id', $post_inputs['escolhido'])->lists('papel_id');
         foreach ($papel_id as $k => $valor) {
             $papel[] = array('id' => $valor, 'nome' => Papel::find($valor)->valor);
         }
-        $acabamento_id = CategoryAcabamento::where('categories_id', $post_inputs['escolhido'])->lists('acabamento_id');
+        $acabamento_id = CategoryAcabamento::where('category_id', $post_inputs['escolhido'])->lists('acabamento_id');
         foreach ($acabamento_id as $k => $valor) {
             $acabamento[] = array('id' => $valor, 'nome' => Acabamento::find($valor)->valor);
         }
         $enoblecimento = '';
-        $enoblecimento_id = CategoryEnoblecimento::where('categories_id', $post_inputs['escolhido'])->lists('enoblecimento_id');
+        $enoblecimento_id = CategoryEnoblecimento::where('category_id', $post_inputs['escolhido'])->lists('enoblecimento_id');
         foreach ($enoblecimento_id as $k => $valor) {
             $enoblecimento[] = array('id' => $valor, 'nome' => Enoblecimento::find($valor)->valor);
         }
@@ -286,12 +272,12 @@ class ProductController extends Controller {
         } else {
             $desc = utf8_encode('<p>Vários modelos e formatos.</p>');
         }
-        $check = Pacformato::where('categories_id', $post_inputs['escolhido']);
+        $check = Pacformato::where('category_id', $post_inputs['escolhido']);
         if ($check) {
             //dd($tabela);
             $data = array();
             $data['back_menu'] = array('background' => $back_menu);
-            $data['active_a'] = array('style_a' => $layout['style_a']);
+            $data['active_a'] = array('style_a' => '');
             $data['imagem'] = array('image' => utf8_encode('images/' . $parent_cores['categories_image']));
             $data['parans'] = $tabela;
             $data['qtd'] = $quantidade;
@@ -329,13 +315,11 @@ class ProductController extends Controller {
             }
         }
         $array_categ = Utilidades::agrupa($cat, 4, 'busca');
-        //dd($array_categ);
-        $layout = $this->layout->classes(0);
+    
         return view('produtos.index')
             ->with('title', STORE_NAME)
             ->with('page', 'produtos')
             ->with('ativo', 'Produtos')
-            ->with('layout', $layout)
             ->with('array_categ', $array_categ)
             ->with('rota', 'produtos.html');
     }

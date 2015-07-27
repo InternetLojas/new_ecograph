@@ -68,7 +68,14 @@ class CustomerController extends Controller {
         Session::forget('administrador');
         $layout = $this->layout->classes('6');
         //$populares = Fichas::produtosPopulares();
-        return view('clientes.index')->with('title', STORE_NAME . ' Sessão encerrada!')->with('page', 'logout')->with('ativo', 'Sessão encerrada')->with('rota', 'clientes/index')->with('populares', $populares)->with('layout', $layout)->with('class', LAYOUT);
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Sessão encerrada!')
+            ->with('page', 'logout')
+            ->with('ativo', 'Sessão encerrada')
+            ->with('rota', 'clientes.logout')
+            ->with('populares', $populares)
+            ->with('layout', $layout)
+            ->with('class', LAYOUT);
     }
 
     public function Conta() {
@@ -153,7 +160,6 @@ class CustomerController extends Controller {
      */
     public function Cadastro(Request $request) {
         $erros = array();
-        //dd($request);
         //check if its our form
         $post_inputs = $request->all($request->except('_token', 'email', 'agree', 'customers_revendedor'));
 
@@ -215,11 +221,7 @@ class CustomerController extends Controller {
                 'loadurl' => '');
             return json_encode($data);
         } else {
-            //exit;
-            // $post_inputs['customers_cpf_cnpj'] = Input::get('customers_cpf_cnpj');
-            // $post_inputs['email'] = Input::get('email');
-            //$salve = false;
-            //prepara os dados para o cliente
+             //prepara os dados para o cliente
             $customer = new Customer;
             $customer->customers_gender = $post_inputs['customers_gender'];
             $customer->remember_token = $post_inputs['_token'];
@@ -227,19 +229,14 @@ class CustomerController extends Controller {
             $customer->password = Hash::make($password);
             $customer->customers_firstname = $post_inputs['customers_firstname'];
             $customer->customers_lastname = $post_inputs['customers_lastname'];
-            //$customer->customers_dob = $post_inputs[customers_dob');
-            $customer->email = $post_inputs['email'];
+           $customer->email = $post_inputs['email'];
             $customer->customers_telephone = $post_inputs['customers_telephone'];
-            //$customer->customers_ddd = $post_inputs[customers_ddd');
             $customer->customers_telephone1 = $post_inputs['customers_telephone1'];
-            //$customer->customers_ddd1 = $post_inputs['customers_ddd1'];
-            $customer->customers_cel = $post_inputs['customers_cel'];
-            //$customer->customers_ddd2 = $post_inputs['customers_ddd2'];
+           $customer->customers_cel = $post_inputs['customers_cel'];
             $customer->customers_cel1 = $post_inputs['customers_cel1'];
             $customer->customers_newsletter = $post_inputs['customers_newsletter'];
             $customer->customers_cpf_cnpj = $post_inputs['customers_cpf_cnpj'];
             $customer->customers_pf_pj = $post_inputs['customers_pf_pj'];
-            //$customer->customers_rg_ie = $post_inputs['customers_rg_ie'];
             //dados do cliente armazenados em customers
             $customer->save();
 
@@ -274,8 +271,7 @@ class CustomerController extends Controller {
             $salve = $acessos->save();
             return $this->TratarEmail($salve, $customer);
         }
-        //return json_encode($data);
-    }
+      }
     /**
      * Script CheckCadastro faz validação de alguns campos antes de postar.
      *
@@ -327,35 +323,40 @@ class CustomerController extends Controller {
         $post_inputs = $request->all();
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($pai);
+        $customer = Customer::find(\Auth::user()->id);
         //dd($post_inputs);
         //prepara os dados para o cliente
         $orcamento = new Orcamento;
         $orcamento->customer_id = Auth::user()->id;
         $orcamento->orcamento_status = 1;
         //dados do cliente armazenados em customers
-        //$orcamento->save();
+        $orcamento->save();
         //prepara os dados dos itens do orçamento
         $OrcProduto = new OrcamentoProduto;
         $OrcProduto->orcamento_id = $orcamento->id;
-        $OrcProduto->categories_id = $post_inputs['orc_categoria_id'];
-        $OrcProduto->produto_nome = $post_inputs['orc_subcategoria_nome'];
-        $OrcProduto->produto_papel = $post_inputs['orc_papel_nome'];
-        $OrcProduto->produto_qtd = $post_inputs['orc_pacote_qtd'];
-        $OrcProduto->produto_enoblecimento = $post_inputs['orc_enoblecimento_nome'];
-        $OrcProduto->produto_formato = $post_inputs['orc_formato_nome'];
-        $OrcProduto->produto_forma_envio = $post_inputs['orc_tipo_frete'];
-        $OrcProduto->prazo_entrega = $post_inputs['orc_enoblecimento_nome'];
-        $OrcProduto->produto_cor = $post_inputs['orc_cor_nome'];
-        $OrcProduto->produto_vl_pacote = $post_inputs['orc_pacote_valor'];
-        $OrcProduto->produto_vl_frete = $post_inputs['orc_vl_frete'];
-        $OrcProduto->produto_vl_desc = 0;
-//$OrcProduto->save();
-        return view('clientes.index')
+        $OrcProduto->orc_peso = $post_inputs['orc_peso'];
+        $OrcProduto->orc_categoria_nome = $post_inputs['orc_categoria_nome'];
+        $OrcProduto->orc_subcategoria_nome = $post_inputs['orc_subcategoria_nome'];
+        $OrcProduto->orc_tipo_frete = $post_inputs['orc_tipo_frete'];
+        $OrcProduto->orc_papel_nome = $post_inputs['orc_papel_nome'];
+        $OrcProduto->orc_acabamento_nome = $post_inputs['orc_acabamento_nome'];
+        $OrcProduto->orc_pacote_qtd = $post_inputs['orc_pacote_qtd'];
+        $OrcProduto->orc_formato_nome = $post_inputs['orc_formato_nome'];
+        $OrcProduto->orc_nome_perfil = $post_inputs['orc_nome_perfil'];
+        $OrcProduto->orc_enoblecimento_nome = $post_inputs['orc_enoblecimento_nome'];
+        $OrcProduto->orc_cor_nome = $post_inputs['orc_cor_nome'];
+        $OrcProduto->orc_desconto_valor = $post_inputs['orc_desconto_valor'];
+        $OrcProduto->orc_pacote_valor = $post_inputs['orc_pacote_valor'];
+        $OrcProduto->orc_vl_frete = $post_inputs['orc_vl_frete'];
+        $OrcProduto->save();
+
+        return view('clientes.index',compact('customer'))
                         ->with('title', STORE_NAME . ' Imprima seu orçamento')
                         ->with('page', 'imprimir')
                         ->with('ativo', 'Imprimir')
-                        ->with('post_inputs', $post_inputs)
-                        ->with('rota', 'orcamento.html')
+                        ->with('inputs_orc', $post_inputs)
+                        ->with('rota', 'orcamento')
+                        ->with('orcamento_id', $orcamento->id)
                         ->with('layout', $layout);
     }
     public function TratarEmail($check, $customer) {

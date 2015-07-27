@@ -14,7 +14,7 @@ class Banner extends Model {
     protected $table = 'banners';
 
     public function palco() {
-        return $this->hasMany('Palco');
+        return $this->hasMany('Ecograph\Palco');
     }
 
     public function scopeAtivo($query, $group) {

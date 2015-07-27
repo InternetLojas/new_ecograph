@@ -6,9 +6,8 @@ use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
-use Ecograph\Category;
-use Ecograph\Customer;
-use Ecograph\CategoryDescription;
+use Ecograph\Libs\Banners;
+
 
 class HomeController extends Controller {
     /*
@@ -39,9 +38,10 @@ class HomeController extends Controller {
      * @return View
      */
     public function index() {
-        //dd(\Auth::user());
+        $sliders = Banners::ativos(3);
         $layout = \Layout::classes(0);
-        return view('home.index')
+
+        return view('home.index',compact('sliders'))
             ->with('title', STORE_NAME . ' Impressos em geral por tema ou profissão')
             ->with('page', 'home')
             ->with('ativo', 'Home')
@@ -56,7 +56,12 @@ class HomeController extends Controller {
     public function contato() {
 
         $layout = $this->layout->classes('0');
-        return view('home.index')->with('title', STORE_NAME . ' Contato')->with('page', 'contato')->with('ativo', 'Contato')->with('rota', 'contato.html')->with('layout', $layout);
+        return view('home.index')
+        ->with('title', STORE_NAME . ' Contato')
+        ->with('page', 'contato')
+        ->with('ativo', 'Contato')
+        ->with('rota', 'contato.html')
+        ->with('layout', $layout);
     }
 
     /**

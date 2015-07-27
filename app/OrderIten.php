@@ -11,7 +11,7 @@ class OrderIten extends Model {
     protected $guarded = ["id"];
 
     public function Order() {
-        return $this->belongsTo('Ecograph\Order', 'order_id');
+        return $this->belongsTo('Ecograph\Order');
     }
 
     public function getTotalAttribute() {

@@ -23,8 +23,8 @@ class ProcessController extends Controller {
      * @return void
      */
     public function __construct(Layout $layout) {
+        $this->middleware('auth');
         $this->layout = $layout;
-        //$this->payments = $payments;
     }
 
     public function Process() {
@@ -37,11 +37,8 @@ class ProcessController extends Controller {
         //prepara o ambiente espedífico da classe
         $before = $class::before($start, $inputs['orc_tipo_frete'], $inputs['orc_vl_frete']);
 
-
         $before["id_pedido"] = $inputs['order_id'];
         $before["redirect"] = "true";
-
-
 
         //preparativos para mostrar a página
         $html = $class::html($before);
@@ -109,8 +106,9 @@ class ProcessController extends Controller {
     public function Pedido() {
         $inputs = \Request::except('_token');
 
-//identifica a classe a ser utilizada
+        //identifica a classe a ser utilizada
         $class = Gateway::find($inputs['id_payment'])->class;
+        //gera o pedido
         $order_id = Checkout::order($inputs['payment'], $class);
 
         //gera os valores totais, descontos e acrescimos
@@ -130,6 +128,7 @@ class ProcessController extends Controller {
 
         if ($order_id) {
             //caso true - criou o item de pedido;
+
                 $data['status'] = 'success';
                 $data['url_interna'] = '';
                 $data['url_externa'] = 'https://www.bcash.com.br/checkout/pay/';

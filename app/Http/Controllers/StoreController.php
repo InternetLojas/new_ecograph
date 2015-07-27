@@ -30,28 +30,15 @@ class StoreController extends Controller {
      */
 
     private $layout;
-    private $fileModel;
-    private $fileTextoModel;
-    private $fileMidiaModel;
-    private $orcamentoModel;
-    private $orcamentoProdutoModel;
+
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Layout $layout,\Ecograph\File $fileModel,
-                                \Ecograph\FileTexto $fileTextoModel,
-                                \Ecograph\FileMidia $fileMidiaModel,
-                                \Ecograph\Orcamento $orcamentoModel,
-                                \Ecograph\OrcamentoProduto $orcamentoProdutoModel) {
+    public function __construct(Layout $layout) {
         $this->layout = $layout;
-        $this->fileModel = $fileModel;
-        $this->fileTextoModel = $fileTextoModel;
-        $this->fileMidiaModel = $fileMidiaModel;
-        $this->orcamentoModel = $orcamentoModel;
-        $this->orcamentoProdutoModel = $orcamentoProdutoModel;
     }
 
     /**
@@ -86,79 +73,7 @@ class StoreController extends Controller {
             ->with('layout', $layout);
     }
 
-    public function UploadResumo(Request $request) {
-        //, \Ecograph\Http\Requests\FileMidiaRequest $midia
-        $post_inputs = $request->all();
-        foreach($post_inputs as $key => $input){
-            if($key !=='files'){
-                $find_orc   = 'orc_';
-                $find_id   = '_id';
-                $pos = strpos($key, $find_orc);
-                $pos1 = strpos($key, $find_id);
-                if ($pos === false) {
-                    $inputs[$key] = $input;
-                } else if($pos1 === false){
-                    $inputs_orc[$key] = $input;
-                }
-            }
-        }
-        //dd($inputs_orc);
-        /*$rules = [
-            'logo1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
-            'logo2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
-            'logo3' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
-            'img1' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
-            'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf',
-            'img2' => 'mimes:jpeg,jpg,gif,png,bmp,pdf'
-        ];*/
-        $erros = [];
-        //local onde se armazena fisicamente os arquivos enviados dos clientes
-        $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
-        foreach($post_inputs['files'] as $key => $files){
-            if($files){
-                $logos[$key] = $files->getClientOriginalName();
-                $files->move($storagePath,  $logos[$key]);
-                $erros[] =$files->isValid();
-            }
-        }
-        //dd($inputs_orc);
-        $user_id = Auth::user()->id;
-        $customer_name = Customer::find($user_id)->customers_firstname;
-        //preparando os arquivos para upload
-        $file = $this->fileModel->fill(['customer_id'=>$user_id]);
-        $file->save();
-        $inputs['file_id'] = $file->id;
-        $filetexto = $this->fileTextoModel->fill($inputs);
-        $filetexto->save();
-        $logos['file_id'] =  $inputs['file_id'];
-        $filemidia = $this->fileMidiaModel->fill($logos);
-        $filemidia->save();
-        //armazenando os dados para o orçamento
-        $orc = ['customer_id'=>$user_id,'file_id' => $inputs['file_id'],'orcamento_status'=>1];
-        $orcamento = $this->orcamentoModel->fill($orc);
-        $orcamento->save();
-        $inputs_orc['orcamento_id'] = $orcamento->id;
-        $orcamento_produto = $this->orcamentoProdutoModel->fill($inputs_orc);
-        $orcamento_produto->save();
 
-        $parent = \Fichas::parentCategoria($post_inputs['orc_categoria_id']);
-        $layout = $this->layout->classes($parent);
-        $title = 'Resumo do Orcamento';
-
-        return view('loja.index')
-            ->with('title', STORE_NAME . $title)
-            ->with('page', 'resumo_orc')
-            ->with('ativo', 'Resumo')
-            ->with('rota', 'loja/resumo.html')
-            ->with('customer_name',$customer_name)
-            ->with('inputs', $inputs)
-            ->with('storagePath',$storagePath)
-            ->with('logos', $logos)
-            ->with('orcamento_id', $orcamento->id)
-            ->with('inputs_orc', $inputs_orc)
-            ->with('erros', $erros)
-            ->with('layout', $layout);
-    }
 
     /**
      * Prepara ambiente para processamento do pagamento.

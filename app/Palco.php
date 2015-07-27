@@ -6,10 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Palco extends Model {
 
-    protected $fillable = [];
+    protected $fillable = [
+        'banner_id'
+    ];
 
     public function banner() {
-        return $this->belongsTo('Banner');
+        return $this->belongsTo('Ecograph\Banner');
+    }
+
+    public function Slider() {
+        return $this->hasMany('Ecograph\Slider');
     }
 
     public function scopePalcos($query, $banner_id) {

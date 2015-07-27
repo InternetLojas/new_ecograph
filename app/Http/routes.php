@@ -153,10 +153,7 @@ Route::group(['prefix' => 'produtos'], function() {
         "as" => "produtos.detalhes",
         "uses" => "ProductController@Detalhes"
     ]);
-    Route::post('orcamento', [
-        'as' => 'produtos.orcamento',
-        'uses' => 'ProductController@Orcamento'
-    ]);
+
     Route::post('enviarpdf.html', [
         'as' => 'produtos.enviarpdf',
         'uses' => 'ProductController@EnviarPDF'
@@ -187,8 +184,6 @@ Route::get("lista_perfis/{categoria}", [
     "as" => "lista_perfis/{categoria}",
     "uses" => "PerfilController@Lista"
 ]);
-
-
 
 
 /* ============================================================== */
@@ -240,11 +235,6 @@ Route::group(['prefix' => 'loja'], function() {
 /*            Controller upload            */
 /* ============================================================== */
 
-//faz uploads dos arquivos para o serviidor
-Route::post('edicao/{produto}', [
-    "as" => "editor.index",
-    "uses" => "EditorController@Index"
-]);
 //faz envio dos innputs a serem utilizados no upload***/
 Route::post('editor/personalizar.html', [
     "as" => "editor.personalizar",
@@ -255,15 +245,15 @@ Route::post('editor/validar', [
     "as" => "editor.validar",
     "uses" => "EditorController@Validar"
 ]);
-//faz envio dos innputs a serem utilizados no upload***/
-Route::post('editor/carregar', [
-    "as" => "editor.carregar",
-    "uses" => "EditorController@Carregar"
-]);
+
 //faz uploads dos arquivos para o serviidor
 Route::post('editor/upload', [
     "as" => "files.upload",
     "uses" => "EditorController@Upload"
+]);
+Route::post('editor/listar', [
+    "as" => "editor.listar",
+    "uses" => "EditorController@Listar"
 ]);
 
 /* ============================================================== */
@@ -309,3 +299,104 @@ Route::post('basket/listar.html', [
     'as' => 'basket.listar',
     'uses' => 'BasketController@Listar'
 ]);
+
+/* ============================================================== */
+/*                          Controller Admin                      */
+/* ============================================================== */
+
+Route::group(['prefix' => 'diretoria',
+    'where'=>['id'=>'[0-9]+'],
+    'where'=>['category'=>'[0-9]+']], function() {
+
+    /**** home da diretoria *****/
+    Route::get('dashboard.html', [
+        'as' => 'diretoria.index',
+        'uses' => 'AdminController@index'
+    ]);
+
+    /****controllers para CATEGORIES *****/
+    Route::get('categories.html', [
+        'as' => 'diretoria.categories',
+        'uses' => 'AdminCategoriesController@index'
+    ]);
+
+    Route::post('categories.html', [
+        'as' => 'categories.store',
+        'uses' => 'AdminCategoriesController@store'
+    ]);
+
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('create.html', [
+            'as' => 'categories.create',
+            'uses' => 'AdminCategoriesController@create'
+        ]);
+
+        //quando um id é passado
+        //todos os atributos da categoria
+        Route::get('{id}/atributos.html', [
+            'as' => 'categories.atributos',
+            'uses' => 'AdminCategoriesController@atributos'
+        ]);
+        Route::get('formato/edit/{id}', [
+            'as' => 'categorie.formatos.edit',
+            'uses' => 'AdminCategoriesController@CatformatosEdit'
+        ]);
+        Route::get('papel/edit/{id}', [
+            'as' => 'categorie.papeis.edit',
+            'uses' => 'AdminCategoriesController@CatpapeisEdit'
+        ]);
+        Route::get('acabamento/edit/{id}', [
+            'as' => 'categorie.acabamentos.edit',
+            'uses' => 'AdminCategoriesController@CatacabamentosEdit'
+        ]);
+        //todos os atributos da categoria
+        Route::get('{id}/pacotes.html', [
+            'as' => 'categories.pacotes',
+            'uses' => 'AdminCategoriesController@pacotes'
+        ]);
+        Route::get('{id}/destroy.html', [
+            'as' => 'categories.destroy',
+            'uses' => 'AdminCategoriesController@destroy'
+        ]);
+        Route::get('{id}/edit.html', [
+            'as' => 'categories.edit',
+            'uses' => 'AdminCategoriesController@edit'
+        ]);
+
+        Route::put('{id}/update-formato.html', [
+            'as' => 'categories.update.formato',
+            'uses' => 'AdminAttributesController@updateFormatos'
+        ]);
+
+        Route::put('{id}/update-papel.html', [
+            'as' => 'categories.update.papel',
+            'uses' => 'AdminAttributesController@updatePapeis'
+        ]);
+
+        Route::put('{id}/update-acabamento.html', [
+            'as' => 'categories.update.acabamento',
+            'uses' => 'AdminAttributesController@updateAcabamentos'
+        ]);
+
+    });
+    //listar individulamente os atributos
+    Route::group(['prefix' => 'atributos'], function () {
+        Route::get('pacotes.html', [
+            'as' => 'atributos.pacotes',
+            'uses' => 'AdminAttributesController@pacotes'
+        ]);
+        Route::get('formatos.html', [
+            'as' => 'atributos.formatos',
+            'uses' => 'AdminAttributesController@formatos'
+        ]);
+        Route::get('papeis.html', [
+            'as' => 'atributos.papeis',
+            'uses' => 'AdminAttributesController@papeis'
+        ]);
+        Route::get('acabamentos.html', [
+            'as' => 'atributos.acabamentos',
+            'uses' => 'AdminAttributesController@acabamentos'
+        ]);
+    });
+});
+

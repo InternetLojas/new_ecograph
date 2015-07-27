@@ -2,6 +2,7 @@
 
 namespace Ecograph\Http\Controllers;
 
+use Ecograph\Category;
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,56 +17,55 @@ use Ecograph\Libs\Utilidades;
 use Ecograph\Libs\Fretes;
 
 class PricesController extends Controller {
-
+    private $category;
     /**
      * *levanta um array.
      * de preços e pesos
      * de acordo com a categoria solicitada
      * @return json
      */
-    public function Precos(Request $request) {
+    public function Precos(Category $category, Request $request) {
         $post_inputs = $request->all();
 
-        //identificar os pacotes a serem utilizados
-        /* $pacotes_id = Pacote::where('categories_id', $post_inputs['categoria'])
-          ->lists('id'); */
-
         //identifica as linhas que atendem a categoria e formato enviados
-        $category_formato = CategoryFormato::where('categories_id', $post_inputs['categoria'])
+        //$cat = $category->find($post_inputs['categoria']);
+        //$category_formato = $cat->formato->lists('id');
+       /* dd($category_formato);*/
+        $category_formato = CategoryFormato::where('category_id', $post_inputs['categoria'])
                 ->where('formato_id', $post_inputs['formato'])
                 ->lists('id');
 
         //levantando apenas as linhas que atendem a categoria o os id do category_formato
-        $pacote_formatos = Pacformato::where('categories_id', $post_inputs['categoria'])
+        $pacote_formatos = Pacformato::where('category_id', $post_inputs['categoria'])
                 ->wherein('category_formato_id', $category_formato)
                 ->lists('id');
 
         //identificando o id da categoroy_papel
-        $category_papel = CategoryPapel::where('categories_id', $post_inputs['categoria'])
+        $category_papel = CategoryPapel::where('category_id', $post_inputs['categoria'])
                 ->where('papel_id', $post_inputs['papel'])
                 ->lists('id');
 
         //levantando as linhas que atendem categoria papel e pac_formato
-        $pacote_papeis = Pacpapel::where('categories_id', $post_inputs['categoria'])
+        $pacote_papeis = Pacpapel::where('category_id', $post_inputs['categoria'])
                 ->where('category_papel_id', $category_papel[0])
-                ->wherein('pacote_formato_id', $pacote_formatos)
+                ->wherein('pacformato_id', $pacote_formatos)
                 ->lists('id');
         //identificando o peso para o pacote 
         $category_peso = Pacpapel::wherein('id', $pacote_papeis)->get();
         $peso = $category_peso->toarray();
-
+$pacote_peso=[];
         foreach ($peso as $k => $valores) {
             $pacote_peso[] = utf8_encode($valores['weight']);
         }
 
-        $category_acabamento = CategoryAcabamento::where('categories_id', $post_inputs['categoria'])
+        $category_acabamento = CategoryAcabamento::where('category_id', $post_inputs['categoria'])
                 ->where('acabamento_id', $post_inputs['acabamento'])
                 ->lists('id');
         //dd($category_acabamento);
         //levantando as linhas que atendem categoria acabamento e pac_papel
-        $pacote_acabamentos = Pacacabamento::where('categories_id', $post_inputs['categoria'])
+        $pacote_acabamentos = Pacacabamento::where('category_id', $post_inputs['categoria'])
                 ->where('category_acabamento_id', $category_acabamento[0])
-                ->wherein('pacote_papel_id', $pacote_papeis)
+                ->wherein('pacpapel_id', $pacote_papeis)
                 ->get();
 
         $acabamento = $pacote_acabamentos->toarray();

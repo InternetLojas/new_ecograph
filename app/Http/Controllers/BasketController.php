@@ -7,12 +7,8 @@ use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
-use Ecograph\Libs\Utilidades;
-use Ecograph\Gateway;
 use Ecograph\Customer;
-use Ecograph\Category;
 use Ecograph\CategoryProduct;
-use Ecograph\Descontoacrescimo;
 use Ecograph\Basket;
 use Ecograph\Formato;
 use Ecograph\Papel;
@@ -39,7 +35,7 @@ class BasketController extends Controller {
       |
      */
 
-    private $layout;
+ 
     private $basket;
     private $basket_item;
 
@@ -48,15 +44,14 @@ class BasketController extends Controller {
      *
      * @return void
      */
-    public function __construct(Layout $layout, Basket $basket, BasketIten $basket_item) {
-        $this->layout = $layout;
+    public function __construct(Basket $basket, BasketIten $basket_item) {
         $this->basket = $basket;
         $this->basket_item = $basket_item;
     }
 
     /**
      * Verifica se existe produtos do carrinho antigo.
-     * Situação ocorre quando o cliente se loja
+     * Situação ocorre quando o cliente faz login
      * @return View
      */
     public function Verifica() {
@@ -68,7 +63,7 @@ class BasketController extends Controller {
             //tem itens Antigo
             // se sim carrega itens antigo
             if (count($customer_basket) > 0) {
-                return redirect()->route('basket.sessao.old');
+                return redirect()->route('basket.sessao');
             }else{
                 //se não redireciona para index
                 return redirect()->route('index');
@@ -77,15 +72,12 @@ class BasketController extends Controller {
             //tem itens Antigo
             //se sim carrega itens antigo mais a sessão
             if (count($customer_basket) > 0) {
-                return redirect()->route('basket.sessao.new',['customer_basket'=>$customer_basket]);
+                return redirect()->route('basket.sessao',['customer_basket'=>$customer_basket]);
             }else{
                 //se não redireciona para index
                 return redirect()->route('index');
             }
         }
-        //if (!Session::has('cart')){
-        //    Session::set('cart',Cart::content());
-        //}
     }
 
     /**
@@ -97,12 +89,8 @@ class BasketController extends Controller {
         $userId = \Auth::user()->id;
         $customer = Customer::find($userId);
         $customer_basket = $customer->basket->toArray();
-        //dd($customer_basket);
         $this->getCart($customer_basket);
-
         $contents = Cart::content();
-        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-
         //levanta o endereço do cliente
         $default_address = AddressBook::find($customer->customers_default_address_id);
         return view('clientes.index')
@@ -113,60 +101,17 @@ class BasketController extends Controller {
             ->with('contents', $contents->toarray())
             ->with('cart_total', Cart::total())
             ->with('default_address', $default_address)
-            ->with('rota', 'carrinho.html')
-            ->with('layout', $layout);
+            ->with('rota', 'carrinho.html');
     }
 
     /**
      * @param Request $request
-     * @return $this
+     * @return view
      * Se se loga e tem itens antigo carrega a sessão de carrinho
      */
     public function SessaoNew($customer_basket){
         $this->getCart($customer_basket);
-        /*foreach ($customer_basket as $key => $valor) {
-            //procura o produto na sessão do carrinho
-            $rowId = Cart::search(['id' => $valor['products_id']]); // Returns an array of rowid(s) of found item(s) or false on failure
-            //se achar o produto aumenta a quantidade
-            if($rowId){
-                $row = Cart::get($rowId);
-                $row_qtd = $valor['quantity']+$row['quantity'];
-                $row_total = ($valor['price']/$valor['quantity'])*$row_qtd;
-                Cart::update($rowId, array('quantity' => $row_qtd, 'price'=>$row_total));
-            } else {
-                $item = array('id' => $valor['products_id'],
-                    'name' => Fichas::nomeProduto($valor['products_id']),
-                    'price' => str_replace('R$ ', '', $valor['final_price']),
-                    'quantity' => $valor['quantity'],
-                    'image' => Fichas::ImgProduto($valor['products_id'])
-                );
-                $basket_items = $this->basket->find($valor['id']);
-                $option_itens = $basket_items->BasketIten->toArray();
-                $cat = CategoryProduct::Categoria($valor['products_id']);
-                $categoria = $cat->toarray();
-                $option = array('categoria_id' => $categoria[0]['category_id'],
-                    'categoria' => $categoria[0]['products_name'],
-                    'formato_id' => $option_itens[0]['formato_id'],
-                    'formato' => Formato::find($option_itens[0]['formato_id'])->valor,
-                    'papel_id' => $option_itens[0]['papel_id'],
-                    'papel' => Papel::find($option_itens[0]['papel_id'])->valor,
-                    'acabamento_id' => $option_itens[0]['acabamento_id'],
-                    'acabamento' => Acabamento::find($option_itens[0]['acabamento_id'])->valor,
-                    'cor_id' => $option_itens[0]['acabamento_id'],
-                    'cor' => Core::find($option_itens[0]['cor_id'])->valor,
-                    'enoblecimento_id' => $option_itens[0]['acabamento_id'],
-                    'enoblecimento' => Enoblecimento::find($option_itens[0]['enoblecimento_id'])->valor,
-                    'unidade' => Pacote::find($option_itens[0]['pacote_id'])->quantity,
-                    'perfil' => $categoria[0]['products_name'],
-                    'perfil_id' => ProdutoPerfil::find($valor['products_id'])->perfis_id
-                );
-                Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
-            }
-        }*/
-
         $contents = Cart::content();
-        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-
         //levanta o endereço do cliente
         $default_address = AddressBook::find($customer->customers_default_address_id);
         return view('clientes.index')
@@ -177,22 +122,30 @@ class BasketController extends Controller {
             ->with('contents', $contents->toarray())
             ->with('cart_total', Cart::total())
             ->with('default_address', $default_address)
-            ->with('rota', 'carrinho.html')
-            ->with('layout', $layout);
+            ->with('rota', 'carrinho.html');
     }
+    /**
+     * @param Request $request
+     * @return jason
+     * incrementa linhas de produtos no carrinho virtual
+     */
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
-        //dd($post_inputs);
         $valor = str_replace('R$ ', '',$post_inputs['orc_pacote_valor']);
         $price = str_replace(',', '.',$valor);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
+        $qty = str_replace(' un','',$post_inputs['orc_pacote_qtd']);
+        $pacote_id = Pacote::where('categories_id',$post_inputs['orc_subcategoria_id'])
+            ->where('quantity',$qty)->lists('id');
+
         $item = (array('id' => $post_inputs['produto_id'],
             'name' => Fichas::nomeProduto($post_inputs['produto_id']),
             'price' => $price,
             'quantity' => 1,
             'image' => $image
         ));
-        $option = array('categoria_id' => $post_inputs['orc_subcategoria_id'],
+        $option = array(
+            'categoria_id' => $post_inputs['orc_subcategoria_id'],
             'categoria' => $post_inputs['orc_subcategoria_nome'],
             'formato_id' => $post_inputs['orc_formato_id'],
             'formato' => $post_inputs['orc_formato_nome'],
@@ -228,7 +181,9 @@ class BasketController extends Controller {
                     $this->basket_item->formato_id = $option['formato_id'];
                     $this->basket_item->papel_id = $option['papel_id'];
                     $this->basket_item->acabamento_id = $option['acabamento_id'];
-                    $this->basket_item->pacote_id = '23';
+                    $this->basket_item->cor_id = $option['cor_id'];
+                    $this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
+                    $this->basket_item->pacote_id = $pacote_id[0];
                     $this->basket_item->save();
                 }
             }
@@ -244,30 +199,24 @@ class BasketController extends Controller {
             $this->basket_item->formato_id = $option['formato_id'];
             $this->basket_item->papel_id = $option['papel_id'];
             $this->basket_item->acabamento_id = $option['acabamento_id'];
-            $this->basket_item->pacote_id = '23';
+            $this->basket_item->pacote_id = $pacote_id[0];
             $this->basket_item->save();
         }
-        $contents = Cart::content();
-        $layout = $this->layout->classes(Fichas::parentCategoria('12'));
-        //levanta o endereço do cliente
-        $customers_default_address_id = Customer::find(Auth::user()->id);
-        $default_address = AddressBook::find($customers_default_address_id->customers_default_address_id);
 
-        return view('clientes.index')
-            ->with('title', STORE_NAME . ' Itens no carrinho')
-            ->with('page', 'carrinho')
-            ->with('ativo', 'carrinho')
-            ->with('post_inputs', $post_inputs)
-            ->with('contents', $contents->toarray())
-            ->with('cart_total', Cart::total())
-            ->with('default_address', $default_address)
-            ->with('rota', 'basket.listar')
-            ->with('layout', $layout);
+        $data = array('status' => 'success',
+            'info' => 'Itens adicionado na carrinho'
+        );
+        return json_encode($data);
     }
+    /**
+     * @param
+     * @return view
+     * incrementa retorna a lista de produtos do carrinho
+     */
     public function Basket() {
         if(Cart::count()>0){
             $contents = Cart::content();
-            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
+            //dd($contents);
             $userId = \Auth::user()->id;
             $customer = Customer::find($userId);
             //levanta o endereço do cliente
@@ -281,24 +230,21 @@ class BasketController extends Controller {
                 ->with('contents', $contents->toarray())
                 ->with('cart_total', Cart::total())
                 ->with('default_address', $default_address)
-                ->with('rota', 'carrinho.html')
-                ->with('layout', $layout);
+                ->with('rota', 'carrinho.html');
         }
         else {
-            $layout = $this->layout->classes(0);
             return view('clientes.index')
                 ->with('title', STORE_NAME . ' Carrinho Vazio')
                 ->with('page', 'carrinhovazio')
                 ->with('ativo', 'Carrinho Vazio')
-                ->with('rota', 'carrinho.lista')
-                ->with('layout', $layout);
+                ->with('rota', 'carrinho.lista');
         }
     }
+
     public function Listar(Request $request) {
         if(Cart::count()>0){
             $post_inputs = $request->all();
             $contents = Cart::content();
-            $layout = $this->layout->classes(Fichas::parentCategoria('12'));
             $userId = \Auth::user()->id;
             $customer = Customer::find($userId);
             //levanta o endereço do cliente
@@ -312,19 +258,22 @@ class BasketController extends Controller {
                 ->with('contents', $contents->toarray())
                 ->with('cart_total', Cart::total())
                 ->with('default_address', $default_address)
-                ->with('rota', 'basket.listar')
-                ->with('layout', $layout);
+                ->with('rota', 'basket.listar');
         }
         else {
-            $layout = $this->layout->classes(0);
+          
             return view('clientes.index')
                 ->with('title', STORE_NAME . ' Carrinho Vazio')
                 ->with('page', 'carrinhovazio')
                 ->with('ativo', 'Carrinho Vazio')
-                ->with('rota', 'carrinho.lista')
-                ->with('layout', $layout);
+                ->with('rota', 'carrinho.lista');
         }
     }
+    /**
+     * @param
+     * @return json
+     * incrementa retira o item do carrinho virtual e da tabela
+     */
     public function Remover() {
         $parans = \Request::all();
         //procura a linha do carrinho

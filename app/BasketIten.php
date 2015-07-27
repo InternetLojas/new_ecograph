@@ -7,7 +7,7 @@ class BasketIten extends Model {
     protected $table = 'basket_itens';
 
     protected $fillable = [
-        'bakket_id',
+        'basket_id',
         'formato_id',
         'papel_id',
         'acabamento_id',

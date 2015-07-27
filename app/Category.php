@@ -18,9 +18,31 @@ class Category extends Model {
         return $this->hasMany('Ecograph\CategoryProduct');
     }
 
-    // public function product() {
-    //     return $this->hasMany('Product');
-    // }
+    public function CategoryFormato() {
+        return $this->hasMany('Ecograph\CategoryFormato');
+    }
+
+    public function CategoryPapel() {
+        return $this->hasMany('Ecograph\CategoryPapel');
+    }
+    public function CategoryAcabamento() {
+        return $this->hasMany('Ecograph\CategoryAcabamento');
+    }
+    public function Pacotes() {
+        return $this->hasMany('Ecograph\Pacotes');
+    }
+
+    public function Formato(){
+        return $this->belongsToMany('Ecograph\Formato');
+    }
+    
+    public function Papel(){
+        return $this->belongsToMany('Ecograph\Papel');
+    }
+
+    public function Acabamento(){
+        return $this->belongsToMany('Ecograph\Acabamento');
+    }
 
     public function scopePai($query) {
         return $query->where('parent_id', '=', '0')->get();

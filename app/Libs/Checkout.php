@@ -96,13 +96,9 @@ Class Checkout {
         );
 
         $array_order = array_merge($array_customer, $array_delivery, $array_billing, $array_order_status);
-        $order = new Order();
-        foreach ($array_order as $key => $valor) {
-            $order->$key = $valor;
-        }
-        $order->save();
+        $orderModel = new Order();
+        $order = $orderModel->create($array_order);
         return $order->id;
-
     }
 
     /**
@@ -120,13 +116,13 @@ Class Checkout {
             //$stock->save();
             //controla os itens do pedido
             $orderitem = new OrderIten();
-            $preco = $itens->price * $itens->quantity;
+            //$preco = $itens->price * $itens->quantity;
             $orderitem->order_id = $new_order_id;
             $orderitem->product_id = $itens->id;
             $orderitem->quantity = $itens->qty;
             $orderitem->product_name = $itens->name;
             $orderitem->price = $itens->price;
-            $orderitem->final_price = $preco;
+            $orderitem->final_price = $itens->price*$itens->quantity;
             $orderitem->tax = '0.00';
             $orderitem->save();
         }
