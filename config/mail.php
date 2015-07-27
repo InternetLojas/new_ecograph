@@ -55,7 +55,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => STORE_EMAIL_TESTE, 'name' => STORE_NAME],
+	'from' => ['address' => 'newsite@ecograph.com.br', 'name' => STORE_NAME],
 
 	/*
 	|--------------------------------------------------------------------------

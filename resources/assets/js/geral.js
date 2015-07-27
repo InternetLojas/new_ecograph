@@ -26,20 +26,40 @@ function EnderecoCEP() {
     $('#info_' + whoo).html('');
     if ($.trim($("#postcode").val()) !== "") {
         CEP = $.trim($("#postcode").val());
+
         $('#mensagem_' + whoo).removeClass('alert alert-warning');
         $('#info_' + whoo).removeClass('alert alert-info');
         // $.getScript("http://cep.republicavirtual.com.br/web_cep.php?formato=javascript&cep=" + CEP.replace("-", ""), function()
-        $.get("https://apps.widenet.com.br/busca-cep/api/cep.json", {code: CEP.replace("-", "")}, function(result) {
-            if (result.status !== 1) {
+        $.get('http://viacep.com.br/ws/'+CEP+'/json/',function(result){
+            console.log(result.logradouro);
+            /*
+            *
+            * "cep": "90810-150",
+             "logradouro": "Avenida Jacuí",
+             "complemento": "",
+             "bairro": "Cristal",
+             "localidade": "Porto Alegre",
+             "uf": "RS",
+             "ibge": "4314902"
+            * */
+            if (result.erro) {
                 alert("Endereço não encontrado para o cep: " + CEP);
                 $("#postcode").focus();
+            } else {
+                $('#street').val(result.logradouro);
+                $('#suburb').val(result.bairro);
+                $('#city').val(result.localidade);
+                $('#state').val(result.uf);
+                var url = $('#' + whoo).attr('action');
+                ValidaTipoConta(whoo, url);
             }
-            var longstring = result.address;
-            var street = longstring.split(" - ");
-            $("#street").val(unescape(street[0]));
-            $("#suburb").val(unescape(result.district));
-            $("#city").val(unescape(result.city));
-            $("#state").val(unescape(result.state));
+
+            //var longstring = result.address;
+            //var street = longstring.split(" - ");
+            //$("#street").val(unescape(street[0]));
+            //$("#suburb").val(unescape(result.district));
+            //$("#city").val(unescape(result.city));
+            //$("#state").val(unescape(result.state));
             var url = $('#' + whoo).attr('action');
             ValidaTipoConta(whoo, url);
         });
@@ -442,10 +462,31 @@ function CalculaPreco(categoria, localizador) {
             $('#pacote_' + localizador).attr('disabled', false);
             localizador = localizador + 1;
         });
-        /*$('#info_tabela').addClass('alert alert-info');
-         $('#info_tabela').html('Escolha a quantidade desejada na lista abaixo.');
-         $('#info_tabela').delay(2000).fadeOut(400);*/
     });
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*  PERSONALIZAR
+ /*-----------------------------------------------------------------------------------*/
+function PersonalizarDesenho(guest) {
+    $('#cupom_frete').css('display', 'none');
+    $('#resultado').css('display', 'none');
+    $('#btn-opcoes').css('display', 'none');
+    $('#btn-encerrar').attr('title','Encontre o desenho que mais lhe convem');
+    $('#btn-imprimir').css('display', 'none');
+    $('#btn-personalizar').css('display', 'none');
+    $('#btn-enviar').css('display', 'none');
+    $('#lista_perfis').css('display', 'block');
+    $('#cupom_frete').attr('data-acao', 'personalizar');
+    if (guest === '1') {//ESTÁ LOGADO         
+        $('#logar').slideUp('fast');
+        var action = 'produtos/portfolio.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        EscolhaPerfil();
+    } else {
+        $('#logar').slideDown('fast');
+    }
 }
 /*-----------------------------------------------------------------------------------*/
 /*  SetaEscolhas
@@ -485,7 +526,10 @@ function SetaEscolhas(localizador, imagem) {
     });
     $('#lista_especificacao').html(li);
     SetaImagem(imagem);
-    $('#especificacoes_selecionada').slideDown('slow');
+
+    var token = $('#especificacoes_envio').attr('data-token');
+    $('.token').val(token);
+    $('#cupom_frete').slideDown('slow');
 }
 /*-----------------------------------------------------------------------------------*/
 /*  SetaImagem
@@ -498,10 +542,7 @@ function SetaImagem(imagem) {
 /*  EscolhaPerfil
  /*-----------------------------------------------------------------------------------*/
 function EscolhaPerfil() {
-    //$('#cupom_frete').css('display', 'none');
-    //$('#resultado').css('display', 'none');
-    //$('logar').css('display', 'none');
-    $('#info_perfis').removeClass('alert');
+     $('#info_perfis').removeClass('alert');
     var categoria = $('#escolhido').val();
     var url_modal = 'lista_perfis' + '/' + categoria;
     $.getJSON(
@@ -584,13 +625,18 @@ function VerTemplate(id, nome) {
     }
     $('#orc_id_perfil').val(id);
     $('#orc_nome_perfil').val(nome);
-    var token = $('#especificacoes_selecionada').attr('data-token');
-    $('.token').val(token);
-    $('#cupom_frete').slideDown('slow');
+    //var token = $('#especificacoes_selecionada').attr('data-token');
+    //$('.token').val(token);
+    //$('#cupom_frete').slideDown('slow');
     $('#ModalPerfil').modal('hide');
     var action = 'produtos/portfolio.html';
     $('#form_orcamento').attr('action', action);
     $('#form_orcamento').attr('method', 'post');
+    $('#mensagem_form_orcamento').addClass('alert alert-success');
+    $('#mensagem_form_orcamento').html('Aguarde enquanto redirecionamos...');
+    $('#mensagem_form_orcamento').delay(2000).fadeOut(800, function() {
+        $('#form_orcamento').submit();
+    });
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -602,171 +648,28 @@ function CalcularFrete() {
     });
 }
 
-/*-----------------------------------------------------------------------------------*/
-/*  PERSONALIZAR
- /*-----------------------------------------------------------------------------------*/
-function PersonalizarDesenho(guest) {
-    $('#cupom_frete').css('display', 'none');
-    $('#resultado').css('display', 'none');
-    $('#btn-opcoes').css('display', 'none');
-    $('#btn-encerrar').attr('title','Encontre o desenho que mais lhe convem');
-    $('#btn-imprimir').css('display', 'none');
-    $('#btn-personalizar').css('display', 'none');
-    $('#btn-enviar').css('display', 'none');
-    $('#lista_perfis').css('display', 'block');
-    $('#cupom_frete').attr('data-acao', 'personalizar');
-    if (guest === '1') {//ESTÁ LOGADO         
-        $('#logar').slideUp('fast');
-        var action = 'produtos/portfolio.html';
-        $('#form_orcamento').attr('action', action);
-        $('#form_orcamento').attr('method', 'post');
-        EscolhaPerfil();
-    } else {
-        $('#logar').slideDown('fast');
-    }
-}
-/*-----------------------------------------------------------------------------------*/
-/*  IMPRIMIR ORÇAMENTO
- /*-----------------------------------------------------------------------------------*/
-function ImprimirOrcamento(guest) {
-    $('#cupom_frete').css('display', 'none');
-    $('#resultado').css('display', 'none');
-    $('#btn-opcoes').css('display', 'none');
-    $('#btn-encerrar').attr('title','Gere o orçamento para impressão');
-    $('#btn-imprimir').css('display', 'none');
-    $('#btn-personalizar').css('display', 'none');
-    $('#btn-enviar').css('display', 'none');
-    $('#cupom_frete').attr('data-acao', 'imprimir');
-    if (guest === '1') {//ESTÁ LOGADO
-        $('#logar').slideUp('fast');
-        var action = 'orcamento.html';
-        $('#form_orcamento').attr('action', action);
-        $('#form_orcamento').attr('method', 'post');
-        token = $('#especificacoes_selecionada').attr('data-token');
-        $('.token').val(token);
-        $('#cupom_frete').slideDown('slow');
-    } else {
-        $('#logar').slideDown('fast');
-    }
-}
-
 
 /*-----------------------------------------------------------------------------------*/
-/*  PDF
+/*  Comprar 
  /*-----------------------------------------------------------------------------------*/
-function PDF(guest) {
-    $('#cupom_frete').css('display', 'none');
-    $('#resultado').css('display', 'none');
-    $('#btn-opcoes').css('display', 'none');
-    $('#btn-encerrar').attr('title','Envie sua arte');
-    /*$('#btn-imprimir').css('display', 'none');
-     $('#btn-personalizar').css('display', 'none');
-     $('#btn-enviar').css('display', 'none');*/
-    $('#cupom_frete').attr('data-acao', 'enviarpdf');
-    if (guest === '1') {
-        $('#logar').slideUp('fast');
-        var action = 'produtos/enviarpdf.html';
-        $('#form_orcamento').attr('action', action);
-        $('#form_orcamento').attr('method', 'post');
-        token = $('#especificacoes_selecionada').attr('data-token');
-        $('.token').val(token);
-        $('#cupom_frete').slideDown('slow');
-    } else {
-        $('#logar').slideDown('fast');
-    }
-
-}
-/*
- function EnviarPDF(guest) {
- var action = 'produtos/enviarpdf.html';
- if (guest === '1') {
- $('#logar').slideUp('fast');
- token = $('#especificacoes_selecionada').attr('data-token');
- $('.token').val(token);
- $('#form_orcamento').attr('action', action);
- $('#form_orcamento').attr('method', 'post');
- $('#form_orcamento').submit();
- } else {
- $('#logar').slideDown('fast');
- }
-
- }*
-
- function Personalizar(produto_id) {
- $('#produto_id').val(produto_id);
- //$produto = $('#' + add);
- var URL = 'editor/personalizar.html';
- $('#basket').attr('action', URL);
- $('#basket').submit();
- }*
- /*-----------------------------------------------------------------------------------*/
-/*  AdicionarEdicao
- /*-----------------------------------------------------------------------------------*
- function AdicionarEdicao(produto_id, add) {
- $('#produto_id').val(produto_id);
- $produto = $('#' + add);
- var URL = $produto.data('url');
- var formulario = $('#basket').serializeArray();
- $.post(URL, formulario, function(data) {
- console.log(data);
- });
- }*/
-
-/*-----------------------------------------------------------------------------------*/
-/*  Editar Template
- /*-----------------------------------------------------------------------------------*
- function EditarTemplates(guest) {
- var url = 'editor/personalizar.html';
- //alert(url);
- //var $formulario = $('#form_orcamento');
- if (guest === '1') {
- $('#form_orcamento').attr('action', url);
- $('#form_orcamento').submit();
- $('#logar').slideUp('fast');
- } else {
- $('#logar').slideDown('fast');
- }
-
- }*/
-
-/*-----------------------------------------------------------------------------------*/
-/*  AdicionaCarrinho 
- /*-----------------------------------------------------------------------------------*/
-function AdicionaItemCarrinho(produto_id) {
+function Comprar(produto_id) {
     $('#produto_id').val(produto_id);
     var URL = 'basket/adicionar';
     var formulario = $('#basket').serializeArray();
+
     $.post(URL, formulario, function(data) {
-        $('#info_basket').addClass('alert alert-success');
-        $('#info_basket').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o seu carrinho, Por favor aguarde...</p>');
-        $('#para').html('carrinho');
-        $('#modalAdicionando').modal('show');
-        $('#info_basket').delay(3000).fadeOut(800, function() {
-            return BasketSubmeter();
-        });
+        var obj = JSON.parse(data);
+        if (obj.status === 'success') {
+            $('#info_listagem').addClass('alert alert-success');
+            $('#info_listagem').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o seu carrinho, Por favor aguarde...</p>');
+            $('#para').html('carrinho');
+            $('#info_listagem').delay(3000).fadeOut(800, function() {
+                $('#modalAdicionando').modal('show');
+                //quando retornar o site vai para o carrinho de compras
+                return BasketSubmeter();
+            });
+        }
     });
-}
-function AdicionaItem() {
-    var URL = 'adicionar';
-    var formulario = $('#basket').serializeArray();
-    $.post(URL, formulario, function(data) {
-        $('#info_basket').addClass('alert alert-success');
-        $('#info_basket').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para a área de edição, Por favor aguarde...</p>');
-        $('#para').html('área de edição');
-        $('#modalAdicionando').modal('show');
-        $('#info_basket').delay(3000).fadeOut(800, function() {
-            return EditarSubmeter();
-        });
-    });
-}
-/*-----------------------------------------------------------------------------------*/
-/*  EditarSubmeter
- /*-----------------------------------------------------------------------------------*/
-function EditarSubmeter() {
-    action_submeter = 'editor/personalizar.html';
-    $('#basket').attr('action', action_submeter);
-    $('#basket').attr('method', 'post');
-    $('#basket').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  BasketSubmeter
@@ -776,6 +679,62 @@ function BasketSubmeter() {
     $('#basket').attr('action', action_submeter);
     $('#basket').attr('method', 'post');
     $('#basket').submit();
+}
+function Editar(produto_id) {
+    $('#produto_id').val(produto_id);
+    var URL = 'basket/adicionar';
+    var formulario = $('#basket').serializeArray();
+    $.post(URL, formulario, function(data) {
+        var obj = JSON.parse(data);
+        if (obj.status === 'success') {
+            $('#info_listagem').addClass('alert alert-success');
+            $('#info_listagem').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para a área de edição, Por favor aguarde...</p>');
+            $('#para').html('área de edição');
+            $('#modalAdicionando').modal('show');
+            $('#info_listagem').delay(3000).fadeOut(800, function() {
+                $('#modalAdicionando').modal('show');
+                //quando retornar o site vai para o carrinho de compras
+                return EditarSubmeter();
+            });
+        }
+    });
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*  EditarSubmeter
+ /*-----------------------------------------------------------------------------------*/
+function EditarSubmeter() {
+    action_submeter = 'editor/personalizar.html';
+    $('#basket').attr('action', action_submeter);
+    $('#basket').attr('method', 'post');
+    $('#basket').submit();
+}
+
+/*-----------------------------------------------------------------------------------*/
+/*  UploadValidar
+ /*-----------------------------------------------------------------------------------*/
+function UploadValidar(url) {
+    var formulario = $('#upload').serializeArray();
+    $.post(url, formulario, function(data) {
+        var obj = JSON.parse(data);
+        if (obj.status === 'success') {
+            $('#info_upload').addClass('alert alert-success');
+            $('#info_upload').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o seu carrinho, Por favor aguarde...</p>');
+            //$('#para').html('carrinho');
+            //$('#modalAdicionando').modal('show');
+            $('#info_upload').delay(3000).fadeOut(800, function() {
+                return UploadSubmeter(obj.loadurl);
+            });
+        }
+    });
+}
+/*-----------------------------------------------------------------------------------*/
+/*  UploadSubmeter
+ /*-----------------------------------------------------------------------------------*/
+function UploadSubmeter(url) {
+    $('#upload').attr('action', url);
+    $('#upload').attr('method', 'post');
+    $('#upload').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  FreteOrcamento
@@ -794,7 +753,7 @@ function FreteOrcamento() {
             if (obj.erro) {
                 $("#wait").fadeIn('fast');
                 $('#info_correio').addClass('alert alert-danger');
-                $('#info_correio').html('<p class="text-center text-medio">Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
+                $('#info_correio').html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
                 $('#info_correio').slideDown('slow');
                 $('#info_correio').delay(4000).fadeOut('slow', function() {
                     $('#orc_cep').focus();
@@ -815,7 +774,7 @@ function FreteOrcamento() {
         });
     } else {
         $('#info_correio').addClass('alert alert-danger');
-        $('#info_correio').html('<p class="text-center text-medio">Por favor informe o CEP de destino</p>');
+        $('#info_correio').html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor informe o CEP de destino</p>');
         $('#info_correio').fadeOut('slow');
         $('#info_correio').fadeOut('slow', function() {
             $('#orc_cep').focus();
@@ -824,21 +783,7 @@ function FreteOrcamento() {
     }
     $('#wait').delay(4000).fadeIn('slow');
 }
-/*-----------------------------------------------------------------------------------*/
-/*  SetaFrete
- /*-----------------------------------------------------------------------------------*
- function SetaFrete(tipo, id) {
- var vl_frete = $('#' + id).val();
- $('#formas_pagamento').css('display', 'block');
- $('#orc_vl_frete').val(tipo);
- $('#orc_tipo_frete').val(vl_frete);
- $('#vl_frete_escolhido').val(vl_frete);
- $('#tipo_frete').val(tipo);
- $('#tipo_escolha_frete').html(tipo);
- $('#escolha_frete').html('R$ ' + vl_frete);
- $('#vl_frete_escolhido').val(vl_frete);
- $('#tipo_frete_escolhido').val(tipo);
- }*/
+
 /*-----------------------------------------------------------------------------------*/
 /*  SetaFrete
  /*-----------------------------------------------------------------------------------*/
@@ -859,21 +804,19 @@ function SetaFrete(tipo, id) {
     $('#orc_tipo_frete').val(tipo);
     $('#vl_frete_escolhido').val('R$ ' + $('#' + id).val());
     $('#escolha_frete').html('R$ ' + $('#' + id).val());
-    $('#btn-opcoes').slideDown('slow');
+    //$('#btn-opcoes').slideDown('slow');
     $('#label_frete').fadeIn(500);
     //SetaBtnAcao(acao);
     soma = (+valor - +(valor*perc_desconto)) + vl_frete;
     $('#vl_desc_final').html('R$ ' +((valor*perc_desconto).toFixed(2)).replace('.', ','));
     $('#orc_desconto_valor').val(valor*perc_desconto);
     $('#vl_total_final').html('R$ ' + (soma.toFixed(2)).replace('.', ','));
+    $('#especificacoes_selecionada').slideDown('slow');
 }
 /*-----------------------------------------------------------------------------------*/
 /*  Seta o Botão específico para dar continuidade ao processo
  /*-----------------------------------------------------------------------------------*/
 function SetaBtnAcao(acao) {
-    $('#btn-imprimir').css('display', 'none');
-    $('#btn-personalizar').css('display', 'none');
-    $('#btn-enviar').css('display', 'none');
     $('#label_frete').fadeIn(500);
     if (acao === 'imprimir') {
         $('#btn-imprimir').css('display', 'block');
@@ -883,9 +826,55 @@ function SetaBtnAcao(acao) {
         $('#btn-enviar').css('display', 'block');
     }
 }
+
+/*-----------------------------------------------------------------------------------*/
+/*  IMPRIMIR ORÇAMENTO
+ /*-----------------------------------------------------------------------------------*/
+function ImprimirOrcamento(guest) {
+    if (guest === '1') {//ESTÁ LOGADO
+        $('#logar').slideUp('fast');
+        var action = 'orcamento.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        token = $('#especificacoes_selecionada').attr('data-token');
+        $('.token').val(token);
+        $('#mensagem_form_orcamento').addClass('alert alert-success');
+        $('#mensagem_form_orcamento').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Aguarde enquanto estamos redirecionando...</p>');
+        $('#mensagem_form_orcamento').fadeIn(400);
+        $('#mensagem_form_orcamento').delay(4000).fadeOut(400, function() {
+            $('#form_orcamento').submit();
+        });
+        $('#cupom_frete').slideDown('slow');
+    } else {
+        $('#logar').slideDown('fast');
+    }
+}
+/*-----------------------------------------------------------------------------------*/
+/*  PDF
+ /*-----------------------------------------------------------------------------------*/
+function PDF(guest) {
+
+    if (guest === '1') {
+        var action = 'produtos/enviarpdf.html';
+        $('#form_orcamento').attr('action', action);
+        $('#form_orcamento').attr('method', 'post');
+        token = $('#especificacoes_selecionada').attr('data-token');
+        $('.token').val(token);
+        $('#mensagem_form_orcamento').addClass('alert alert-success');
+        $('#mensagem_form_orcamento').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Aguarde enquanto estamos redirecionando...</p>');
+        $('#mensagem_form_orcamento').fadeIn(400);
+        $('#mensagem_form_orcamento').delay(4000).fadeOut(400, function() {
+            $('#form_orcamento').submit();
+        });
+        $('#cupom_frete').slideDown('slow');
+    } else {
+        $('#logar').slideDown('fast');
+    }
+
+}
 function Encerrar() {
     $('#info_encerrar').addClass('alert alert-success');
-    $('#info_encerrar').html('<p class="text-center text-medio"> Aguarde enquanto estamos redirecionando...</p>');
+    $('#info_encerrar').html('<p class="fg-black"><i class="icon-smiley on-left"></i> Aguarde enquanto estamos redirecionando...</p>');
     $('#info_encerrar').fadeIn(400);
     $('#info_encerrar').delay(4000).fadeOut(400, function() {
         $('#form_orcamento').submit();
@@ -955,36 +944,29 @@ function ValidaCarrinho(whoo, URL){
         $('#mensagem_' + whoo).html('');
         $('#info_' + whoo).html('');
         //overlay('on', whoo);
-        $('#mensagem_' + whoo).addClass('errormsg alert');
+        $('#mensagem_' + whoo).addClass('alert alert-warning');
         $('#mensagem_' + whoo).html('ERRO!');
         $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
             //$('#enviando_' + whoo).delay(1000).fadeOut(500);
-            $('#info_' + whoo).addClass('infomsg alert');
-            $('#info_' + whoo).html('Por favor! Para prosseguir é necessário o valor do frete, o tipo de frete e a forma de pagamento.');
+            $('#info_' + whoo).addClass('alert alert-info');
+            $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! Para prosseguir é necessário o valor do frete, o tipo de frete e a forma de pagamento.</p>');
             $('#' + whoo).css({
                 opacity: 1
             });
         });
         $('#info_' + whoo).delay(2000).fadeOut(800);
-        //overlay('off', whoo);
-        //$('info_calc_frete').addClass('errormsg alert');
-        // $('#info_calc_frete').html(mensagem);
-        //$('#info_calc_frete').delay(2000).fadeOut(800);
-        //$('#info_calc_frete').html('');
+
     } else {
-        //overlay('on', whoo);
-        //$('#enviando_' + whoo).show();
+
         $('#' + whoo).css({
             opacity: 1
         });
         $('#mensagem_' + whoo).html('');
         $('#info_' + whoo).html('');
-        $('#mensagem_' + whoo).removeClass('errormsg alert');
-        $('#info_' + whoo).removeClass('infomsg alert');
-        $('#mensagem_' + whoo).addClass('successmsg alert');
-        $('#info_' + whoo).addClass('infomsg alert');
+          $('#mensagem_' + whoo).addClass('alert alert-success');
+        $('#info_' + whoo).addClass('alert alert-info');
         $('#mensagem_' + whoo).html('SUCESSO');
-        $('#info_' + whoo).html('Redirecionando para resumo do pedido.');
+        $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Redirecionando para resumo do pedido.</p>');
         $('#info_' + whoo).slideUp(600);
         $('#' + whoo).attr('action', URL);
         $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
@@ -1025,7 +1007,7 @@ function RemoverItem(product){
 
         if (obj.reload === 'true') {
             //alert(obj.reload);
-            $('#info_carrinho').html('<p class="alert alert-info text-medio text-center">' + obj.info + ' <img src="images/img/loader.gif" /></p>');
+            $('#info_carrinho').html('<div class="alert alert-info" role="alert"><p class="text-warning">' + obj.info + ' <img src="images/img/loader.gif" /></p></div>');
             $('#info_carrinho').slideDown(600);
             //slideUp(600)
             $('#info_carrinho').delay(5000).slideUp(600, function() {
@@ -1044,32 +1026,30 @@ function ValidaCaixa(whoo){
     VerificaConcorde(whoo);
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
-        var formulario = $('#' + whoo).serializeArray();
-        var url_validacao = $('#' + whoo).attr('action');//'loja/validacaixa';
-        $.post(url_validacao, formulario, function(data) {
-            //alert(url_validacao);
-            var obj = JSON.parse(data);
-            alert(obj.loadurl);
-            if (obj.status === 'fail') {
-                $('#mensagem_' + whoo).addClass('alert strong');
-                $('#mensagem_' + whoo).html(obj.info);
-                $('#info_' + whoo).addClass('padding5 bg-cyan fg-white strong');
-                $('#info_' + whoo).html('<strong>' + obj.erro + '</strong>');
-                $('#info_' + whoo).delay(5000).fadeOut(800);
-            }
-            else {
-                $('#mensagem_' + whoo).addClass('alert success');
-                $('#info_' + whoo).addClass('alert info');
-                $('#mensagem_' + whoo).html('SUCESSO');
-                $('#info_' + whoo).html(obj.info);
-                $('#' + whoo).attr('action', obj.loadurl);
-                $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
-                    $('#' + whoo).submit();
-                });
-            }
-        });
-
-    return false;
+    var formulario = $('#' + whoo).serializeArray();
+    var url_validacao = $('#' + whoo).attr('action');//'loja/validacaixa';
+    $.post(url_validacao, formulario, function(data) {
+        //alert(url_validacao);
+        var obj = JSON.parse(data);
+        //alert(obj.loadurl);
+        if (obj.status === 'fail') {
+            $('#mensagem_' + whoo).addClass('alert alert-warning');
+            $('#mensagem_' + whoo).html(obj.info);
+            $('#info_' + whoo).addClass('alert alert-info');
+            $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i><strong>' + obj.erro + '</strong></p>');
+            $('#info_' + whoo).delay(5000).fadeOut(800);
+        }
+        else {
+            //$('#mensagem_' + whoo).addClass('alert alert-success');
+            $('#info_' + whoo).addClass('alert alert-success');
+            //$('#mensagem_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>SUCESSO</p>');
+            $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>'+obj.info+'</p>');
+            $('#' + whoo).attr('action', obj.loadurl);
+            $('#mensagem_' + whoo).delay(2000).fadeOut(800, function() {
+                $('#' + whoo).submit();
+            });
+        }
+    });
 }
 
 /*******************************************************
@@ -1078,10 +1058,10 @@ function ValidaCaixa(whoo){
  */
 function VerificaConcorde(whoo) {
     if (!$("#agree").is(':checked')) {
-        $('#mensagem_' + whoo).addClass('alert strong');
+        $('#mensagem_' + whoo).addClass('alert alert-warning');
         $('#mensagem_' + whoo).html('ERRO!');
-        $('#info_' + whoo).addClass('padding5 bg-cyan fg-white strong');
-        $('#info_' + whoo).html('Por favor! <strong>É necessário o concorde dos dados apresentados.</strong>');
+        $('#info_' + whoo).addClass('alert alert-info');
+        $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! <strong>É necessário o concorde dos dados apresentados.</strong></p>');
         $('#mensagem_' + whoo).delay(3000).fadeOut(400);
         $('#info_' + whoo).delay(5000).fadeOut(800);
         return false;
@@ -1138,19 +1118,13 @@ function PreparaUpload(midia) {
  */
 function ValidaCupom(whoo, URL){
 
-    /*$('#enviando_' + whoo).show();
-     $('#' + whoo).css({
-     opacity: 0.2
-     });*/
     $('#btn-validar').attr('disabled', 'false');
 //$('#btn_cupom_confirmar').css('display', 'none');
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
     $('#mensagem_' + whoo).removeClass('alert alert-warning');
     $('#info_' + whoo).removeClass('alert alert-info');
-    /*$('#' + whoo).css({
-     opacity: 0.2
-     });*/
+
     var formulario = $('#' + whoo).serializeArray();
     console.log(formulario);
     $.post(URL, formulario, function(data) {
@@ -1159,11 +1133,11 @@ function ValidaCupom(whoo, URL){
         if (obj.status === 'fail') {
             $('#info_' + whoo).html('');
             //overlay('on', whoo);
-            $('#mensagem_' + whoo).addClass('notice marker-on-bottom bg-orange fg-black');
+            $('#mensagem_' + whoo).addClass('alert alert-warning');
             $('#mensagem_' + whoo).html('ERRO!');
             $('#mensagem_' + whoo).delay(2000).fadeOut(500);
             $('#enviando_' + whoo).delay(1000).fadeOut(500);
-            $('#info_' + whoo).addClass('notice marker-on-bottom bg-orange fg-black');
+            $('#info_' + whoo).addClass('alert alert-info');
             var li = '';
             obj.erro.forEach(function(entry) {
                 li += '<li>' + entry + '</li>';
@@ -1172,20 +1146,16 @@ function ValidaCupom(whoo, URL){
             $('#' + whoo).css({
                 opacity: 1
             });
-            //overlay('off', whoo);
+
             $('#discount_code').focus();
             $('#info_' + whoo).delay(2000).fadeOut(800);
-            //overlay('off', whoo);
+
         } else {
-            //overlay('off', whoo);
-            /*$('#' + whoo).css({
-             opacity: 1
-             });*/
+
             $('#mensagem_' + whoo).removeClass('alert alert-warning');
-            // $('#mensagem_' + whoo).addClass('alert alert-success');
-            //$('#mensagem_' + whoo).html('SUCESSO! Seu cupom foi validado.');
+
             $('#info_' + whoo).addClass('alert alert-info');
-            $('#info_' + whoo).html(obj.info);
+            $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>'+obj.info+'</p>');
             //$('#extra_' + whoo).html(obj.extra);
             $('#btn-validar').attr('disabled', 'true');
             var vl_discount_cupom = obj.config[1].discount_values;
@@ -1252,7 +1222,7 @@ function CheckOutFail(obj, whoo) {
     $('#mensagem_' + whoo).html('ERRO!');
     $('#mensagem_' + whoo).delay(2000).fadeOut(600, function() {
         $('#info_' + whoo).addClass('alert info');
-        $('#info_' + whoo).html('Por favor! Não foi possivel fazer o requerimento.');
+        $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! Não foi possivel fazer o requerimento.</p>');
         $('#info_' + whoo).fadeOut('800');
         $('#info_' + whoo).fadeOut('800');
     });
@@ -1279,39 +1249,17 @@ function CheckOutSucess(obj, whoo) {
  **  Acessa checkout externo **
  */
 function CheckoutSubmeter(obj, form_interno) {
-     $('#processamento_info').slideUp('slow',function(){
+    $('#processamento_info').slideUp('slow',function(){
         $('#processamento_finalizado').slideDown('last');
         $('#'+form_interno).attr('method', obj.metodo);
         $('#'+form_interno).attr('action', obj.url_externa);
         $('#neworder_Id').html(obj.neworder_Id);
     });
     setTimeout(function(){
-       $('#'+form_interno).submit()
+        $('#'+form_interno).submit()
     },10000);
-   
+
 }
-/*-----------------------------------------------------------------------------------*/
-/*  VERIFICA SE O GATEWAY USADO NECESSITA USAR URL EXTERNA
- /*-----------------------------------------------------------------------------------*
-function CheckoutNao_Submeter(obj, whoo, form_externo, payment) {
-    //var metodo = obj.metodo;
-    var $btn_boleto = $('#btn_boleto');
-    $btn_boleto.on('click', function() {
-        window.location = url_interna;
-    });
-    $('#' + form_externo).serializeArray();
-    $('#mensagem_' + form_externo).html('');
-    $('#info_' + form_externo).html('');
-    $('#fase3_' + whoo).delay(4000).fadeOut(400, function() {
-        //overlay('off', whoo);
-        $('#processamento_info').slideUp('slow', function() {
-            $('#processamento_finalizado').slideDown();
-            //$('#fase4_formfinalizacao').show();
-            $('#neworder_Id').html(obj.neworder_Id);
-            $('#enviando_' + form_externo).css('display', 'block');
-        });
-    });
-}*/
 
 /*
  ******************************************************
@@ -1331,7 +1279,7 @@ function EmailEnviar(whoo, URL){
         if (obj.status === 'fail') {
             $('#mensagem_' + whoo).html('');
             $('#info_' + whoo).html('');
-            $('#mensagem_' + whoo).addClass('errormsg alert');
+            $('#mensagem_' + whoo).addClass('alert alert-warning');
             $('#mensagem_' + whoo).html('ERRO! Verifique abaixo');
             $('#mensagem_' + whoo).delay(3000).fadeOut(500);
             //$('#info_' + whoo).addClass('infomsg alert');
@@ -1349,9 +1297,9 @@ function EmailEnviar(whoo, URL){
             $('#' + whoo).css({
                 opacity: 1
             });
-            $('#mensagem_' + whoo).removeClass('errormsg alert');
-            $('#mensagem_' + whoo).addClass('successmsg alert');
-            $('#mensagem_' + whoo).html('SUCESSO! Email encaminhado.');
+            $('#mensagem_' + whoo).removeClass('alert alert-warning');
+            $('#mensagem_' + whoo).addClass('alert alert-success');
+            $('#mensagem_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>SUCESSO! Email encaminhado.</p>');
             $('#mensagem_' + whoo).show();
             console.log(data);
             var obj = JSON.parse(data);
