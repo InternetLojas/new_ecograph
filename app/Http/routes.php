@@ -309,6 +309,11 @@ Route::group(['prefix' => 'diretoria',
     'where'=>['category'=>'[0-9]+']], function() {
 
     /**** home da diretoria *****/
+    Route::get('', [
+        'as' => 'diretoria.index',
+        'uses' => 'AdminController@index'
+    ]);
+
     Route::get('dashboard.html', [
         'as' => 'diretoria.index',
         'uses' => 'AdminController@index'

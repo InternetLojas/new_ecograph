@@ -53,6 +53,7 @@ class AdminCategoriesController extends Controller {
             ->with('description',$description)
             ->with('page','category');
     }
+
     public function CatformatosEdit($id,Pacote $pacote,CategoryDescription $category_description){
         $cat = $this->categoryModel->find($id);
         $cat_name = $category_description->find($id)->categories_name;
@@ -79,31 +80,57 @@ class AdminCategoriesController extends Controller {
             ->with('cat_id',$id)
             ->with('page','atributos');
     }
+
     public function CatpapeisEdit($id,Pacote $pacote,Pacformato $pacformato,CategoryDescription $category_description){
-        $cat = $this->categoryModel->find($id);
-        $cat_name = $category_description->find($id)->categories_name;
+        $categoryFormato_id = $this->categoryFormato->where('category_id',$id)->lists('id');
+        //dd($categoryFormato_id);//3 e 4
         //papeis
-        $catpapeis = $cat->CategoryPapel;
-        $catpapeis_id = $cat->CategoryPapel->lists('papel_id');
         $papeis = $this->papelModel->all();
-        foreach($catpapeis as $collection){
-            $pacpapeis = $collection->Pacpapeis;
-            $papel_id = $collection->papel_id;
-            $papel = $this->papelModel->find($papel_id)->valor;
-            foreach($pacpapeis as $itempapeis){
-                //dd($itempapeis);
-                $pacformato_id = $itempapeis->pacformato_id;
-                $pacote_id = $pacformato->find($pacformato_id)->pacote_id;
-                $quantity = $pacote->find($pacote_id)->quantity;
-                $weight = $itempapeis->weight;
-                //chave nome do formato - identificador do formato - identificado do pacote
-                $pacotes[$papel][$pacformato_id][$pacote_id] = [$quantity, $weight];
-            }
+        $cat = $this->categoryModel->find($id);
+        $catpapeis_id = $cat->CategoryPapel->lists('papel_id');
+        foreach ($catpapeis_id as $key => $value) {
+            //levanta a collection
+            $papeis_id[$value]= $this->papelModel->find($value)->valor;
+            //$formato_id = $collection->formato_id;
         }
-        //dd($pacotes);
+        //dd($catpapeis_id);//3 e 4 
+        foreach($categoryFormato_id as $id){
+            $array_conf = [];
+            $pacote_id = [];
+            $pacpapeis = [];
+             $quantity = [];
+            //levanta a collection
+            $collection = $this->categoryFormato->find($id);
+            $formato_id = $collection->formato_id;
+            //$array_conf['formato'] = [];
+            //todos os pacformatos
+            $pacformatos = $collection->pacformatos;
+            //dd($pacformatos);//retorna um array com os pacformatos vinculados a categoria - identifico qual o pacote_id
+            foreach($pacformatos as $item){
+
+                $quantity[$item->pacote_id] = $pacote->find($item->pacote_id)->quantity;
+                //$pacote_id[$item->pacote_id] = $quantity ;
+                //dd($item->pacpapeis);
+                $pacpapeis[$item->pacote_id] = $item->pacpapeis->lists('weight','id');
+                foreach($item->pacpapeis as $pac){
+                     $array_conf['quantity']= $quantity;
+                     $array_conf['papeis']= $papeis_id;
+                    $array_conf['formato'] = [$formato_id=>$this->formatoModel->find($formato_id)->valor];
+                    
+                    $array_conf['pacpapeis']=$pacpapeis;
+
+                }
+            }
+            $configuracao[] =$array_conf;
+        }
+        dd($configuracao);
+        //nome da categoria
+        $cat_name = $category_description->find($id)->categories_name;
+
+        //dd($pac);
         return view('diretoria.atributos.category_papel',compact('papeis'))
             ->with('catpapeis',$catpapeis_id)
-            ->with('pacotes',$pacotes)
+            ->with('configuracao',$configuracao)
             ->with('cat_name',$cat_name)
             ->with('cat_id',$id)
             ->with('page','atributos');
@@ -181,10 +208,10 @@ class AdminCategoriesController extends Controller {
                     $quantity = $pacote->find($pacote_id)->quantity;
                     //chave nome do formato - nome do papel  - identificador do pacote
                     $pacotes[$formato][$category_papel->valor][$pacote_id]=[
-                            'papel_id' => [$category_papel->id],
-                            'formato_id' => $formato_id,
-                            'quantity' => $quantity,
-                            'weight' => $weight
+                        'papel_id' => [$category_papel->id],
+                        'formato_id' => $formato_id,
+                        'quantity' => $quantity,
+                        'weight' => $weight
                     ];
 
                 }
@@ -192,7 +219,7 @@ class AdminCategoriesController extends Controller {
         }
 
         //[$category_papel->valor][$itemformatos->pacote_id]
-       dd($pacotes);
+        dd($pacotes);
         return view('diretoria.pacotes.category_pacotes',compact('catformatos'))
             ->with('cat',$cat)
             ->with('pacotes',$pacotes)

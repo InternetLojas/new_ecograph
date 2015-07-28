@@ -48,6 +48,20 @@ class AdminAttributesController extends Controller {
         return view('diretoria.atributos.formato',compact('formatos'))
                         ->with('page', 'atributos');
     }
+    public function papeis() {
+        $papeis = $this->papelModel->paginate(12);
+        return view('diretoria.atributos.papel')
+            ->with(compact('papeis'))
+            ->with('page', 'atributos');
+    }
+    public function acabamentos() {
+        $acabamentos = $this->acabamentoModel->paginate(12);
+        return view('diretoria.atributos.acabamento')
+            ->with(compact('acabamentos'))
+            ->with('page', 'atributos');
+    }
+
+    /***atualizações***/
     public function updateFormatos(CategoryFormato $categoryFormato) {
         //$this->categoryModel->find($id)->update($request->all());
 //dd($categoryFormato);
@@ -63,18 +77,4 @@ class AdminAttributesController extends Controller {
     public function CatformatosEdit($id) {
         return 'Vou edita os dados do identificador da categoria '.$id;
     }
-    public function papeis() {
-        $papeis = $this->papelModel->paginate(12);
-        return view('diretoria.atributos.papel')
-            ->with(compact('papeis'))
-            ->with('page', 'atributos');
-    }
-
-    public function acabamentos() {
-        $acabamentos = $this->acabamentoModel->paginate(12);
-        return view('diretoria.atributos.acabamento')
-            ->with(compact('acabamentos'))
-            ->with('page', 'atributos');
-    }
-
 }
