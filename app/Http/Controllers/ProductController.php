@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
 use Ecograph\CategoryFormato;
-use Ecograph\Core;
+use Ecograph\Cor;
 use Ecograph\CategoryCore;
 use Ecograph\Enoblecimento;
 use Ecograph\CategoryEnoblecimento;
@@ -175,7 +175,7 @@ class ProductController extends Controller {
      */
     public function Calculadora(Request $request) {
         $post_inputs = $request->all();
-        // dd($post_inputs);
+        $layout = [];
         $pai = Fichas::parentCategoria($post_inputs['escolhido']);
 
         $formato_id = CategoryFormato::where('category_id', $post_inputs['escolhido'])
@@ -200,7 +200,7 @@ class ProductController extends Controller {
         $cores = '';
         $cor_id = CategoryCore::where('category_id', $post_inputs['escolhido'])->lists('cor_id');
         foreach ($cor_id as $k => $valor) {
-            $cores[] = array('id' => $valor, 'nome' => Core::find($valor)->valor);
+            $cores[] = array('id' => $valor, 'nome' => Cor::find($valor)->valor);
         }
         $papel_id = CategoryPapel::where('category_id', $post_inputs['escolhido'])->lists('papel_id');
         foreach ($papel_id as $k => $valor) {
@@ -232,7 +232,7 @@ class ProductController extends Controller {
           "nome" => "Laminacao Fosca")
           ); */
 
-        $pacote = Pacote::where('categories_id', $post_inputs['escolhido'])->get();
+        $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
         $pacote_qtd = $pacote->toarray();
         foreach ($pacote_qtd as $key => $itens) {
             $quantidade[] = array('id' => $itens['id'], 'unidade' => $itens['quantity']);
