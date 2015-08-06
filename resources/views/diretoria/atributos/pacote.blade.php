@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <h1>Pacotes</h1>
-        <a href="#"  class="btn btn-default" > New Attribute </a>
+        <a href="{{route('pacotes.create')}}"  class="btn btn-default" > Novo Pacote </a>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -12,7 +12,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($pacotes as $pacote)
+            @forelse($pacotes as $pacote)
                 <tr>
                     <td>{!!$pacote->id!!}</td>
                     <td>{!!$pacote->categories_id!!}</td>
@@ -22,7 +22,17 @@
                         <a href="#" title="Eliminar categoria {{$pacote->quantity}}">delete</a>
                     </td>
                 </tr>
-            @endforeach
+                @empty
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-info">
+                            <h2>Ainda não existem pacotes cadastrado</h2>
+                            <p>Clique no botão "Novo Pacote" para criar uma nova entrada.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
+
             </tbody>
         </table>
         {!! $pacotes->render() !!}

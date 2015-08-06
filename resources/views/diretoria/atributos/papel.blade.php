@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <h1>Papeis</h1>
-        <a href="#"  class="btn btn-default" > New Attribute </a>
+        <a href="{{route('papeis.create')}}"  class="btn btn-default" > Novo Papel </a>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -11,7 +11,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($papeis as $papel)
+            @forelse($papeis as $papel)
                 <tr>
                     <td>{!!$papel->id!!}</td>
                     <td>{!!$papel->valor!!}</td>
@@ -20,7 +20,16 @@
                         <a href="#" title="Eliminar categoria {{$papel->valor}}">delete</a>
                     </td>
                 </tr>
-            @endforeach
+                @empty
+                    <tr>
+                        <td colspan="3">
+                            <div class="alert alert-info">
+                                <h2>Ainda não existem papeis cadastrado</h2>
+                                <p>Clique no botão "Novo Formato" para criar uma nova entrada.</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
         {!! $papeis->render() !!}

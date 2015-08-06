@@ -30,19 +30,19 @@
             <a href="#"><i class="fa fa-edit fa-fw"></i> Catálogos<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a href="{{route('diretoria.categories')}}">Gerenciar produtos</a>
-                </li>
-                <li>
                     <a href="{{route('diretoria.categories')}}">Gerenciar categoria</a>
                 </li>
                 <li>
-                    <a href="{{route('diretoria.categories')}}">Gerenciar atributos</a>
+                    <a href="{{route('diretoria.atributos')}}">Gerenciar atributos</a>
                     <ul class="nav nav-third-level">
                         <li>
                             <a href="{{route('atributos.pacotes')}}">Pacotes</a>
                         </li>
                         <li>
                             <a href="{{route('atributos.formatos')}}">Formatos</a>
+                        </li>
+                        <li>
+                            <a href="{{route('atributos.cores')}}">Cores</a>
                         </li>
                         <li>
                             <a href="{{route('atributos.papeis')}}">Papeis</a>

@@ -5,12 +5,47 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>Configuração de papeis para categoria {!!$cat_name!!}</h1>
-                    <h2>Editar peso do papeis</h2>
+
                     <table class="table table-bordered table-condensed">
-                        @forelse($configuracao as $formato_id => $formatos)
-<?php dd($formatos) ?>
+                        <thead>
+                        <tr>
+                            <th>Formato</th>
+                            <th>#</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse($formato as $formato_id => $items)
+                            <tr>
+                                <td>
+                                    {{$items['formato_nome']}}
+                                </td>
+                                <td>
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th>Papel</th>
+                                            <th>#</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @forelse($papel as $papel_id => $items_p)
+                                            <tr>
+                                                <td>
+                                                    {{$items_p['papel_nome']}}
+                                                </td>
+                                                <td>
+
+                                                   </td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                         @empty
                         @endforelse
+                        </tbody>
                     </table>
 
                     <h2>Editar atributo do papel</h2>
@@ -25,7 +60,7 @@
                     @endif
                     {!! Form::open(['route' =>['categories.update.papel',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
-                        @forelse($papeis as $papel)
+                        @forelse($list_papeis as $papel)
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">

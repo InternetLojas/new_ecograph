@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <h1>Acabamentos</h1>
-        <a href="#"  class="btn btn-default" > New Attribute </a>
+        <a href="{{route('acabamentos.create')}}"  class="btn btn-default" > Novo Acabamento </a>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -11,7 +11,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($acabamentos as $acabamento)
+            @forelse($acabamentos as $acabamento)
                 <tr>
                     <td>{!!$acabamento->id!!}</td>
                     <td>{!!$acabamento->valor!!}</td>
@@ -20,7 +20,16 @@
                         <a href="#" title="Eliminar categoria {{$acabamento->valor}}">delete</a>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-info">
+                            <h2>Ainda não existem acabamentos cadastrado</h2>
+                            <p>Clique no botão "Novo Acabamento" para criar uma nova entrada.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
             </tbody>
         </table>
         {!! $acabamentos->render() !!}

@@ -4,58 +4,111 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>Configuração de papeis para categoria {!!$cat_name!!}</h1>
-                    <h2>Editar peso do papeis</h2>
+                    <h1>Configuração de acabamento para categoria {!!$cat_name!!}</h1>
+
                     <table class="table table-bordered table-condensed">
                         <thead>
                         <tr>
-                            <th class="text-center">Papeis</th>
-                            <th class="text-center">Quantidade/Peso</th>
-
-                            <th class="text-center">Action</th>
+                            <th>Formato</th>
+                            <th>#</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse($pacotes as $papel_name => $papel)
+                        @forelse($formato as $formato_id => $items)
                             <tr>
-                                <td>{{$papel_name}}</td>
                                 <td>
-                                    <table class="table table-condensed table-hover table-bordered">
-                                        <tbody>
-                                        <tr>
-                                            <td class="qtd text-center">Qtd</td>
-                                            @forelse($papel as $papel_id => $pacote)
-                                                @forelse($pacote as $k => $qtd)
-                                                    <td class="qtd text-center">{{$qtd[0]}}</td>
-                                                @empty
-                                                @endforelse
-
-                                            @empty
-                                            @endforelse
-                                        </tr>
-                                        <tr>
-                                            <td class="qtd text-center">Peso</td>
-                                            @forelse($papel as $papel_id => $pacote)
-                                                @forelse($pacote as $k => $qtd)
-                                                    <td class="qtd text-center">{{$qtd[1]}}</td>
-                                                @empty
-                                                @endforelse
-
-                                            @empty
-                                            @endforelse
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                   {{$items['formato_nome']}}
                                 </td>
                                 <td>
-                                    <a href="#" title="Editar pacote ">edit peso</a>
+                                    <table class="table table-bordered table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th>Papel</th>
+                                            <th>#</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @forelse($papel as $papel_id => $items_p)
+                                        <tr>
+                                            <td>
+                                                {{$items_p['papel_nome']}}
+                                            </td>
+                                            <td>
+                                                <table class="table table-bordered table-condensed">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Cor</th>
+                                                        <th>#</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @forelse($cores as $cor_id => $items_c)
+                                                        <tr>
+                                                            <td>
+                                                                {{$items_c['cor_nome']}}
+                                                            </td>
+                                                            <td>
+                                                                <table class="table table-bordered table-condensed">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th>Acabamento</th>
+                                                                        <th>#</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <table class="table table-bordered table-condensed">
+                                                                                <tr>
+                                                                                    @forelse($items_p['pacotes'][$formato_id][$papel_id]['weight'] as $weight)
+                                                                                    <td>{{$weight[0]}}</td>
+                                                                                    @empty
+                                                                                    @endforelse
+                                                                                </tr>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    @forelse($acabamentos as $acabamento_id => $items_a)
+                                                                        <tr>
+                                                                            <td>
+                                                                                {{$items_a['acabamento_nome']}}
+                                                                            </td>
+                                                                            <td>
+                                                                                <table class="table table-bordered table-condensed">
+                                                                                    <tr>
+                                                                                @forelse($items_a['pacotes'][$formato_id][$papel_id][$cor_id][$acabamento_id]['price'] as $config)
+                                                                                    <td>{{$config}}</td>
+                                                                                @empty
+                                                                                @endforelse
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @empty
+                                                                    @endforelse
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    @empty
+                                                    @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        @endforelse
+                                        </tbody>
+                                    </table>
                                 </td>
                             </tr>
                         @empty
                         @endforelse
                         </tbody>
                     </table>
-                    <h2>Editar atributo do papel</h2>
+
+                    <h2>Editar atributo do acabamento</h2>
                     @if($errors->any())
                         <ul class="alert alert-warning">
                             @foreach($errors->all() as $erro)
@@ -65,13 +118,13 @@
                             @endforeach
                         </ul>
                     @endif
-                    {!! Form::open(['route' =>['categories.update.papel',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' =>['categories.update.acabamento',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
-                        @forelse($papeis as $papel)
+                        @forelse($list_acabamentos as $acabamento)
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="papel[{{$papel->id}}]" value="{{$papel->id}}" @if(in_array($papel->id,$catpapeis)) checked @endif >{{$papel->valor}}</label>
+                                        <input type="checkbox" name="papel[{{$acabamento->id}}]" value="{{$acabamento->id}}" @if(in_array($acabamento->id,$catacabamentos)) checked @endif >{{$acabamento->valor}}</label>
                                 </div>
                             </div>
                         @empty
