@@ -13,8 +13,12 @@ class Pacformato extends Model {
     ];
 
     public function CategoryFormato(){
+        return $this->belongsTo('Ecograph\CategoryFormato');
+    }
 
-        return $this->BelongsTo('Ecograph\CategoryFormato');
+    public function Pacotes(){
+
+        return $this->belongsTo('Ecograph\Pacote');
 
     }
 

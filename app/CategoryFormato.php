@@ -13,6 +13,11 @@ class CategoryFormato extends Model {
         'formato_id'
     ];
 
+
+    public function Categories() {
+        return $this->belongsTo('Ecograph\Category');
+    }
+
     public function PacFormatos() {
         return $this->hasMany('Ecograph\Pacformato');
     }

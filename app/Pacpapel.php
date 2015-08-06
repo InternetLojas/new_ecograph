@@ -12,6 +12,7 @@ class Pacpapel extends Model {
         'category_id',
         'pacformato_id',
         'category_papel_id',
+        'pacote_id',
         'weight'
     ];
 
@@ -23,7 +24,13 @@ class Pacpapel extends Model {
 
     public function PacFormato(){
 
-        return $this->BelongsTo(\Ecograph\PacFormato);
+        return $this->BelongsTo(Ecograph\PacFormato);
+
+    }
+
+    public function PacCor(){
+
+        return $this->hasMany('Ecograph\Paccor');
 
     }
 

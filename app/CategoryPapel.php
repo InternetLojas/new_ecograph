@@ -13,6 +13,11 @@ class CategoryPapel extends Model {
         'papel_id'
     ];
 
+    public function Categories() {
+        return $this->belongsTo('Ecograph\Category');
+    }
+
+
     public function PacPapeis() {
         return $this->hasMany('Ecograph\Pacpapel');
     }

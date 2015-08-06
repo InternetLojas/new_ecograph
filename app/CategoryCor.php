@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryCore extends Model {
+class CategoryCor extends Model {
 
     protected $table = 'category_cor';
 
@@ -15,7 +15,7 @@ class CategoryCore extends Model {
         return $this->belongsTo('Ecograph\Category');
     }
 
-    public function PacCore() {
+    public function PacCor() {
         return $this->hasMany('Ecograph\Paccor');
     }
 }

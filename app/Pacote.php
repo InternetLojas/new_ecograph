@@ -9,12 +9,12 @@ class Pacote extends Model {
     protected $table = 'pacotes';
 
     protected $fillable = [
-        'categories_id',
+        'category_id',
         'quantity'
     ];
 
     public function Categories() {
-        return $this->hasMany('Ecograph\Category');
+        return $this->belongsTo('Ecograph\Category');
     }
 
     public function PacFormatos() {
