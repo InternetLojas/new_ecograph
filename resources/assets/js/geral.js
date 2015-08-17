@@ -1,4 +1,24 @@
 /*-----------------------------------------------------------------------------------*/
+/*  controla de frente e verso de cartões
+ /*-----------------------------------------------------------------------------------*/
+function FrenteVerso(id){
+    var frente_display = $('#frente_'+id);
+    var verso_display = $('#verso_'+id);
+    if( frente_display.is(':visible') ) {
+        // está visível, faça algo
+        verso_display.css('display','block');
+        frente_display.css('display','none');
+        $('#label_'+id).text('Frente');
+    } else {
+        // não está visível, faça algo
+        verso_display.css('display','none');
+        frente_display.css('display','block');
+        $('#label_'+id).text('Verso');
+    }
+
+}
+
+/*-----------------------------------------------------------------------------------*/
 /*  controla o formulário de busca
  /*-----------------------------------------------------------------------------------*/
 function SearchVerifica(){
@@ -228,7 +248,7 @@ function CheckCadastro() {
 /*  Calculadora
  /*-----------------------------------------------------------------------------------*/
 function Calculadora(current_id, categoria) {
-    //$('#pdf').val('0');
+
     $('#escolhido').val(current_id);
     $('#nome_categoria').val(categoria);
     $('#modal_escolhido').html(categoria);
@@ -244,7 +264,7 @@ function Calculadora(current_id, categoria) {
         $('#lista_cores').html();
         $('#lista_papel').html();
         $('#lista_acabamento').html();
-        $('#lista_enoblecimento').html();
+        //$('#naocadastrado').css.('display','none');
         $('#lista_preco').html();
         $('#orc_categoria_id').val(orc_categoria_id);
         $('#orc_categoria_nome').val(orc_categoria_nome);
@@ -254,17 +274,27 @@ function Calculadora(current_id, categoria) {
                 $('#nome_escolhido').html(categoria);
                 $('#img_escolhida_thumb').html(categoria);
                 var imagem = obj.imagem.image;
-                if (obj.processamento.erro !== '') {
-                    $('#info_calculadora').addClass('alert alert-danger');
-                    $('#info_calculadora').html(obj.informacao.info);
-                    $('#info_calculadora').delay(4000).fadeOut(400);
-                    $('#tabela').css('display', 'none');
-                } else {
-                    $('.listview .list.fg-white').each(function(i) {
-                        $(this).attr('class', 'list bg-gray fg-white btn-detalhes');
-                    });
-                    $.each(obj, function(key, val) {
-                        $('#img-escolhido').attr('src', imagem);
+                $.each(obj, function(key, val) {
+                    if (key === 'processamento' && val.erro !== '') {
+                        $('#info_calculadora').addClass('alert alert-warning');
+                        $('#info_calculadora').html(obj.informacao.info);
+                        $('#tabela').css('display', 'none');
+                        $('#naocadastrado').css('display','block');
+                        //$('#especificacoes_envio').delay(3000).fadeOut(400,function(){
+                            $('#especificacoes_selecionada').delay(1500).fadeOut(400);
+                            $('#lista_perfis').delay(1600).fadeOut(400);
+                            $('#orcamento_gerado').delay(1700).fadeOut(400);
+                            $('#info_calculadora').html();
+                            $('#cupom_frete').delay(2000).fadeOut(400);
+                            $('#resultado').delay(2100).fadeOut(400);
+                            $('#naocadastrado').delay(3000).fadeOut(400,function(){
+                                $('#info_calculadora').html('<p class="alert">Escolha outra categoria para continuar</p>');
+                            });
+                        $('#info_calculadora').delay(4000).fadeOut(400);
+                       // });
+                        //$('#especificacoes_envio').fadeOut.(600);
+                        return false;
+                    } else {
                         if (key === 'back_menu') {
                             back_menu = val.background;
                         }
@@ -281,14 +311,18 @@ function Calculadora(current_id, categoria) {
                             });
                             $('#lista_preco').html('<ul id="list_preco" class=\"list-unstyled\">' + item + '</ul>');
                         }
-                    });
-                    $('#especificacoes_selecionada').slideUp('slow', function() {
-                        $('#all_produtos').fadeIn('slow');
+                    }
+                });
 
-                    });
-                    $('#lista_perfis').slideUp('slow');
-                    $('#orcamento_gerado').slideUp('slow');
-                }
+                $('.listview .list.fg-white').each(function(i) {
+                    $(this).attr('class', 'list bg-gray fg-white btn-detalhes');
+                });
+                $('#especificacoes_selecionada').slideUp('slow', function() {
+                    $('#all_produtos').fadeIn('slow');
+
+                });
+                $('#lista_perfis').slideUp('slow');
+                $('#orcamento_gerado').slideUp('slow');
             });
         });
     });
@@ -300,33 +334,18 @@ function GeraLista(parametros, category_id) {
     var cat_id = $('#orc_categoria_id').val();
     $.each(parametros, function(tipo, parans) {
         var radio = '';
-        if (cat_id === '5') {
-            $.each(parans, function(k, item) {
-                on_click_troca = 'TrocaCheked(\'' + tipo + '\',' + k + ');';
-                on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' + k + ');';
-                if (tipo !== 'enoblecimento') {
-                    radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_troca + '" value=\"' + item.id + '\" />\n\n\
+        $.each(parans, function(k, item) {
+            on_click_troca = 'TrocaCheked(\'' + tipo + '\',' + k + ',\''+ category_id +'\');';
+            on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' + k + ');';
+            if (tipo !== 'acabamento') {
+                radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_troca + '" value=\"' + item.id + '\" />\n\n\
          <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
-                } else {
-                    radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_calcula + '" value=\"' + item.id + '\" />\n\n\
+            } else {
+                radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_calcula + '" value=\"' + item.id + '\" disabled />\n\n\
          <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
-                }
-            });
-            $('#lista_' + tipo).html('<ul id="list_' + tipo + '" class=\"list-unstyled\">\n' + radio + '\n</ul>');
+            }
+        });
 
-        } else {
-            $.each(parans, function(k, item) {
-                on_click_troca = 'TrocaCheked(\'' + tipo + '\',' + k + ');';
-                on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' + k + ');';
-                if (tipo !== 'acabamento') {
-                    radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_troca + '" value=\"' + item.id + '\" />\n\n\
-         <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
-                } else {
-                    radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_calcula + '" value=\"' + item.id + '\" />\n\n\
-         <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
-                }
-            });
-        }
         $('#lista_' + tipo).html('<ul id="list_' + tipo + '" class=\"list-unstyled\">\n' + radio + '\n</ul>');
 
     });
@@ -346,7 +365,7 @@ function GeraQtd(y, qtd, imagem) {
 /*-----------------------------------------------------------------------------------*/
 /*  TrocaCheked
  /*-----------------------------------------------------------------------------------*/
-function TrocaCheked(whoo, localizador) {
+function TrocaCheked(whoo, localizador, categoria) {
     $('#especificacoes_selecionadas').slideDown('slow');
     var valor = $('#' + whoo + '_' + localizador).val();
     var param = null;
@@ -354,57 +373,91 @@ function TrocaCheked(whoo, localizador) {
         param = $('#param_formato_' + localizador).text();
         $('#formato_nome').val(param);
         $('#formato_id').val(valor);
-        $('#list_cores').each(function(i) {
-            $('#cores_' + i).attr("checked", false);
+        $('ul#list_cores li').each(function(c) {
+            $('#cores_' + c).attr("checked", false);
         });
-        $('#list_papel').each(function(i) {
-            $('#papel_' + i).attr("checked", false);
+        $('ul#list_papel li').each(function(p) {
+            $('#papel_' + p).attr("checked", false);
         });
-        $('#list_acabamento').each(function(i) {
-            $('#acabamento_' + i).attr("checked", false);
+        $('ul#list_acabamento li').each(function(a) {
+
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
         });
-        $('#list_enoblecimento').each(function(i) {
-            $('#enoblecimento_' + i).attr("checked", false);
+        $('ul#list_preco li').each(function(i) {
+            $('#pacote_' + i).attr("checked", false);
+            $('#pacote_' + i).attr("disabled", true);
+            $('span#preco_' + i).text();
         });
+
     }
     if (whoo === 'cores') {
         param = $('#param_cores_' + localizador).text();
         $('#cores_id').val(valor);
         $('#cor_nome').val(param);
-        $('#list_papel').each(function(i) {
+        $('ul#list_papel li').each(function(i) {
             $('#papel_' + i).attr("checked", false);
         });
-        $('#list_acabamento').each(function(i) {
+        $('ul#list_acabamento li').each(function(i) {
             $('#acabamento_' + i).attr("checked", false);
         });
-        $('#list_enoblecimento').each(function(i) {
-            $('#enoblecimento_' + i).attr("checked", false);
-        });
+
     }
     if (whoo === 'papel') {
         param = $('#param_papel_' + localizador).text();
         $('#papel_id').val(valor);
         $('#papel_nome').val(param);
-        $('#list_acabamento').each(function(i) {
-            $('#acabamento_' + i).attr("checked", false);
-        });
-        $('#list_enoblecimento').each(function(i) {
-            $('#enoblecimento_' + i).attr("checked", false);
-        });
+        if (categoria === '5') {
+
+            if(valor === '1'){
+                $('#acabamento_0').attr('disabled', true);
+                $('#acabamento_1').attr('disabled', false);
+                $('#acabamento_2').attr('disabled', false);
+                $('#acabamento_3').attr('disabled', false);
+                $('#acabamento_4').attr('disabled', false);
+                $('#acabamento_5').attr('disabled', false);
+                $('#acabamento_6').attr('disabled', false);
+                $('#acabamento_7').attr('disabled', false);
+                $('#acabamento_8').attr('disabled', false);
+            }
+            if(valor === '2'){
+                $('#acabamento_0').attr('disabled', true);
+                $('#acabamento_1').attr('disabled', false);
+                $('#acabamento_2').attr('disabled', true);
+                $('#acabamento_3').attr('disabled', true);
+                $('#acabamento_4').attr('disabled', true);
+                $('#acabamento_5').attr('disabled', false);
+                $('#acabamento_6').attr('disabled', true);
+                $('#acabamento_7').attr('disabled', true);
+                $('#acabamento_8').attr('disabled', true);
+            }
+            if(valor === '3'){
+                $('#acabamento_0').attr('disabled', false);
+                $('#acabamento_1').attr('disabled', true);
+                $('#acabamento_2').attr('disabled', false);
+                $('#acabamento_3').attr('disabled', true);
+                $('#acabamento_4').attr('disabled', true);
+                $('#acabamento_5').attr('disabled', true);
+                $('#acabamento_6').attr('disabled', true);
+                $('#acabamento_7').attr('disabled', true);
+                $('#acabamento_8').attr('disabled', true);
+            }
+        } else {
+            $('ul#list_acabamento li').each(function(i) {
+                $('#acabamento_' + i).attr("disabled", false);
+                $('#acabamento_' + i).attr("checked", false);
+            });
+        }
+
+
     }
     if (whoo === 'acabamento') {
         param = $('#param_acabamento_' + localizador).text();
         $('#acabamento_id').val(valor);
         $('#acabamento_nome').val(param);
-        $('#list_enoblecimento').each(function(i) {
-            $('#enoblecimento_' + i).attr("checked", false);
-        });
+
     }
-    if (whoo === 'enoblecimento') {
-        param = $('#param_enoblecimento_' + localizador).text();
-        $('#enoblecimento_id').val(valor);
-        $('#enoblecimento_nome').val(param);
-    }
+
     $('#list_preco').each(function(i) {
         $('#preco_' + i).text();
     });
@@ -416,52 +469,47 @@ function TrocaCheked(whoo, localizador) {
 /*  CalculaPreco
  /*-----------------------------------------------------------------------------------*/
 function CalculaPreco(categoria, localizador) {
-    if (categoria === '5') {
-        enoblecimento_valor = $('#enoblecimento_' + localizador).val();
-        param = $('#param_enoblecimento_' + localizador).text();
-        $('#enoblecimento_nome').val(param);
-        $('#orc_enoblecimento_id').val(enoblecimento_valor);
-        $('#orc_enoblecimento_nome').val(param);
-        acabamento_valor = $('#acabamento_' + localizador).val();
-        param = $('#param_acabamento_' + localizador).text();
-        $('#acabamento_nome').val(param);
-        $('#acabamento_id').val(acabamento_valor);
-        $('#orc_acabamento_id').val(acabamento_valor);
-        $('#orc_acabamento_nome').val(param);
-    } else {
-        acabamento_valor = $('#acabamento_' + localizador).val();
-        param = $('#param_acabamento_' + localizador).text();
-        $('#acabamento_nome').val(param);
-        $('#acabamento_id').val(acabamento_valor);
-        $('#orc_acabamento_id').val(acabamento_valor);
-        $('#orc_acabamento_nome').val(param);
-    }
+    acabamento_valor = $('#acabamento_' + localizador).val();
+    param = $('#param_acabamento_' + localizador).text();
+    $('#acabamento_nome').val(param);
+    $('#acabamento_id').val(acabamento_valor);
+    $('#orc_acabamento_id').val(acabamento_valor);
+    $('#orc_acabamento_nome').val(param);
+    //}
     categoria_nome = $('#nome_escolhido').text();
     $('#orc_subcategoria_id').val(categoria);
     $('#orc_subcategoria_nome').val(categoria_nome);
 
     url = $('#calculadora').attr('action');
     $('#categ_selecionada').val(categoria);
+    cor_id = $('#orc_cores_id').val();
+    cor_nome = $('#orc_cores_nome').val();
+    $('#cor_id').val(cor_id);
+    $('#cor_nome').val(cor_nome);
     var formulario = $('#calculadora').serializeArray();
     $.post(url, formulario, function(data) {
         localizador = 0;
         peso_selecionado = '';
-        console.log(data);
-        data.peso.forEach(function(entry) {
-            peso = parseFloat(entry);
-            peso_selecionado += '<input type="hidden" name="peso_selecionado" id="peso_selecionado_' + localizador + '" value="' + peso + '" />\n';
-            $('#peso_selecionado').html(peso_selecionado);
-            //$('#peso_selecionado_'+locali)
-            localizador = localizador + 1;
-        });
-        localizador = 0;
-        data.preco.forEach(function(entry) {
-            valor = parseFloat(entry).toFixed(2);
-            $('#preco_' + localizador).html('<strong>R$ ' + valor.replace(".", ",") + '</strong>');
-            $('#pacote_' + localizador).val(valor);
-            $('#pacote_' + localizador).attr('disabled', false);
-            localizador = localizador + 1;
-        });
+        if(data.status !=='erro'){
+            data.peso.forEach(function(entry) {
+                peso = parseFloat(entry);
+                peso_selecionado += '<input type="hidden" name="peso_selecionado" id="peso_selecionado_' + localizador + '" value="' + peso + '" />\n';
+                $('#peso_selecionado').html(peso_selecionado);
+                //$('#peso_selecionado_'+locali)
+                localizador = localizador + 1;
+            });
+            localizador = 0;
+            data.preco.forEach(function(entry) {
+                valor = parseFloat(entry).toFixed(2);
+                $('#preco_' + localizador).html('<strong>R$ ' + valor.replace(".", ",") + '</strong>');
+                $('#pacote_' + localizador).val(valor);
+                $('#pacote_' + localizador).attr('disabled', false);
+                localizador = localizador + 1;
+            });
+        } else {
+            //alert('aquio');
+            return Calculadora();
+        }
     });
 }
 
@@ -498,6 +546,7 @@ function SetaEscolhas(localizador, imagem) {
     $('logar').css('display', 'none');
     var qtd = $('#qtd_' + localizador).text();
     var peso = $('#peso_selecionado_' + localizador).val();
+    //alert(peso);
     var preco = $('#preco_' + localizador).text();
     var produto = $('#nome_categoria').val();
     //var qt_vl = qtd + " - " + preco;
@@ -506,7 +555,7 @@ function SetaEscolhas(localizador, imagem) {
     $('#orc_pacote_valor').val(preco);
     $('#especificacoes').html();
     var cor = $('#cor_nome').val();
-    var enoblecimento = $('#enoblecimento_nome').val();
+    //var enoblecimento = $('#enoblecimento_nome').val();
     var formato = $('#formato_nome').val();
     var papel = $('#papel_nome').val();
     var acabamento = $('#acabamento_nome').val();
@@ -516,7 +565,6 @@ function SetaEscolhas(localizador, imagem) {
         "Cores": cor,
         "Material": papel,
         "Acabamento": acabamento,
-        "Enoblecimento": enoblecimento,
         "Qtd": qtd,
         "Valor": preco
     };
@@ -558,7 +606,7 @@ function EscolhaPerfil() {
                     $.each(val, function(k, item) {
                         //alert(item.nome_perfil);
                         button += '<div class="umquarto bg-dark">\n\
-                                        <button type="button" class=" btn bg-dark fg-white no-radius" onclick="VerTemplate(\'' + item.id_perfil + '\', \'' + item.nome_perfil + '\')"  title="Escolher o template para ' + item.nome_perfil + '">\n\
+                                        <button type="button" class=" btn bg-dark fg-white no-radius" onclick="VerTemplate(\'' + item.id + '\', \'' + item.nome_perfil + '\')"  title="Escolher o template para ' + item.nome_perfil + '">\n\
                                         <img title="' + item.nome_perfil + '" src="' + item.logo_perfil + '" class="img-responsive pull-left">\n\
                                         <span class="pull-lef text-medio">' + item.nome_perfil + '</span>\n\
                                 </button></div>';
@@ -744,6 +792,7 @@ function FreteOrcamento() {
     if ($.trim($("#orc_cep").val()) !== "") {
         CEP = $("#orc_cep").val();
         peso = $('#orc_peso').val();
+        //alert(peso);
         $('#orc_peso_frete').val(peso);
         var formulario = $('#correio').serializeArray();
         var url = "calcula_frete/" + CEP;
@@ -751,7 +800,7 @@ function FreteOrcamento() {
             var obj = JSON.parse(data);
             //console.log(obj);
             if (obj.erro) {
-                $("#wait").fadeIn('fast');
+                $("#wait").delay(4000).fadeOut('fast');
                 $('#info_correio').addClass('alert alert-danger');
                 $('#info_correio').html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
                 $('#info_correio').slideDown('slow');
@@ -761,15 +810,17 @@ function FreteOrcamento() {
                 });
                 return false;
             }
-            sedex = parseFloat(obj.SEDEX[0]) + 5;
-            labelsedex = sedex.toFixed(2);
-            labelsedex = labelsedex.replace('.', ',');
-            labelsedex = "R$ " + labelsedex;
-            $('#vl_sedex').html(labelsedex);
-            $('#frete_sedex').val(sedex.toFixed(2));
-            $('#resultado').slideDown('slow', function() {
-                $('#resultado').css('display', 'block');
-                $('#desconto').css('display', 'block');
+            $("#wait").delay(4000).fadeOut('fast',function() {
+                sedex = parseFloat(obj.SEDEX[0]) + 5;
+                labelsedex = sedex.toFixed(2);
+                labelsedex = labelsedex.replace('.', ',');
+                labelsedex = "R$ " + labelsedex;
+                $('#vl_sedex').html(labelsedex);
+                $('#frete_sedex').val(sedex.toFixed(2));
+                $('#resultado').slideDown('slow', function () {
+                    $('#resultado').css('display', 'block');
+                    $('#desconto').css('display', 'block');
+                });
             });
         });
     } else {
