@@ -9,7 +9,12 @@ class CategoryProduct extends Model {
     protected $guarded = ['id'];
 
     public function Category() {
-        return $this->BelongsTo('Ecograph\CategoryProduct', 'category_id');
+        return $this->BelongsTo('Ecograph\CategoryProduct');
+    }
+
+
+    public function Product() {
+        return $this->BelongsTo('Ecograph\Product');
     }
 
     public function scopeCategoria($query, $k) {
@@ -23,8 +28,5 @@ class CategoryProduct extends Model {
                         ->get();
     }
 
-    public function product() {
-        return $this->hasMany('Product');
-    }
 
 }

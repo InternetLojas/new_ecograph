@@ -12,6 +12,7 @@ use Ecograph\Cor;
 use Ecograph\Formato;
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
+use Ecograph\Pacacabamento;
 use Ecograph\Pacote;
 use Ecograph\Pacpapel;
 use Ecograph\Papel;
@@ -163,40 +164,6 @@ class AdminAttributesController extends Controller {
         }
         return redirect()->route('atributos.papeis');
     }
-    public function WeightUpdate(Request $request,$id, Pacpapel $pacpapel){
-        $input = $request->except('_token');
-        //dd($input);
-        $erros = [];
-        foreach($input['weight'] as $pac_papel_id =>$weight) {
-            $rules[$pac_papel_id] = 'required|numeric';
-            $post_weight[$pac_papel_id] = $weight;
-            //regras a serem validadas
-            $validation = Validator::make($post_weight, $rules);
-            if ($validation->fails()) {
-                foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
-                    foreach ($erro as $key => $value) {
-                        $erros[] = $value;
-                    }
-                }
-            }
-            $values[$pac_papel_id] = explode('_',$input['ids'][$pac_papel_id]);
-        }
-        if(count($erros)>0){
-            return redirect()->route('categorie.papeis.edit', ['id'=> $id]);
-        }
-        //dd($values);
-        foreach($post_weight as $pac_papel_id => $peso) {
-            $update = [
-                'category_id' => $id,
-                'pacformato_id' => $values[$pac_papel_id][0] ,
-                'category_papel_id' => $values[$pac_papel_id][2],
-                'weight' => $peso
-            ];
-            $pacpapel->find($values[$pac_papel_id][1])->update($update);
-        }
-        return redirect()->route('categorie.papeis.edit', ['id'=> $id ]);
-    }
-
     /***cores***/
     public function CoresCreate(CategoryDescription $categoryDescription) {
         //para popular o select
@@ -235,9 +202,7 @@ class AdminAttributesController extends Controller {
     }
     public function AcabamentosStore(Request $request, CategoryAcabamento $categoryAcabamento) {
         $input = $request->except('_token');
-
         $category_id = $input['category_id'];
-        $cat = $this->categoryModel->find($category_id);
         foreach($input['valor'] as $key =>$valor) {
             if (!empty($valor)) {
                 $acabamentos[] = $valor;
@@ -253,10 +218,72 @@ class AdminAttributesController extends Controller {
                     'acabamento_id' => $id
                 ]);
             }
-            //$cat->Acabamento()->attach($acabamento->id);
         }
         return redirect()->route('atributos.acabamentos');
     }
+
+    /****atualização de pesos****/
+    public function WeightUpdate(Request $request,$id, Pacpapel $pacpapel){
+        $input = $request->except('_token');
+        //dd($input);
+        $erros = [];
+        foreach($input['weight'] as $pac_papel_id =>$weight) {
+            $rules[$pac_papel_id] = 'required|numeric';
+            $post_weight[$pac_papel_id] = $weight;
+            //regras a serem validadas
+            $validation = Validator::make($post_weight, $rules);
+            if ($validation->fails()) {
+                foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
+                    foreach ($erro as $key => $value) {
+                        $erros[] = $value;
+                    }
+                }
+            }
+            $values[$pac_papel_id] = $weight;
+        }
+        if(count($erros)>0){
+            return redirect()->route('categorie.papeis.edit', ['id'=> $id]);
+        }
+        //dd($post_weight);
+        foreach($post_weight as $pac_papel_id => $peso) {
+           $pacpapel->find($pac_papel_id)->update(['weight' => $peso]);
+        }
+        return redirect()->route('categorie.papeis.edit', ['id'=> $id ]);
+    }
+/**atualizacação de preçso**/
+    public function PricesUpdate(Request $request,$id, Pacacabamento $pacacabamento){
+        //dd($request->input());
+        $input = $request->except('_token');
+        $erros = [];
+        /*foreach($input['price'] as $pac_acabamento_id =>$prices) {
+            $rules[$prices] = 'required|numeric';
+            $post_price[$pac_acabamento_id] = $prices;
+            //regras a serem validadas
+            $validation = Validator::make($post_price, $rules);
+            if ($validation->fails()) {
+                foreach ($validation->getMessageBag()->toArray() as $atributo => $erro) {
+                    foreach ($erro as $key => $value) {
+                        $erros[] = $value;
+                    }
+                }
+            }
+        firstOrCreate([
+                        'category_id' => $category->id,
+                        'category_formato_id' => $id['id'],
+                        'pacote_id' => $pacote_id
+                    ]);
+        }*/
+        //dd($erros);
+        if(count($erros)== 0) {
+            foreach ($input['price'] as $pac_acabamento_id => $price) {
+                $pacacabamento->find($pac_acabamento_id)->update(['price' => $price]);
+            }
+        }
+
+        return redirect()->route('categorie.acabamentos.edit', ['id'=> $id ]);
+    }
+
+
     public function updateFormatos(CategoryFormato $categoryFormato) {
         //$this->categoryModel->find($id)->update($request->all());
 //dd($categoryFormato);
@@ -269,5 +296,7 @@ class AdminAttributesController extends Controller {
         return redirect()->route('diretoria.categories');
 //return 'aqui';
     }
-
+    public function CatformatosEdit($id) {
+        return 'Vou edita os dados do identificador da categoria '.$id;
+    }
 }

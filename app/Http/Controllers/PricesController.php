@@ -5,11 +5,13 @@ namespace Ecograph\Http\Controllers;
 use Ecograph\Category;
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
+use Ecograph\Paccor;
 use Illuminate\Http\Request;
 use Ecograph\Pacote;
 use Ecograph\CategoryFormato;
 use Ecograph\Pacformato;
 use Ecograph\CategoryPapel;
+use Ecograph\CategoryCor;
 use Ecograph\Pacpapel;
 use Ecograph\CategoryAcabamento;
 use Ecograph\Pacacabamento;
@@ -18,75 +20,66 @@ use Ecograph\Libs\Fretes;
 
 class PricesController extends Controller {
     private $category;
+    private $pacFormato;
+    private $pacPapel;
+    private $pacCor;
+    private $pacAcabamento;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(Category $category, Pacformato $pacFormato, Pacpapel $pacPapel, Paccor $pacCor, Pacacabamento $pacAcabamento) {
+        //$this->middleware('auth');
+        $this->category = $category;
+        $this->pacFormato = $pacFormato;
+        $this->pacPapel = $pacPapel;
+        $this->pacCor = $pacCor;
+        $this->pacAcabamento = $pacAcabamento;
+    }
     /**
      * *levanta um array.
      * de preços e pesos
      * de acordo com a categoria solicitada
      * @return json
      */
-    public function Precos(Category $category, Request $request) {
+    public function Precos(Category $category, Request $request, CategoryFormato $categoryFormato, CategoryPapel $categoryPapel, CategoryCor $categoryCor, CategoryAcabamento $categoryAcabamento) {
+        $data = '';
         $post_inputs = $request->all();
+        $cat = $category->find($post_inputs['categoria']);
 
-        //identifica as linhas que atendem a categoria e formato enviados
-        //$cat = $category->find($post_inputs['categoria']);
-        //$category_formato = $cat->formato->lists('id');
-       /* dd($category_formato);*/
-        $category_formato = CategoryFormato::where('category_id', $post_inputs['categoria'])
-                ->where('formato_id', $post_inputs['formato'])
-                ->lists('id');
+        $formato_id = $post_inputs['formato'];
+        $category_formato_id = $categoryFormato->where('formato_id',$formato_id)->first()->id;
+        $PacFormatos = $cat->CategoryFormato->find($category_formato_id)->PacFormatos()->lists('id');
 
-        //levantando apenas as linhas que atendem a categoria o os id do category_formato
-        $pacote_formatos = Pacformato::where('category_id', $post_inputs['categoria'])
-                ->wherein('category_formato_id', $category_formato)
-                ->lists('id');
+        $papel_id = $post_inputs['papel'];
+        $category_papel_id = $categoryPapel->where('papel_id',$papel_id)->first()->id;
+        $PacPapeis = $cat->CategoryPapel->find($category_papel_id)->PacPapeis()->wherein('pacformato_id',$PacFormatos)->lists('id');
+        $PacPapeisWeight = $cat->CategoryPapel->find($category_papel_id)->PacPapeis()->wherein('pacformato_id',$PacFormatos)->lists('weight');
+        $cor_id = $post_inputs['cor'];
+        $category_cor_id = $categoryCor->where('cor_id',$cor_id)->first()->id;
+        $PacCores = $cat->CategoryCor->find($category_cor_id)->PacCor()->wherein('pacpapel_id',$PacPapeis)->lists('id');
 
-        //identificando o id da categoroy_papel
-        $category_papel = CategoryPapel::where('category_id', $post_inputs['categoria'])
-                ->where('papel_id', $post_inputs['papel'])
-                ->lists('id');
+        $acabamento_id = $post_inputs['acabamento'];
+        $category_acabamento_id = $categoryAcabamento->where('acabamento_id',$acabamento_id)->first()->id;
+        $PacAcabamentos = $cat->CategoryAcabamento->find($category_acabamento_id)->PacAcabamentos()->wherein('paccor_id',$PacCores)->lists('price');
 
-        //levantando as linhas que atendem categoria papel e pac_formato
-        $pacote_papeis = Pacpapel::where('category_id', $post_inputs['categoria'])
-                ->where('category_papel_id', $category_papel[0])
-                ->wherein('pacformato_id', $pacote_formatos)
-                ->lists('id');
-        //identificando o peso para o pacote 
-        $category_peso = Pacpapel::wherein('id', $pacote_papeis)->get();
-        $peso = $category_peso->toarray();
-$pacote_peso=[];
-        foreach ($peso as $k => $valores) {
-            $pacote_peso[] = utf8_encode($valores['weight']);
-        }
-
-        $category_acabamento = CategoryAcabamento::where('category_id', $post_inputs['categoria'])
-                ->where('acabamento_id', $post_inputs['acabamento'])
-                ->lists('id');
-        //dd($category_acabamento);
-        //levantando as linhas que atendem categoria acabamento e pac_papel
-        $pacote_acabamentos = Pacacabamento::where('category_id', $post_inputs['categoria'])
-                ->where('category_acabamento_id', $category_acabamento[0])
-                ->wherein('pacpapel_id', $pacote_papeis)
-                ->get();
-
-        $acabamento = $pacote_acabamentos->toarray();
-
-        $span_preco = array();
-        foreach ($acabamento as $k => $preco) {
-            $span_preco[] = Utilidades::RealBusca(Pacacabamento::find($preco['id'])->price);
-            $data = array('preco' => $span_preco);
-        }
-        $data['peso'] = ($pacote_peso);
-        if ($post_inputs['categoria'] == 5) {
-            $data['preco'][5] = '25,00';
-            $data['preco'][6] = '25,00';
-            $data['preco'][7] = '25,00';
-            $data['preco'][8] = '25,00';
-            $data['preco'][9] = '25,00';
+        if(count($PacAcabamentos)>0){
+            $span_preco = array();
+            foreach ($PacAcabamentos as $k => $preco) {
+                $span_preco[] = Utilidades::RealBusca($preco);
+                //$data = array('preco' => $span_preco);
+            }
+            $data['status'] = 'ok';
+            $data['preco'] = $span_preco;
+            $data['peso'] = $PacPapeisWeight;
+        } else {
+            $data['status'] = 'erro';
+            $data['info'] = 'Preço ainda não cadastrado';
         }
         //dd($data);
-        if (is_array($data)) {
-            return ($data);
-        }
+        return ($data);
     }
 
     /**
@@ -95,7 +88,8 @@ $pacote_peso=[];
      */
     public function Fretes(Request $request) {
         $post_inputs = $request->all();
-        $post_inputs['orc_peso'] = '3.25';
+        //dd($post_inputs);
+        //$post_inputs['orc_peso'] = '3.25';
         //$URL_PAC = Fretes::makeURL($post_inputs['orc_peso'], '90810150', $post_inputs['orc_cep'], '41106');
         $URL_SEDEX = Fretes::makeURL($post_inputs['orc_peso'], $post_inputs['orc_cep'], '40010');
         //echo $URL_SEDEX ;exit;

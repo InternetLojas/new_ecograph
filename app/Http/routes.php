@@ -340,6 +340,11 @@ Route::group(['prefix' => 'diretoria',
         ]);
 
         //quando um id é passado
+        //detalhes de uma categoria e seus produtos
+        Route::get('{id}/detalhes.html',[
+            'as' => 'categories.detalhes',
+            'uses' => 'AdminCategoriesController@detalhes'
+        ]);
         //todos os atributos da categoria
         Route::get('{id}/atributos.html', [
             'as' => 'categories.atributos',
@@ -362,10 +367,10 @@ Route::group(['prefix' => 'diretoria',
             'uses' => 'AdminCategoriesController@CatacabamentosEdit'
         ]);
         //todos os atributos da categoria
-        Route::get('{id}/pacotes.html', [
+        /*Route::get('{id}/pacotes.html', [
             'as' => 'categories.pacotes',
             'uses' => 'AdminCategoriesController@pacotes'
-        ]);
+        ]);*/
         Route::get('{id}/destroy.html', [
             'as' => 'categories.destroy',
             'uses' => 'AdminCategoriesController@destroy'
@@ -424,6 +429,10 @@ Route::group(['prefix' => 'diretoria',
                 'as' => 'formatos.store',
                 'uses' => 'AdminAttributesController@FormatosStore'
             ]);
+            Route::put('{id}/update.html', [
+                'as' => 'quantity.update',
+                'uses' => 'AdminAttributesController@QuantityUpdate'
+            ]);
         });
         Route::get('papeis.html', [
             'as' => 'atributos.papeis',
@@ -469,6 +478,10 @@ Route::group(['prefix' => 'diretoria',
             Route::post('store', [
                 'as' => 'acabamentos.store',
                 'uses' => 'AdminAttributesController@AcabamentosStore'
+            ]);
+            Route::put('{id}/update.html', [
+                'as' => 'prices.update',
+                'uses' => 'AdminAttributesController@PricesUpdate'
             ]);
         });
     });

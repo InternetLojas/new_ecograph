@@ -3,6 +3,7 @@
 Class URLAmigaveis {
 
     public static function Slug($string, $slug = false, $full = false) {
+
         $string = preg_replace('/[`^~\'"]/', null, iconv('UTF-8', 'ASCII//TRANSLIT', $string));
         // Código ASCII das vogais
         $ascii['a'] = range(224, 230);

@@ -63,7 +63,7 @@ class BasketController extends Controller {
             //tem itens Antigo
             // se sim carrega itens antigo
             if (count($customer_basket) > 0) {
-                return redirect()->route('basket.sessao');
+                return redirect()->route('basket.sessao.old');
             }else{
                 //se não redireciona para index
                 return redirect()->route('index');
@@ -72,7 +72,7 @@ class BasketController extends Controller {
             //tem itens Antigo
             //se sim carrega itens antigo mais a sessão
             if (count($customer_basket) > 0) {
-                return redirect()->route('basket.sessao',['customer_basket'=>$customer_basket]);
+                return redirect()->route('basket.sessao.old',['customer_basket'=>$customer_basket]);
             }else{
                 //se não redireciona para index
                 return redirect()->route('index');
@@ -86,7 +86,7 @@ class BasketController extends Controller {
      * Se se loga e tem itens antigo carrega a sessão de carrinho
      */
     public function SessaoOld(){
-        $userId = \Auth::user()->id;
+        $userId = Auth::user()->id;
         $customer = Customer::find($userId);
         $customer_basket = $customer->basket->toArray();
         $this->getCart($customer_basket);
@@ -131,11 +131,12 @@ class BasketController extends Controller {
      */
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
+
         $valor = str_replace('R$ ', '',$post_inputs['orc_pacote_valor']);
         $price = str_replace(',', '.',$valor);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
         $qty = str_replace(' un','',$post_inputs['orc_pacote_qtd']);
-        $pacote_id = Pacote::where('categories_id',$post_inputs['orc_subcategoria_id'])
+        $pacote_id = Pacote::where('category_id',$post_inputs['orc_subcategoria_id'])
             ->where('quantity',$qty)->lists('id');
 
         $item = (array('id' => $post_inputs['produto_id'],
@@ -153,10 +154,10 @@ class BasketController extends Controller {
             'papel' => $post_inputs['orc_papel_nome'],
             'acabamento_id' => $post_inputs['orc_acabamento_id'],
             'acabamento' => $post_inputs['orc_acabamento_nome'],
-            'cor_id' => $post_inputs['orc_cor_id'],
-            'cor' => $post_inputs['orc_cor_nome'],
-            'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
-            'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
+            'cor_id' => $post_inputs['orc_cores_id'],
+            'cor' => $post_inputs['orc_cores_nome'],
+            //'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
+            //'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
             'unidade' => $post_inputs['orc_pacote_qtd'],
             'perfil' => $post_inputs['orc_nome_perfil'],
             'perfil_id' => $post_inputs['orc_id_perfil']
@@ -182,7 +183,7 @@ class BasketController extends Controller {
                     $this->basket_item->papel_id = $option['papel_id'];
                     $this->basket_item->acabamento_id = $option['acabamento_id'];
                     $this->basket_item->cor_id = $option['cor_id'];
-                    $this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
+                    //$this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
                     $this->basket_item->pacote_id = $pacote_id[0];
                     $this->basket_item->save();
                 }
@@ -199,6 +200,7 @@ class BasketController extends Controller {
             $this->basket_item->formato_id = $option['formato_id'];
             $this->basket_item->papel_id = $option['papel_id'];
             $this->basket_item->acabamento_id = $option['acabamento_id'];
+            $this->basket_item->cor_id = $option['cor_id'];
             $this->basket_item->pacote_id = $pacote_id[0];
             $this->basket_item->save();
         }
@@ -309,6 +311,8 @@ class BasketController extends Controller {
      */
     public function getCart($customer_basket)
     {
+
+
         foreach ($customer_basket as $key => $valor) {
             //procura o produto na sessão do carrinho
             $rowId = Cart::search(['id' => $valor['products_id']]); // Returns an array of rowid(s) of found item(s) or false on failure
@@ -327,6 +331,7 @@ class BasketController extends Controller {
             );
             $basket_items = $this->basket->find($valor['id']);
             $option_itens = $basket_items->BasketIten->toArray();
+            //dd($option_itens);
             $cat = CategoryProduct::Categoria($valor['products_id']);
             $categoria = $cat->toarray();
             $cor_id = $option_itens[0]['cor_id'];

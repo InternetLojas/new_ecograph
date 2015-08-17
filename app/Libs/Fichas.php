@@ -469,13 +469,24 @@ Class Fichas {
         return ProductDescription::find($id)->products_name;
     }
 
-    public static function ImgProduto($id) {
+    public static function ImgProduto($id, $verso = false) {
         $img = Product::find($id)->products_image;
        
         if (!file_exists('images/' . $img)) {
             $img = 'theme/naoencontrado.png';
         }
+        if($verso){
+            $img_verso = str_replace('frente','verso',$img);
+            return $img_verso;
+        }
         return $img; 
+    }
+
+    public static function MudaImgProduto($id,$name){
+        $perfil = explode('[',$name);
+        $perfil_nome = str_replace(']','',$perfil[1]);
+        $img = Product::find($id)->products_image;
+        dd($perfil_nome);
     }
 
     public static function ModelProduto($id) {

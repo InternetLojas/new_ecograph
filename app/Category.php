@@ -30,9 +30,9 @@ class Category extends Model {
     public function Cor(){
         return $this->belongsToMany('Ecograph\Cor');
     }
-    /*public function Acabamento(){
+    public function Acabamento(){
         return $this->belongsToMany('Ecograph\Acabamento');
-    }*/
+    }
     public function CategoryFormato(){
         return $this->hasMany('Ecograph\CategoryFormato');
     }

@@ -8,36 +8,28 @@ use Ecograph\Perfil;
 
 Class Modais {
 
-    public static function modal($categories_id) {
-        //verificar se existe o produto para a categoria solicitada
-        $check_produtos = CategoryProduct::where('category_id', '=', $categories_id)
-                ->lists('product_id');
+    public static function modal($categoria) {
+        $check_produtos = $categoria->CategoryProduct()->lists('product_id');
         //se existir produtos vinculados
         if (count($check_produtos) > 0) {
-            $perfis_produtos = ProdutoPerfil::wherein('templates_id', $check_produtos)
-                    ->lists('perfis_id');
-            $perfis = array_unique($perfis_produtos);
-            reset($perfis);
+            $perfis = ProdutoPerfil::wherein('product_id',$check_produtos)->groupby('perfil_id')->lists('perfil_id','id');
+
             return $perfis;
         }
         return false;
     }
 
-    public static function perfis($perfis) {
-        $perfil = Perfil::where('id', '<>', 0)
-                        ->wherein('id', $perfis)->get();
-        foreach ($perfil as $k => $dados_perfil) {
-            $array_perfil[] = array('id_perfil' => $dados_perfil['id'],
-                'nome_perfil' => $dados_perfil['nome_perfil'],
-                'nome_perfil_html' => $dados_perfil['nome_perfil_html'],
-                'logo_perfil' => $dados_perfil['logo_perfil']);
+    public static function perfis($perfis, $produtoperfil) {
+        foreach ($perfis as $id=>$perfil_id) {
+            if($perfil_id != 0){
+                $perfil  = $produtoperfil->find($id)->Perfil;
+                $array_perfil[] = $perfil->toArray();
+            }
         }
-
-        ksort($array_perfil);
         return $array_perfil;
     }
 
-    public static function upload($categoria) {
+   /* public static function upload($categoria) {
         $uploads = Array(
             'adesivo' => Array
                 (
@@ -338,6 +330,6 @@ Class Modais {
             ),
         );
         return $uploads[$categoria];
-    }
+    }*/
 
 }

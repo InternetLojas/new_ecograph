@@ -8,7 +8,7 @@ use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
 use Ecograph\CategoryFormato;
 use Ecograph\Cor;
-use Ecograph\CategoryCore;
+use Ecograph\CategoryCor;
 use Ecograph\Enoblecimento;
 use Ecograph\CategoryEnoblecimento;
 use Ecograph\CategoryPapel;
@@ -142,8 +142,8 @@ class ProductController extends Controller {
         $check_produtos = CategoryProduct::where('category_id', $post_inputs['orc_subcategoria_id'])->lists('product_id');
 //se existir produtos vinculados
         if (count($check_produtos) > 0) {
-            $perfis_produtos = ProdutoPerfil::where('perfis_id', $post_inputs['orc_id_perfil'])
-                ->wherein('templates_id', $check_produtos)
+            $perfis_produtos = ProdutoPerfil::where('perfil_id', $post_inputs['orc_id_perfil'])
+                ->wherein('product_id', $check_produtos)
                 ->orderby('created_at')
                 ->paginate(NR_PRODUTOS_POR_PAGINA);
         }
@@ -176,7 +176,6 @@ class ProductController extends Controller {
     public function Calculadora(Request $request) {
         $post_inputs = $request->all();
         $layout = [];
-        $pai = Fichas::parentCategoria($post_inputs['escolhido']);
 
         $formato_id = CategoryFormato::where('category_id', $post_inputs['escolhido'])
             ->lists('formato_id');
@@ -187,8 +186,8 @@ class ProductController extends Controller {
             }
         } else {
             $data = array();
-            $data['back_menu'] = array('background' => $layout['back_menu']);
-            $data['active_a'] = array('style_a' => $layout['style_a']);
+            $data['back_menu'] = array('background' => '');
+            $data['active_a'] = array('style_a' => '');
             $data['imagem'] = array('image' => utf8_encode('images/fora-do-ar.jpg'));
             $data['processamento'] = array('erro' => utf8_encode('Erro no processamento.'));
             $data['informacao'] = array('info' => utf8_encode('Essa categoria ainda não foi cadastrada.'));
@@ -198,7 +197,7 @@ class ProductController extends Controller {
             return $json_data;
         }
         $cores = '';
-        $cor_id = CategoryCore::where('category_id', $post_inputs['escolhido'])->lists('cor_id');
+        $cor_id = CategoryCor::where('category_id', $post_inputs['escolhido'])->lists('cor_id');
         foreach ($cor_id as $k => $valor) {
             $cores[] = array('id' => $valor, 'nome' => Cor::find($valor)->valor);
         }
@@ -210,34 +209,21 @@ class ProductController extends Controller {
         foreach ($acabamento_id as $k => $valor) {
             $acabamento[] = array('id' => $valor, 'nome' => Acabamento::find($valor)->valor);
         }
-        $enoblecimento = '';
-        $enoblecimento_id = CategoryEnoblecimento::where('category_id', $post_inputs['escolhido'])->lists('enoblecimento_id');
-        foreach ($enoblecimento_id as $k => $valor) {
-            $enoblecimento[] = array('id' => $valor, 'nome' => Enoblecimento::find($valor)->valor);
-        }
-        /* $cores = array(
-          array(
-          "id" => "90",
-          "nome" => "4x0"),
-          array(
-          "id" => "91",
-          "nome" => "4x4")
-          );
-          $enoblecimento = array(
-          array(
-          "id" => "92",
-          "nome" => "Sem Enoblecimento"),
-          array(
-          "id" => "93",
-          "nome" => "Laminacao Fosca")
-          ); */
 
         $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
         $pacote_qtd = $pacote->toarray();
         foreach ($pacote_qtd as $key => $itens) {
-            $quantidade[] = array('id' => $itens['id'], 'unidade' => $itens['quantity']);
+            $quantidade[] = [
+                'id' => $itens['id'],
+                'unidade' => $itens['quantity']
+            ];
         }
-        $tabela = array('formato' => $formato, 'cores' => $cores, 'papel' => $papel, 'acabamento' => $acabamento, 'enoblecimento' => $enoblecimento);
+        $tabela = [
+            'formato' => $formato,
+            'cores' => $cores,
+            'papel' => $papel,
+            'acabamento' => $acabamento
+        ];
         $category = Category::find($post_inputs['escolhido']);
         $parent_cores = $category->toarray();
         switch ($parent_cores['parent_id']) {
