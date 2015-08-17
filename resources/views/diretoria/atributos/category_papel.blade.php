@@ -10,7 +10,7 @@
                         <thead>
                         <tr>
                             <th>Formato</th>
-                            <th>#</th>
+                            <th>Papel</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -23,20 +23,63 @@
                                     <table class="table table-bordered table-condensed">
                                         <thead>
                                         <tr>
-                                            <th>Papel</th>
                                             <th>#</th>
+                                            <th>
+                                                <table class="table table-bordered table-condensed">
+
+                                                    <tbody>
+
+                                                    <tr>
+                                                        @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                            <td>{{$quantity}}</td>
+                                                        @empty
+                                                            <td></td>
+                                                        @endforelse
+                                                    </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @forelse($papel as $papel_id => $items_p)
+                                            @if(is_array($items_p['pacotes'][$formato_id][$papel_id]))
                                             <tr>
                                                 <td>
+
                                                     {{$items_p['papel_nome']}}
                                                 </td>
                                                 <td>
 
-                                                   </td>
+
+                                                            {!! Form::open(['url'=>route('weight.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
+                                                            <table class="table table-condensed">
+                                                                <tbody>
+                                                                <tr>
+                                                                        @forelse($items_p['pacotes'][$formato_id][$papel_id]['weight'] as $id =>$weight)
+                                                                            <td>
+
+                                                                                    {!! Form::text('weight['.$id.']', $weight, ['class' => 'form-control']) !!}
+
+                                                                            </td>
+                                                                        @empty
+                                                                            <td></td>
+                                                                        @endforelse
+                                                                        <td>
+
+                                                                                {!! Form::submit('Adicionar peso para o papel', ['class'=>'btn btn-primary']) !!}
+
+                                                                        </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            {!! Form::close() !!}
+
+                                                </td>
                                             </tr>
+
+                                            @endif
                                         @empty
                                         @endforelse
                                         </tbody>

@@ -17,7 +17,7 @@
                         @forelse($formato as $formato_id => $items)
                             <tr>
                                 <td>
-                                   {{$items['formato_nome']}}
+                                    {{$items['formato_nome']}}
                                 </td>
                                 <td>
                                     <table class="table table-bordered table-condensed">
@@ -29,74 +29,80 @@
                                         </thead>
                                         <tbody>
                                         @forelse($papel as $papel_id => $items_p)
-                                        <tr>
-                                            <td>
-                                                {{$items_p['papel_nome']}}
-                                            </td>
-                                            <td>
-                                                <table class="table table-bordered table-condensed">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Cor</th>
-                                                        <th>#</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    @forelse($cores as $cor_id => $items_c)
-                                                        <tr>
-                                                            <td>
-                                                                {{$items_c['cor_nome']}}
-                                                            </td>
-                                                            <td>
-                                                                <table class="table table-bordered table-condensed">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>Acabamento</th>
-                                                                        <th>#</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <table class="table table-bordered table-condensed">
-                                                                                <tr>
-                                                                                    @forelse($items_p['pacotes'][$formato_id][$papel_id]['weight'] as $weight)
-                                                                                    <td>{{$weight[0]}}</td>
-                                                                                    @empty
-                                                                                    @endforelse
-                                                                                </tr>
-                                                                            </table>
-                                                                        </td>
-                                                                    </tr>
-                                                                    @forelse($acabamentos as $acabamento_id => $items_a)
-                                                                        <tr>
-                                                                            <td>
-                                                                                {{$items_a['acabamento_nome']}}
-                                                                            </td>
-                                                                            <td>
-                                                                                <table class="table table-bordered table-condensed">
-                                                                                    <tr>
-                                                                                @forelse($items_a['pacotes'][$formato_id][$papel_id][$cor_id][$acabamento_id]['price'] as $config)
-                                                                                    <td>{{$config}}</td>
-                                                                                @empty
-                                                                                @endforelse
-                                                                                    </tr>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    @empty
-                                                                    @endforelse
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                    @empty
-                                                    @endforelse
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
+                                            @if(is_array($items_p['pacotes'][$formato_id][$papel_id]))
+                                                <tr>
+                                                    <td>
+                                                        {{$items_p['papel_nome']}}
+                                                    </td>
+                                                    <td>
+
+                                                        <table class="table table-bordered table-condensed">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Cores</th>
+                                                                <th>
+                                                                    Acabamento
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @forelse($cores as $cor_id => $items_c)
+                                                                <tr>
+                                                                    <td>
+                                                                        {{$items_c['cor_nome']}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {!! Form::open(['url'=>route('prices.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
+                                                                           <table class="table table-bordered table-condensed">
+                                                                               <thead>
+                                                                               <tr>
+                                                                                   <th>#</th>
+                                                                                   @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                                                       <th>{{$quantity}}</th>
+                                                                                   @empty
+                                                                                       <th></th>
+                                                                                   @endforelse
+
+                                                                               </tr>
+                                                                               </thead>
+                                                                               <tbody>
+                                                                               @forelse($acabamentos[$formato_id][$papel_id][$cor_id] as $acabamento_id => $items_a)
+                                                                                   <tr>
+                                                                                       <td>
+                                                                                           @forelse($items_a as $acabamento_nome => $configuracao)
+                                                                                              {{$acabamento_nome}}
+                                                                                           @empty
+                                                                                           @endforelse
+                                                                                       </td>
+                                                                                       @forelse($items_a as $acabamento_nome => $configuracao)
+                                                                                           @forelse($configuracao as $p => $prices)
+                                                                                               <td>
+                                                                                                   <div class="">
+                                                                                                       {!! Form::text('price['.$prices['pacacabamento_id'].']', $prices['price'], ['class' => 'form-control']) !!}
+                                                                                                   </div>
+
+                                                                                               </td>
+                                                                                           @empty
+                                                                                           @endforelse
+                                                                                       @empty
+                                                                                       @endforelse
+                                                                                   </tr>
+                                                                               @empty
+                                                                               @endforelse
+                                                                               </tbody>
+                                                                           </table>
+                                                                        {!! Form::submit('Adicionar o preço', ['class'=>'btn btn-success pull-right']) !!}
+                                                                        {!! Form::close() !!}
+                                                                    </td>
+                                                                </tr>
+                                                            @empty
+                                                            @endforelse
+                                                            </tbody>
+                                                        </table>
+
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @empty
                                         @endforelse
                                         </tbody>

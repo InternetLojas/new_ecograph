@@ -9,7 +9,5 @@
     <input type="hidden" name="papel" id="papel_id" value="" />
     <input type="hidden" name="acabamento_nome" id="acabamento_nome" value="" />
     <input type="hidden" name="acabamento" id="acabamento_id" value="" />
-    <input type="hidden" name="enoblecimento_nome" id="enoblecimento_nome" value="" />
-    <input type="hidden" name="enoblecimento" id="enoblecimento_id" value="" />
     <input type="hidden" name="_token" value="{!!csrf_token()!!}"/>
 </form>

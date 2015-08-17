@@ -53,9 +53,6 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="{{route('diretoria.categories')}}">Gerenciar marcas</a>
-                </li>
-                <li>
                     <a href="{{route('diretoria.categories')}}">Gerenciar google</a>
                 </li>
             </ul>

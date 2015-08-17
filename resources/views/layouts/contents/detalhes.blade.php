@@ -7,6 +7,9 @@
     <span style="font-size:90%">Selecione as opções:</span>
 </div>
 <div id="info_calculadora"></div>
+<div class="thumb_cat">
+    <img id="naocadastrado" style="margin:auto;display:none" src="images/theme/naoencontrado.png"/>
+</div>
 <!--tabela de cálculo dos preços-->
 @include('layouts.includes.detalhes.tabela')
 @include('layouts.includes.detalhes.especificacoes')

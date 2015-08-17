@@ -10,7 +10,7 @@
                         <thead>
                         <tr>
                             <th>Formato</th>
-                            <th>#</th>
+                            <th>Quantidade</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -20,28 +20,24 @@
                                     {{$items['formato_nome']}}
                                 </td>
                                 <td>
-                                    <table class="table table-bordered table-condensed">
-                                        <thead>
-                                        <tr>
-                                            <th>peso1</th>
-                                            <th>Peso2</th>
-                                            <th>Peson</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-
+                                    {!! Form::open(['url'=>route('quantity.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
+                                        <table class="table table-bordered table-condensed">
+                                            <tbody>
                                             <tr>
-                                                <td>
-                                                    itens1
-                                                </td>
-                                                <td>
-itens2
-                                                </td>
-                                                <td>Item n</td>
-                                            </tr>
+                                                @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                    <td>
 
-                                        </tbody>
-                                    </table>
+                                                        {!! Form::text('quantity['.$id.']', $quantity, ['class' => 'form-control']) !!}
+
+                                                    </td>
+                                                @empty
+                                                    <td></td>
+                                                @endforelse
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    {!! Form::submit('Atualizar quantidade', ['class'=>'btn btn-success pull-right']) !!}
+                                    {!! Form::close() !!}
                                 </td>
                             </tr>
                         @empty

@@ -3,7 +3,7 @@
     <div class="container">
         <h1>Categorias</h1>
 
-        <a href="#"  class="btn btn-default" > New Category </a>
+        <a href="#"  class="btn btn-default" > Nova Categoria </a>
         <table class="table table-hover">
             <thead>
             <tr>

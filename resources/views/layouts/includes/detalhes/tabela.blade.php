@@ -16,7 +16,6 @@
                     <th class="text-center">Cores</th>
                     <th class="text-center">Papel/Material</th>
                     <th class="text-center">Acabamento</th>
-                    <th class="text-center">Enoblecimento</th>
                     <th class="text-center">
                         Qtd/Valor                                   
                     </th>
@@ -28,7 +27,6 @@
                     <td id="lista_cores"></td>
                     <td id="lista_papel"></td>
                     <td id="lista_acabamento"></td>
-                    <td id="lista_enoblecimento"></td>
                     <td id="lista_preco" ></td>
                 </tr>
             </tbody>

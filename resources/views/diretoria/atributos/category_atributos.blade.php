@@ -35,6 +35,20 @@
                             @endforelse
                         </div>
                         <div class="form-group">
+                            <h2>Cores</h2>
+                            <hr>
+                            @forelse($cores as $cor)
+                                <div class="col-sm-3">
+                                    <div class="checkbox">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="cor[{{$cor->id}}]" value="{{$cor->id}}" @if(in_array($cor->id,$catcores)) checked @endif >{{$cor->valor}}</label>
+                                    </div>
+                                </div>
+                            @empty
+                                <p>Sem atributo cores</p>
+                            @endforelse
+                        </div>
+                        <div class="form-group">
                             <h2>Acabamentos</h2>
                             <hr>
                             @forelse($acabamentos as $acabamento)

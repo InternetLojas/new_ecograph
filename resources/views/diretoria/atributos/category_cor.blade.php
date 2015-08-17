@@ -24,7 +24,7 @@
                                         <thead>
                                         <tr>
                                             <th>Papel</th>
-                                            <th>#</th>
+                                            <th>Cores</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -37,8 +37,23 @@
                                                     <table class="table table-bordered table-condensed">
                                                         <thead>
                                                         <tr>
-                                                            <th>Cores</th>
                                                             <th>#</th>
+                                                            <th>
+                                                                <table class="table table-bordered table-condensed">
+
+                                                                    <tbody>
+
+                                                                    <tr>
+                                                                        @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                                            <td>{{$quantity}}</td>
+                                                                        @empty
+                                                                            <td></td>
+                                                                        @endforelse
+                                                                    </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>

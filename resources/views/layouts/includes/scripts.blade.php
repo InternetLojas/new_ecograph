@@ -22,7 +22,7 @@
 <script src="{{ asset('//code.jquery.com/jquery.js')}}"></script>
 <script src="{{ asset('//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')}}"></script>
 <script src="{{asset(elixir('js/custom.js'))}}"></script>
-<!--<script src="{asset('build/js/custom-031e2d63.js')}"></script>-->
+<!--<script src="asset('build/js/custom-40585431.js')"></script>-->
 <script src="{{asset('js/jquery.maskedinput.js')}}"></script>
 @if($page=='contato')
     <script src="{{ asset(elixir('js/alljs.js')) }}"></script>
