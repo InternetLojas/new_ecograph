@@ -15,6 +15,7 @@
                         </thead>
                         <tbody>
                         @forelse($formato as $formato_id => $items)
+
                             <tr>
                                 <td>
                                     {{$items['formato_nome']}}
@@ -24,7 +25,7 @@
                                         <table class="table table-bordered table-condensed">
                                             <tbody>
                                             <tr>
-                                                @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                @forelse($items['pacotes'] as $id =>$quantity)
                                                     <td>
 
                                                         {!! Form::text('quantity['.$id.']', $quantity, ['class' => 'form-control']) !!}
@@ -54,8 +55,9 @@
                             @endforeach
                         </ul>
                     @endif
-                    {!! Form::open(['route' =>['categories.update.formato',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' =>['categories.atributo.update',$cat_id,'formato'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
+
                         @forelse($list_formatos as $formato)
                             <div class="col-sm-3">
                                 <div class="checkbox">
@@ -69,7 +71,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            {!! Form::submit('Edit Category', ['class'=>'btn btn-primary']) !!}
+                            {!! Form::submit('Edit Category', ['class'=>'btn btn-success pull-right']) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

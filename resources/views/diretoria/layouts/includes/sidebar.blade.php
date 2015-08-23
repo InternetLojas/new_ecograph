@@ -42,10 +42,13 @@
                             <a href="{{route('atributos.formatos')}}">Formatos</a>
                         </li>
                         <li>
+                            <a href="{{route('atributos.papeis')}}">Papeis</a>
+                        </li>
+                        <li>
                             <a href="{{route('atributos.cores')}}">Cores</a>
                         </li>
                         <li>
-                            <a href="{{route('atributos.papeis')}}">Papeis</a>
+                            <a href="{{route('atributos.enobrecimentos')}}">Enobrecimentos</a>
                         </li>
                         <li>
                             <a href="{{route('atributos.acabamentos')}}">Acabamentos</a>

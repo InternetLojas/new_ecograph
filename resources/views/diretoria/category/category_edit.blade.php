@@ -49,7 +49,7 @@
             @endif
         </div>
         <div class="form-group">
-            {!! Form::submit('Edit Category', ['class'=>'btn btn-success']) !!}
+            {!! Form::submit('Edit Category', ['class'=>'btn btn-success pull-right']) !!}
         </div>
         {!! Form::close() !!}
     </div>

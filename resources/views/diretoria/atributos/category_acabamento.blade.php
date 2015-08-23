@@ -24,24 +24,30 @@
                                         <thead>
                                         <tr>
                                             <th>Papel</th>
-                                            <th>#</th>
+                                            <th>
+                                                #
+                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @forelse($papel as $papel_id => $items_p)
-                                            @if(is_array($items_p['pacotes'][$formato_id][$papel_id]))
+
+                                        @forelse($papel[$formato_id] as $papel_id => $items_p)
+
+                                            @if(is_array($items_p['pacotes']))
                                                 <tr>
                                                     <td>
+
                                                         {{$items_p['papel_nome']}}
+
                                                     </td>
                                                     <td>
 
-                                                        <table class="table table-bordered table-condensed">
+                                                        <table class="table table-bordered  table-condensed">
                                                             <thead>
                                                             <tr>
                                                                 <th>Cores</th>
                                                                 <th>
-                                                                    Acabamento
+                                                                    #
                                                                 </th>
                                                             </tr>
                                                             </thead>
@@ -53,46 +59,43 @@
                                                                     </td>
                                                                     <td>
                                                                         {!! Form::open(['url'=>route('prices.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
-                                                                           <table class="table table-bordered table-condensed">
-                                                                               <thead>
-                                                                               <tr>
-                                                                                   <th>#</th>
-                                                                                   @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
-                                                                                       <th>{{$quantity}}</th>
-                                                                                   @empty
-                                                                                       <th></th>
-                                                                                   @endforelse
+                                                                        <table class="table table-bordered table-condensed">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                    <th>Acabamento</th>
+                                                                                    @forelse($items_p['pacotes']['pacote_id'] as $id =>$quantity)
+                                                                                        <th>{{$quantity}}</th>
+                                                                                    @empty
+                                                                                        <th></th>
+                                                                                    @endforelse
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            @forelse($acabamentos[$formato_id][$papel_id][$items_c['cor_id']] as $acabamento_id => $items_a)
 
-                                                                               </tr>
-                                                                               </thead>
-                                                                               <tbody>
-                                                                               @forelse($acabamentos[$formato_id][$papel_id][$cor_id] as $acabamento_id => $items_a)
-                                                                                   <tr>
-                                                                                       <td>
-                                                                                           @forelse($items_a as $acabamento_nome => $configuracao)
-                                                                                              {{$acabamento_nome}}
-                                                                                           @empty
-                                                                                           @endforelse
-                                                                                       </td>
-                                                                                       @forelse($items_a as $acabamento_nome => $configuracao)
-                                                                                           @forelse($configuracao as $p => $prices)
-                                                                                               <td>
-                                                                                                   <div class="">
-                                                                                                       {!! Form::text('price['.$prices['pacacabamento_id'].']', $prices['price'], ['class' => 'form-control']) !!}
-                                                                                                   </div>
-
-                                                                                               </td>
-                                                                                           @empty
-                                                                                           @endforelse
-                                                                                       @empty
-                                                                                       @endforelse
-                                                                                   </tr>
-                                                                               @empty
-                                                                               @endforelse
-                                                                               </tbody>
-                                                                           </table>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        @forelse($items_a as $acabamento_nome => $configuracao)
+                                                                                            {{$acabamento_nome}}
+                                                                                        @empty
+                                                                                        @endforelse
+                                                                                    </td>
+                                                                                    @forelse($items_a as $acabamento_nome => $configuracao)
+                                                                                        @forelse($configuracao as $p => $prices)
+                                                                                            <td>
+                                                                                                {!! Form::text('price['.$prices['pacacabamento_id'].']', $prices['price'], ['class' => 'form-control']) !!}
+                                                                                            </td>
+                                                                                        @empty
+                                                                                        @endforelse
+                                                                                    @empty
+                                                                                    @endforelse
+                                                                                </tr>
+                                                                            @empty
+                                                                            @endforelse
+                                                                            </tbody>
+                                                                        </table>
                                                                         {!! Form::submit('Adicionar o preço', ['class'=>'btn btn-success pull-right']) !!}
-                                                                        {!! Form::close() !!}
+                                                                        {!!Form::close()!!}
                                                                     </td>
                                                                 </tr>
                                                             @empty
@@ -124,7 +127,7 @@
                             @endforeach
                         </ul>
                     @endif
-                    {!! Form::open(['route' =>['categories.update.acabamento',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' =>['categories.atributo.update',$cat_id,'acabamento'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         @forelse($list_acabamentos as $acabamento)
                             <div class="col-sm-3">
@@ -139,7 +142,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            {!! Form::submit('Edit Category', ['class'=>'btn btn-primary']) !!}
+                            {!! Form::submit('Edit Category', ['class'=>'btn btn-succes pull-right']) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

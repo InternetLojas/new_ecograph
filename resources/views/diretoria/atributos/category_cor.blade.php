@@ -28,50 +28,50 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @forelse($papel as $papel_id => $items_p)
-                                            <tr>
-                                                <td>
-                                                    {{$items_p['papel_nome']}}
-                                                </td>
-                                                <td>
-                                                    <table class="table table-bordered table-condensed">
-                                                        <thead>
+                                        @forelse($papel[$formato_id] as $papel_id => $items_p)
+                                        <tr>
+                                            <td>
+                                                {{$items_p['papel_nome']}}
+                                            </td>
+                                            <td>
+                                                <table class="table table-bordered table-condensed">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>
+                                                            <table class="table table-bordered table-condensed">
+
+                                                                <tbody>
+
+                                                                <tr>
+                                                                    @forelse($items_p['pacotes']['pacote_id'] as $k => $quantity)
+                                                                        <td>{{$quantity}}</td>
+                                                                    @empty
+                                                                        <td></td>
+                                                                    @endforelse
+                                                                </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @forelse($cores as $cor_id => $items_c)
                                                         <tr>
-                                                            <th>#</th>
-                                                            <th>
-                                                                <table class="table table-bordered table-condensed">
+                                                            <td>
+                                                                {{$items_c['cor_nome']}}
+                                                            </td>
+                                                            <td>
 
-                                                                    <tbody>
-
-                                                                    <tr>
-                                                                        @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
-                                                                            <td>{{$quantity}}</td>
-                                                                        @empty
-                                                                            <td></td>
-                                                                        @endforelse
-                                                                    </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </th>
+                                                            </td>
                                                         </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @forelse($cores as $cor_id => $items_c)
-                                                            <tr>
-                                                                <td>
-                                                                    {{$items_c['cor_nome']}}
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                            </tr>
-                                                        @empty
-                                                        @endforelse
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
+                                                    @empty
+                                                    @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                         @empty
                                         @endforelse
                                         </tbody>
@@ -93,7 +93,7 @@
                             @endforeach
                         </ul>
                     @endif
-                    {!! Form::open(['route' =>['categories.update.cor',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' =>['categories.atributo.update',$cat_id,'cor'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         @forelse($list_cores as $cores)
                             <div class="col-sm-3">
@@ -108,7 +108,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            {!! Form::submit('Edit Category', ['class'=>'btn btn-primary']) !!}
+                            {!! Form::submit('Edit Category', ['class'=>'btn btn-succes pull-right']) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

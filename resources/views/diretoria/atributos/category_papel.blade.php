@@ -30,7 +30,7 @@
                                                     <tbody>
 
                                                     <tr>
-                                                        @forelse($items['pacotes'][$formato_id]['pacote_id'] as $id =>$quantity)
+                                                        @forelse($items['pacotes'] as $id =>$quantity)
                                                             <td>{{$quantity}}</td>
                                                         @empty
                                                             <td></td>
@@ -43,42 +43,32 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @forelse($papel as $papel_id => $items_p)
-                                            @if(is_array($items_p['pacotes'][$formato_id][$papel_id]))
-                                            <tr>
-                                                <td>
 
-                                                    {{$items_p['papel_nome']}}
-                                                </td>
-                                                <td>
+                                        @forelse($papel[$formato_id] as $papel_id => $items_p)
 
-
-                                                            {!! Form::open(['url'=>route('weight.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
-                                                            <table class="table table-condensed">
-                                                                <tbody>
-                                                                <tr>
-                                                                        @forelse($items_p['pacotes'][$formato_id][$papel_id]['weight'] as $id =>$weight)
-                                                                            <td>
-
-                                                                                    {!! Form::text('weight['.$id.']', $weight, ['class' => 'form-control']) !!}
-
-                                                                            </td>
-                                                                        @empty
-                                                                            <td></td>
-                                                                        @endforelse
-                                                                        <td>
-
-                                                                                {!! Form::submit('Adicionar peso para o papel', ['class'=>'btn btn-primary']) !!}
-
-                                                                        </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            {!! Form::close() !!}
-
-                                                </td>
-                                            </tr>
-
+                                            @if(is_array($items_p['pacotes']))
+                                                <tr>
+                                                    <td>
+                                                        {{$items_p['papel_nome']}}
+                                                    </td>
+                                                    <td>
+                                                        {!! Form::open(['url'=>route('weight.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
+                                                        <table class="table table-condensed">
+                                                            <tbody>
+                                                            <tr>
+                                                                @forelse($items_p['pacotes']['weight'] as $id =>$weight)
+                                                                    <td>
+                                                                        {!! Form::text('weight['.$id.']', $weight, ['class' => 'form-control']) !!}
+                                                                    </td>
+                                                                @empty
+                                                                @endforelse
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        {!! Form::submit('Adicionar peso para o papel', ['class'=>'btn btn-success pull-right']) !!}
+                                                        {!! Form::close() !!}
+                                                    </td>
+                                                </tr>
                                             @endif
                                         @empty
                                         @endforelse
@@ -101,7 +91,7 @@
                             @endforeach
                         </ul>
                     @endif
-                    {!! Form::open(['route' =>['categories.update.papel',$cat_id],'method'=>'put', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' =>['categories.atributo.update',$cat_id,'papel'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         @forelse($list_papeis as $papel)
                             <div class="col-sm-3">
@@ -116,7 +106,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            {!! Form::submit('Edit Category', ['class'=>'btn btn-primary']) !!}
+                            {!! Form::submit('Edit Category', ['class'=>'btn btn-succes pull-right']) !!}
                         </div>
                     </div>
                     {!! Form::close() !!}

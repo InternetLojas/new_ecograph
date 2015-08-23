@@ -1,7 +1,7 @@
 @extends('diretoria.main_admin')
 @section('content')
     <div class="container">
-        <h1>Criar Ppaeis</h1>
+        <h1>Criar Papeis</h1>
         @if($errors->any())
             <ul class="alert alert-warning">
                 @foreach($errors->all() as $erro)
@@ -16,12 +16,23 @@
             {!! Form::label('category', 'Categoria: ') !!}
             {!! Form::select('category_id', $category, null, ['class' => 'form-control']) !!}
         </div>
-        @for($i=0;$i<$qtd_inputs;$i++)
-            <div class="form-group">
+        <!---->
+        @if($papel)
+            <div class="form-group col-md-4">
+                    {!! Form::label('valor', 'Nome do papel: ') !!}
+                   <!-- { Form::text('valor[]', null, ['class' => 'form-control col-md-8']) }-->
+                    {!! Form::select('valor[]', $papel, null, ['class' => 'form-control','multiple' => true]) !!}
+            </div>
+        @else
+            @for($i=0;$i<$qtd_inputs;$i++)
+            <div class="form-group col-md-4">
                 {!! Form::label('valor', 'Nome do papel: ') !!}
                 {!! Form::text('valor[]', null, ['class' => 'form-control']) !!}
             </div>
-        @endfor
+            @endfor
+            @endif
+        <div class="clearfix"></div>
+        <!---->
         <div class="form-group">
             {!! Form::submit('Adicionar o Papel para a categoria', ['class'=>'btn btn-primary']) !!}
         </div>
