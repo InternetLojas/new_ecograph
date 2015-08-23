@@ -14,13 +14,9 @@ class Category extends Model {
     );
     protected $guarded = ['id'];
 
-    public function CategoryProduct() {
-        return $this->hasMany('Ecograph\CategoryProduct');
-    }
-
-    public function Pacotes() {
-        return $this->hasMany('Ecograph\Pacote');
-    }
+    /*
+     * belongsToMany
+     */
     public function Formato(){
         return $this->belongsToMany('Ecograph\Formato');
     }
@@ -33,6 +29,18 @@ class Category extends Model {
     public function Acabamento(){
         return $this->belongsToMany('Ecograph\Acabamento');
     }
+    /*
+     * hasmany
+     */
+    public function CategoryProduct() {
+        return $this->hasMany('Ecograph\CategoryProduct');
+    }
+    public function Pacotes() {
+        return $this->hasMany('Ecograph\Pacote');
+    }
+    public function Enoblecimento(){
+        return $this->HasMany('Ecograph\Enoblecimento');
+    }
     public function CategoryFormato(){
         return $this->hasMany('Ecograph\CategoryFormato');
     }
@@ -42,12 +50,13 @@ class Category extends Model {
     public function CategoryCor(){
         return $this->hasMany('Ecograph\CategoryCor');
     }
+    public function CategoryEnoblecimento(){
+        return $this->hasMany('Ecograph\CategoryEnoblecimento');
+    }
     public function CategoryAcabamento(){
         return $this->hasMany('Ecograph\CategoryAcabamento');
     }
-    /*public function Enoblecimento(){
-        return $this->belongsToMany('Ecograph\Enoblecimento');
-    }*/
+
 
 
     public function scopePai($query) {

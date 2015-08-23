@@ -35,15 +35,15 @@ class ProductController extends Controller {
       | controller as you wish. It is just here to get your app started!
       |
      */
-
+    private $enoblecimentoModel;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct() {
-      //
+    public function __construct(Enoblecimento $enoblecimentoModel) {
+      $this->enoblecimentoModel = $enoblecimentoModel;
     }
 
     /**
@@ -205,9 +205,24 @@ class ProductController extends Controller {
         foreach ($papel_id as $k => $valor) {
             $papel[] = array('id' => $valor, 'nome' => Papel::find($valor)->valor);
         }
+        $enoblecimento_id = $this->enoblecimentoModel->where('category_id', $post_inputs['escolhido'])->get()->lists('valor','id');
+        //dd($enoblecimento_id);
+        foreach ($enoblecimento_id as $k => $valor) {
+            $acabamento_enoblecimento =  Acabamento::where('enoblecimento',$valor)->lists('id');
+
+            $enoblecimento[] = [
+                'id' => $acabamento_enoblecimento[0],
+                'nome' => $valor,
+                'enoblecimento_id' => $acabamento_enoblecimento[0]
+            ];
+        }
+        //dd($enoblecimento);
         $acabamento_id = CategoryAcabamento::where('category_id', $post_inputs['escolhido'])->lists('acabamento_id');
-        foreach ($acabamento_id as $k => $valor) {
-            $acabamento[] = array('id' => $valor, 'nome' => Acabamento::find($valor)->valor);
+          foreach ($acabamento_id as $k => $valor) {
+            $acabamento[] = [
+                'id' => $valor,
+                'nome' => Acabamento::find($valor)->valor
+            ];
         }
 
         $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
@@ -222,6 +237,7 @@ class ProductController extends Controller {
             'formato' => $formato,
             'cores' => $cores,
             'papel' => $papel,
+            'enoblecimento' => $enoblecimento,
             'acabamento' => $acabamento
         ];
         $category = Category::find($post_inputs['escolhido']);
@@ -260,7 +276,7 @@ class ProductController extends Controller {
         }
         $check = Pacformato::where('category_id', $post_inputs['escolhido']);
         if ($check) {
-            //dd($tabela);
+           // dd($tabela);
             $data = array();
             $data['back_menu'] = array('background' => $back_menu);
             $data['active_a'] = array('style_a' => '');

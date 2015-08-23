@@ -305,6 +305,7 @@ Route::post('basket/listar.html', [
 /* ============================================================== */
 
 Route::group(['prefix' => 'diretoria',
+    'middleware' => 'auth',
     'where'=>['id'=>'[0-9]+'],
     'where'=>['category'=>'[0-9]+']], function() {
 
@@ -366,11 +367,7 @@ Route::group(['prefix' => 'diretoria',
             'as' => 'categorie.acabamentos.edit',
             'uses' => 'AdminCategoriesController@CatacabamentosEdit'
         ]);
-        //todos os atributos da categoria
-        /*Route::get('{id}/pacotes.html', [
-            'as' => 'categories.pacotes',
-            'uses' => 'AdminCategoriesController@pacotes'
-        ]);*/
+
         Route::get('{id}/destroy.html', [
             'as' => 'categories.destroy',
             'uses' => 'AdminCategoriesController@destroy'
@@ -380,22 +377,9 @@ Route::group(['prefix' => 'diretoria',
             'uses' => 'AdminCategoriesController@edit'
         ]);
 
-        Route::put('{id}/update-formato.html', [
-            'as' => 'categories.update.formato',
-            'uses' => 'AdminAttributesController@updateFormatos'
-        ]);
-
-        Route::put('{id}/update-papel.html', [
-            'as' => 'categories.update.papel',
-            'uses' => 'AdminAttributesController@updatePapeis'
-        ]);
-        Route::put('{id}/update-cor.html', [
-            'as' => 'categories.update.cor',
-            'uses' => 'AdminAttributesController@updateCores'
-        ]);
-        Route::put('{id}/update-acabamento.html', [
-            'as' => 'categories.update.acabamento',
-            'uses' => 'AdminAttributesController@updateAcabamentos'
+        Route::put('{id}/atributo/{atributo}/update.html', [
+            'as' => 'categories.atributo.update',
+            'uses' => 'AdminAttributesController@updateAtributos'
         ]);
 
     });
@@ -415,11 +399,13 @@ Route::group(['prefix' => 'diretoria',
                 'uses' => 'AdminAttributesController@PacotesStore'
             ]);
         });
+        /*
+         * Controle dos formatos
+         */
         Route::get('formatos.html', [
             'as' => 'atributos.formatos',
             'uses' => 'AdminAttributesController@formatos'
         ]);
-        //listar individulamente os atributos
         Route::group(['prefix' => 'formatos'], function () {
             Route::get('create.html', [
                 'as' => 'formatos.create',
@@ -434,6 +420,9 @@ Route::group(['prefix' => 'diretoria',
                 'uses' => 'AdminAttributesController@QuantityUpdate'
             ]);
         });
+        /*
+         * Papeis
+         */
         Route::get('papeis.html', [
             'as' => 'atributos.papeis',
             'uses' => 'AdminAttributesController@papeis'
@@ -446,6 +435,31 @@ Route::group(['prefix' => 'diretoria',
             Route::post('novopapel', [
                 'as' => 'papeis.store',
                 'uses' => 'AdminAttributesController@PapeisStore'
+            ]);
+            Route::put('{id}/update.html', [
+                'as' => 'weight.update',
+                'uses' => 'AdminAttributesController@WeightUpdate'
+            ]);
+        });
+        Route::get('cores.html', [
+            'as' => 'atributos.cores',
+            'uses' => 'AdminAttributesController@cores'
+        ]);
+        /*
+         * Enobrecimento
+         */
+        Route::get('enobrecimentos.html', [
+            'as' => 'atributos.enobrecimentos',
+            'uses' => 'AdminAttributesController@enobrecimentos'
+        ]);
+        Route::group(['prefix' => 'enobrecimento'], function () {
+            Route::get('create.html', [
+                'as' => 'enobrecimentos.create',
+                'uses' => 'AdminAttributesController@EnobrecimentosCreate'
+            ]);
+            Route::post('novoenobrecimento', [
+                'as' => 'enobrecimentos.store',
+                'uses' => 'AdminAttributesController@EnobrecimentosStore'
             ]);
             Route::put('{id}/update.html', [
                 'as' => 'weight.update',

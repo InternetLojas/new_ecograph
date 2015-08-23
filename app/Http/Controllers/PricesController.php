@@ -50,19 +50,20 @@ class PricesController extends Controller {
         $cat = $category->find($post_inputs['categoria']);
 
         $formato_id = $post_inputs['formato'];
-        $category_formato_id = $categoryFormato->where('formato_id',$formato_id)->first()->id;
+        $category_formato_id = $categoryFormato->where('formato_id',$formato_id)->where('category_id',$post_inputs['categoria'])->first()->id;
         $PacFormatos = $cat->CategoryFormato->find($category_formato_id)->PacFormatos()->lists('id');
 
         $papel_id = $post_inputs['papel'];
-        $category_papel_id = $categoryPapel->where('papel_id',$papel_id)->first()->id;
+        $category_papel_id = $categoryPapel->where('papel_id',$papel_id)->where('category_id',$post_inputs['categoria'])->first()->id;
         $PacPapeis = $cat->CategoryPapel->find($category_papel_id)->PacPapeis()->wherein('pacformato_id',$PacFormatos)->lists('id');
         $PacPapeisWeight = $cat->CategoryPapel->find($category_papel_id)->PacPapeis()->wherein('pacformato_id',$PacFormatos)->lists('weight');
+
         $cor_id = $post_inputs['cor'];
-        $category_cor_id = $categoryCor->where('cor_id',$cor_id)->first()->id;
+        $category_cor_id = $categoryCor->where('cor_id',$cor_id)->where('category_id',$post_inputs['categoria'])->first()->id;
         $PacCores = $cat->CategoryCor->find($category_cor_id)->PacCor()->wherein('pacpapel_id',$PacPapeis)->lists('id');
 
         $acabamento_id = $post_inputs['acabamento'];
-        $category_acabamento_id = $categoryAcabamento->where('acabamento_id',$acabamento_id)->first()->id;
+        $category_acabamento_id = $categoryAcabamento->where('acabamento_id',$acabamento_id)->where('category_id',$post_inputs['categoria'])->first()->id;
         $PacAcabamentos = $cat->CategoryAcabamento->find($category_acabamento_id)->PacAcabamentos()->wherein('paccor_id',$PacCores)->lists('price');
 
         if(count($PacAcabamentos)>0){

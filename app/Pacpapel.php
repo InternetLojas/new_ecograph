@@ -18,13 +18,13 @@ class Pacpapel extends Model {
 
     public function CategoryPapel(){
 
-        return $this->BelongsTo(\Ecograph\CategoryPapel);
+        return $this->BelongsTo('Ecograph\CategoryPapel');
 
     }
 
     public function PacFormato(){
 
-        return $this->BelongsTo(Ecograph\PacFormato);
+        return $this->BelongsTo('Ecograph\PacFormato');
 
     }
 

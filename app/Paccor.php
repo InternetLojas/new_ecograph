@@ -18,7 +18,7 @@ class Paccor extends Model {
     }
 
     public function PacPapel(){
-        return $this->BelongsTo(Ecograph\Pacpapel);
+        return $this->BelongsTo('Ecograph\Pacpapel');
     }
     public function PacAcabamento(){
 
