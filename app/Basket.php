@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Basket extends Model {
 
     protected $table = 'basketes';
-    protected $fillable = array('customer_id',
-        'product_id',
+    protected $fillable = [
+        'customer_id',
+        'products_id',
+        'products_model',
         'quantity',
         'final_price'
-    );
+    ];
     protected $guarded = array('id');
 
     /**
