@@ -41,7 +41,7 @@
         <div class="panel panel-danger text-left">
             <div class="panel-heading">
                 <h3 class="panel-title font24">
-                    <i class="icon-ok"></i>&nbsp;Sucesso.
+                    <i class="icon-ok"></i>&nbsp;Sucesso.&nbsp;Redirecionando em 10s. Aguarde!
                 </h3>
             </div>
             <div class="panel-body">
@@ -56,8 +56,7 @@
                         <p>Seu(s) produto(s) chegará(ão) num prazo de 10 a 40 dias úteis conforme o forma de envio escolhida.</p>
                         <p>Assim que confirmarmos o seu pagamento iniciaremos o processo de envio.</p>
                         <p>Esperamos que suas necessidades tenham sido atendidas.</p>
-                        <p>Redirecionando em 10s. Aguarde!</p>
-                </div>
+                 </div>
             </div>
         </div>
         <div id="mensagem_formcheckout"></div>

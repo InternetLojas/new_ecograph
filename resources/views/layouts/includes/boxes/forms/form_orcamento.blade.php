@@ -8,10 +8,12 @@
     <input id="orc_subcategoria_nome" type="hidden" value="" name="orc_subcategoria_nome">
     <input id="orc_formato_id" type="hidden" value="" name="orc_formato_id">
     <input id="orc_formato_nome" type="hidden" value="" name="orc_formato_nome">
-    <input id="orc_cores_id" type="hidden" value="" name="orc_cores_id">
-    <input id="orc_cores_nome" type="hidden" value="" name="orc_cores_nome">
+    <input id="orc_cor_id" type="hidden" value="" name="orc_cor_id">
+    <input id="orc_cor_nome" type="hidden" value="" name="orc_cor_nome">
     <input id="orc_papel_id" type="hidden" value="" name="orc_papel_id">
     <input id="orc_papel_nome" type="hidden" value="" name="orc_papel_nome">
+    <input id="orc_enoblecimento_id" type="hidden" value="" name="orc_enoblecimento_id">
+    <input id="orc_enoblecimento_nome" type="hidden" value="" name="orc_enoblecimento_nome">
     <input id="orc_acabamento_id" type="hidden" value="" name="orc_acabamento_id">
     <input id="orc_acabamento_nome" type="hidden" value="" name="orc_acabamento_nome">
     <input id="orc_pacote_qtd" type="hidden" value="" name="orc_pacote_qtd">

@@ -97,7 +97,7 @@
             @if($page === 'carrinho' || $page=='resumo_orc')
             var $btn_resumo = $('#btn_resumo');
             $btn_resumo.on('click', function() {
-               ValidaCaixa('formresumo');
+                ValidaCaixa('formresumo');
             });
             @endif
             @if($page === 'detalhes')

@@ -21,12 +21,12 @@
 <!--Script exclusiva para internetlojas -->
 <script src="{{ asset('//code.jquery.com/jquery.js')}}"></script>
 <script src="{{ asset('//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')}}"></script>
-<script src="{{asset(elixir('js/custom.js'))}}"></script>
-<!--<script src="asset('build/js/custom-40585431.js')"></script>-->
+{!! HTML::script(asset(elixir('js/custom.js'))) !!}
+<!--<script src="{asset('build/js/custom-d5562bc3.js')}"></script>-->
 <script src="{{asset('js/jquery.maskedinput.js')}}"></script>
 @if($page=='contato')
-    <script src="{{ asset(elixir('js/alljs.js')) }}"></script>
-{!! HTML::script(asset(elixir('js/alljs.js'))) !!}
+    <!--<script src="{asset('build/js/alljs-8005f53c.js')}"></script>-->
+
 {!! Form::google_map(STORE_ADDRESS_GOOGLE_MAPS) !!}
 <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&sensor=true"></script>
 @endif

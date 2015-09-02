@@ -1,4 +1,5 @@
-<div class="row">
+<div class="col-md-12">
+
     <!--============================== content =================================-->
     <p class="text-medio"><b>{!!$post_inputs['orc_categoria_nome']!!} - {!!$post_inputs['orc_subcategoria_nome']!!}</b></p>
     <p class="bg-gray fg-white text-center text-medio" >
@@ -6,6 +7,7 @@
     </p>
 
     <!--============================== content =================================-->
+    <div class="table-responsive">
     <table class="table table-bordered text-medio">
         <tr>
             <td class=""></td>
@@ -18,7 +20,7 @@
         </tr>
         <tr>
             <td class="">
-                <img src="images/{!!Fichas::ImgProduto($post_inputs['orc_categoria_id'])!!}" class="img-responsive" />
+                <img src="images/{!!Fichas::ImgProduto($post_inputs['orc_categoria_id'])!!}" class="img-responsive" style="max-width:270px" />
             </td>
             <td class="">{!!$post_inputs['orc_pacote_qtd']!!}</td>
             <td class="">
@@ -53,6 +55,7 @@
             </td>
         </tr>
     </table>
+    </div>
     @include('layouts.includes.boxes.forms.form_basket')
     @include('layouts.includes.modais.modal_comprar')
     <div class="pull-right">

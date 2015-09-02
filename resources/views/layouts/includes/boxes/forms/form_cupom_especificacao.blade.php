@@ -14,12 +14,12 @@
             <input type="text" id="discount_code" name="discount_code" class="form-control no-radius" placeholder="Informe Codigo" required />
         </div>
         <div class="col-md-pull-1 col-md-2">
-            <a href="javascript:void(0)" id="btn-validar" class="btn bg-yellow fg-black no-radius" onclick="javascript:ValidaCupom('cupom', 'desconto');" title="Valide seu cupom">
+            <a href="javascript:void(0)" id="btn-validar" class="btn bg-yellow fg-black no-radius" onclick="javascript:ValidaCupom('cupom', 'desconto',@if(Auth::check()) '{{Auth::user()->id}}' @else '0' @endif);" title="Valide seu cupom">
                 <span style="float:left">Validar</span>
             </a>
             <!--<button type="button" id="btn_cupom_confirmar" class="btn bg-gray fg-black no-radius" style="display:none">Confirmar</button>-->
         </div>
     </div>
     <input type="hidden" name="_token" value="" class="token"/>
-    <input type="hidden" id="perc_desconto" name="perc_desconto">
+    <input type="hidden" id="perc_desconto" name="perc_desconto" value="{{DESCONTO_CONCEDIDO}}">
 </form>

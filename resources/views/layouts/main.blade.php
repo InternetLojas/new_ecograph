@@ -5,7 +5,9 @@
 </head>
 @if($page == 'checkout')
     <body class="" onload="setTimeout(chamar_gateway(), 100 * 1000);">
-    @else
+    @elseif($page == 'detalhescv')
+            <body class="" onload="Calculadora(28,'Cartão de Visita Grátis');">
+            @else
         <body class="">
         @endif
         <div class="section">

@@ -11,7 +11,7 @@
     </li>
     @else
     <li class="col-xs-4 text-center">
-        <a href="{{ route('clientes.conta')}}" data-hint="Informações sobre a minha conta"  class="fg-gray"><i class="icon-cabinet fg-dark"></i> Meus dados </a>
+        <a href="{{ route('clientes.conta',['id'=>Auth::user()->id])}}" data-hint="Informações sobre a minha conta"  class="fg-gray"><i class="icon-cabinet fg-dark"></i> Meus dados </a>
     </li>
     <div class="col-xs-4 text-center">
         <a href="{{ route('clientes.logout') }}" class="button bg-yellow fg-white botoes-topo" data-hint="Encerre a sessão com segurança"  class="fg-gray"><i class="fa lg fa-fw icon-exit"></i> <span class="">Sair</span> </a>

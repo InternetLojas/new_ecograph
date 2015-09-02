@@ -7,6 +7,8 @@
     <input type="hidden" name="formato_nome" id="formato_nome" value="" />
     <input type="hidden" name="papel_nome" id="papel_nome" value="" />
     <input type="hidden" name="papel" id="papel_id" value="" />
+    <input type="hidden" name="enobrecimento_nome" id="enobrecimento_nome" value="" />
+    <input type="hidden" name="enobrecimento" id="enobrecimento_id" value="" />
     <input type="hidden" name="acabamento_nome" id="acabamento_nome" value="" />
     <input type="hidden" name="acabamento" id="acabamento_id" value="" />
     <input type="hidden" name="_token" value="{!!csrf_token()!!}"/>

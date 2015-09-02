@@ -19,7 +19,7 @@
         </li>
         <span class="element-divider"></span>
         <li class="col-md-2">
-            <a class="fg-gray @if($page=='produtos' || $page=='detalhes' || $page=='listagem')active @endif user" href="{{ route('orcamento') }}" title ='Lista de produtos'> <span>Orçamento Online</span> </a>
+            <a class="fg-gray @if($page=='produtos' || $page=='detalhes' || $page=='listagem')active @endif user" href="{{ route('contato') }}" title ='Nosso endereço'> <span>Faça contato</span> </a>
         </li>
         <li class="col-md-1"></li>
         <!--<span class="element-divider-end"></span>

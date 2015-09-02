@@ -15,6 +15,7 @@
                     <th class="text-center">Formato</th>
                     <th class="text-center">Cores</th>
                     <th class="text-center">Papel/Material</th>
+                    <th class="text-center">Enobrecimento</th>
                     <th class="text-center">Acabamento</th>
                     <th class="text-center">
                         Qtd/Valor                                   
@@ -26,6 +27,7 @@
                     <td id="lista_formato"></td>
                     <td id="lista_cores"></td>
                     <td id="lista_papel"></td>
+                    <td id="lista_enoblecimento"></td>
                     <td id="lista_acabamento"></td>
                     <td id="lista_preco" ></td>
                 </tr>

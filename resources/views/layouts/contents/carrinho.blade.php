@@ -15,6 +15,7 @@
 <!--================= informações sobre entrega ==========================-->
 @include('layouts.includes.carrinho.info_endereco')
 @if(is_array($post_inputs))
+
     @include('layouts.includes.carrinho.info_prazos')
     @include('layouts.includes.carrinho.info_cupom')
     @include('layouts.includes.carrinho.info_pagamento')
@@ -46,11 +47,11 @@
 
 @include('layouts.includes.resumo.ficha_resumo')
 @else
-<div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
- <div class="text-right">
-                <a href="{{route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn btn-lg bg-dark fg-white no-radius ">
-                    <i class="icon-arrow-left icon-white"></i> Início
-                </a>
-            </div>
-<div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
+    <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
+    <div class="text-right">
+        <a href="{{route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn btn-lg bg-dark fg-white no-radius ">
+            <i class="icon-arrow-left icon-white"></i> Início
+        </a>
+    </div>
+    <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
 @endif

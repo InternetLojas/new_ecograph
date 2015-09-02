@@ -20,30 +20,39 @@
     </div>
     <div class="clearfix"></div>
     <hr>
-    <div id="resultado" style="display:none;">
-        <div class="text-center">
-            <p class="text-medio text-center"><strong>Escolha uma forma de envio para continuar.</strong></p>
-            @include('layouts.includes.boxes.forms.form_resultado_frete')
+    <div id="mensagens" style="display:none">
+        <div class="col-md-12">
+            <div id="info_correio"></div>
+            <div id="mensagem_correio"></div>
         </div>
-        <div id="label_frete" style="display:none;padding:10px 0">
-            <table class="table table-hover text-medio text-center">
-                <tbody>
-                <tr>
-                    <td>
-                        Resumo: Valor - <span id="vl_final"></span>
-                    </td>
-                    <td>
-                        Desconto: - <span id="vl_desc_final"></span>
-                    </td>
-                    <td>
-                        Frete: - <span id="escolha_frete"></span>
-                    </td>
-                    <td></span>
-                        Valor Total: - <span id="vl_total_final"></span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    </div>
+    <div id="resultado" style="display:none;">
+        <div class="col-md-12">
+            <div class="text-center">
+                <p class="text-medio text-center"><strong>Escolha uma forma de envio para continuar.</strong></p>
+
+               @include('layouts.includes.boxes.forms.form_resultado_frete')
+            </div>
+            <div id="label_frete" style="display:none;padding:10px 0">
+                <table class="table table-hover text-medio text-center">
+                    <tbody>
+                    <tr>
+                        <td>
+                            Resumo: Valor - <span id="vl_final"></span>
+                        </td>
+                        <td>
+                            Desconto: - <span id="vl_desc_final"></span>
+                        </td>
+                        <td>
+                            Frete: - <span id="escolha_frete"></span>
+                        </td>
+                        <td></span>
+                            Valor Total: - <span id="vl_total_final"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

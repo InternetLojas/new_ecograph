@@ -1,6 +1,4 @@
 
-<div id="info_correio"></div>
-<div id="mensagem_correio"></div>
 <span style="display:block;float:left" >
 <img id="wait" style="display:none" src="images/img/loader.gif" class="img-responsive" alt="Image" width="16">
 </span>
@@ -22,5 +20,6 @@
     </div>
     <input type="hidden" id="pdf" name="pdf" value="0"/>
     <input type="hidden" name="_token" value="" class="token"/>
+    <input type="hidden" id="vl_declarado" name="vl_declarado"/>
     <input type="hidden" id="orc_peso_frete" name="orc_peso">
 </form>
