@@ -16,21 +16,14 @@
             {!! Form::label('category', 'Categoria: ') !!}
             {!! Form::select('category_id', $category, null, ['class' => 'form-control']) !!}
         </div>
-        <!---->
-        @if($papel)
-            <div class="form-group col-md-4">
-                    {!! Form::label('valor', 'Nome do papel: ') !!}
-                   <!-- { Form::text('valor[]', null, ['class' => 'form-control col-md-8']) }-->
-                    {!! Form::select('valor[]', $papel, null, ['class' => 'form-control','multiple' => true]) !!}
-            </div>
-        @else
+
             @for($i=0;$i<$qtd_inputs;$i++)
             <div class="form-group col-md-4">
                 {!! Form::label('valor', 'Nome do papel: ') !!}
                 {!! Form::text('valor[]', null, ['class' => 'form-control']) !!}
             </div>
             @endfor
-            @endif
+
         <div class="clearfix"></div>
         <!---->
         <div class="form-group">

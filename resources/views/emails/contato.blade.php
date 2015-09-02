@@ -18,7 +18,7 @@
             table {margin:0 auto}
         </style>
     </head>
-    <body>
+    <body style="margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px;background:#EDEDED;">
         <table width="650" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
             <tbody>
                 <tr>
@@ -35,7 +35,7 @@
                             @media only screen and (max-width: 599px) {
                                 td[class="mail-wrapper"] {
                                     padding: 10px 0!important;
-                                }                                
+                                }
                             }
 
                             /* Header CSS*/

@@ -7,7 +7,8 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Nome</th>
+                <th>Enobrecimento</th>
+                <th>Acabamento</th>
             </tr>
             </thead>
             <tbody>
@@ -15,6 +16,7 @@
                 <tr>
                     <td>{!!$acabamento->id!!}</td>
                     <td>{!!$acabamento->valor!!}</td>
+                    <td>{!!$acabamento->enoblecimento!!}</td>
                     <td>
                         <a href="#" title="Editar categoria {{$acabamento->valor}}">edit</a> |
                         <a href="#" title="Eliminar categoria {{$acabamento->valor}}">delete</a>

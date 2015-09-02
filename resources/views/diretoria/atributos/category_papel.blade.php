@@ -10,70 +10,71 @@
                         <thead>
                         <tr>
                             <th>Formato</th>
-                            <th>Papel</th>
+                            <th>#</th>
                         </tr>
                         </thead>
                         <tbody>
                         @forelse($formato as $formato_id => $items)
+
                             <tr>
                                 <td>
                                     {{$items['formato_nome']}}
                                 </td>
                                 <td>
+                                    {!! Form::open(['url'=>route('weight.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
                                     <table class="table table-bordered table-condensed">
                                         <thead>
                                         <tr>
+                                            <th>Papel</th>
                                             <th>#</th>
-                                            <th>
-                                                <table class="table table-bordered table-condensed">
-
-                                                    <tbody>
-
-                                                    <tr>
-                                                        @forelse($items['pacotes'] as $id =>$quantity)
-                                                            <td>{{$quantity}}</td>
-                                                        @empty
-                                                            <td></td>
-                                                        @endforelse
-                                                    </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </th>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        @forelse($papel[$formato_id] as $papel_id => $items)
+                                            <!--verifica se o formato é autorizado para o papel corrente-->
+                                            @if (in_array($formato_id, $formato_autorizado[0][$papel_id]))
+                                            <tr>
+                                                <td>
+                                                    {{$items['papel_nome']}}
+                                                </td>
+                                                <td>
+                                                    <table class="table table-bordered table-condensed">
 
-                                        @forelse($papel[$formato_id] as $papel_id => $items_p)
+                                                            @forelse($items as $chave => $value)
+                                                            @if(!is_null($value))
+                                                            @if($chave == 'pacotes')
+                                                                    <tr>
+                                                                        <td>Qtd</td>
+                                                                        @forelse($value['pacote_id'] as $pacote_id => $quantity)
+                                                                            <td>{{$quantity}}</td>
+                                                                        @empty
+                                                                        @endforelse
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Peso</td>
+                                                                    @forelse($value['weight'] as $pacpapel_id => $weight)
+                                                                        <td>
+                                                                            {!! Form::text('weight['.$pacpapel_id.']', $weight, ['class' => 'form-control']) !!}
 
-                                            @if(is_array($items_p['pacotes']))
-                                                <tr>
-                                                    <td>
-                                                        {{$items_p['papel_nome']}}
-                                                    </td>
-                                                    <td>
-                                                        {!! Form::open(['url'=>route('weight.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
-                                                        <table class="table table-condensed">
-                                                            <tbody>
-                                                            <tr>
-                                                                @forelse($items_p['pacotes']['weight'] as $id =>$weight)
-                                                                    <td>
-                                                                        {!! Form::text('weight['.$id.']', $weight, ['class' => 'form-control']) !!}
-                                                                    </td>
-                                                                @empty
-                                                                @endforelse
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        {!! Form::submit('Adicionar peso para o papel', ['class'=>'btn btn-success pull-right']) !!}
-                                                        {!! Form::close() !!}
-                                                    </td>
-                                                </tr>
+                                                                        </td>
+                                                                    @empty
+                                                                    @endforelse
+                                                                    </tr>
+                                                                @endif
+                                                            @endif
+                                                            @empty
+                                                            @endforelse
+
+                                                    </table>
+                                                </td>
+                                            </tr>
                                             @endif
                                         @empty
                                         @endforelse
                                         </tbody>
                                     </table>
+                                    {!!Form::submit('Atualizar peso', ['class'=>'btn btn-success pull-right']) !!}
+                                    {!! Form::close() !!}
                                 </td>
                             </tr>
                         @empty

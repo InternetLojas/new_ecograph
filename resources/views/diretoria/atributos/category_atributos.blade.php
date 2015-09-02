@@ -5,6 +5,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>Atributos da Categoria {!!$cat->name!!}</h1>
+                    <!--pacotes-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'pacote'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Pacotes</h2>
@@ -24,6 +25,7 @@
                         {!! Form::submit('Atualizar Pacote', ['class'=>'btn btn-success']) !!}
                     </div>
                     {!! Form::close() !!}
+                    <!--formatos-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'formato'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Formatos</h2>
@@ -46,6 +48,7 @@
                         </div>
                     </div>
                     </form>
+                    <!--papeis-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'papel'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Papeis</h2>
@@ -67,11 +70,11 @@
                         </div>
                     </div>
                     </form>
+                    <!--cores-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'cor'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Cores</h2>
                         <hr>
-
                         @forelse($cores as $cor)
                             <div class="col-sm-3">
                                 <div class="checkbox">
@@ -89,6 +92,7 @@
                         </div>
                     </div>
                     </form>
+                    <!--enobrecimentos-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'enobrecimento'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Enobrecimentos</h2>
@@ -110,6 +114,7 @@
                         </div>
                     </div>
                     </form>
+                    <!--acabamentos-->
                     {!! Form::open(['route' =>['categories.atributo.update',$cat->id,'acabamento'],'method'=>'put', 'class' => 'form-horizontal']) !!}
                     <div class="form-group">
                         <h2>Acabamentos</h2>
@@ -125,7 +130,6 @@
                             <p>Sem atributo acabamentos</p>
                         @endforelse
                     </div>
-
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-success pull-right">Atualizar acabamento</button>

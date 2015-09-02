@@ -1,15 +1,15 @@
 @extends('diretoria.main_admin')
 @section('content')
     <div class="container">
-        <h1>Categorias</h1>
-
-        <a href="#"  class="btn btn-default" > Nova Categoria </a>
+        <h1>Editar atributos da categoria</h1>
+        <hr>
+        <!--<a href="#"  class="btn btn-default" > Nova Categoria </a>-->
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Nome</th>
-                <th>Action</th>
+                <th>Categoria</th>
+                <th>Verificar</th>
             </tr>
             </thead>
             <tbody>

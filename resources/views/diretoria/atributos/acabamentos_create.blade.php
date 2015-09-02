@@ -16,10 +16,22 @@
             {!! Form::label('category', 'Categoria: ') !!}
             {!! Form::select('category_id', $category, null, ['class' => 'form-control']) !!}
         </div>
+        <div class="form-group">
+            <div class="col-md-4">
+                {!! Form::label('valor', 'Acabamento: ') !!}
+            </div>
+            <div class="col-md-4">
+                {!! Form::label('valor', 'Enobrecimentos: ') !!}
+            </div>
+        </div>
         @for($i=0;$i<$qtd_inputs;$i++)
             <div class="form-group">
-                {!! Form::label('valor', 'Nome do acabamento: ') !!}
-                {!! Form::text('valor[]', null, ['class' => 'form-control']) !!}
+                <div class="col-md-4">
+                    {!! Form::text('valor[]', null, ['class' => 'form-control']) !!}
+                </div>
+                <div class="col-md-4">
+                    {!! Form::select('enobrecimento[]', $enobrecimentos, null, ['class' => 'form-control']) !!}
+                </div>
             </div>
         @endfor
         <div class="form-group">

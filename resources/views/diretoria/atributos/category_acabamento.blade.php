@@ -30,15 +30,11 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
                                         @forelse($papel[$formato_id] as $papel_id => $items_p)
-
                                             @if(is_array($items_p['pacotes']))
                                                 <tr>
                                                     <td>
-
                                                         {{$items_p['papel_nome']}}
-
                                                     </td>
                                                     <td>
 
@@ -62,40 +58,59 @@
                                                                         <table class="table table-bordered table-condensed">
                                                                             <thead>
                                                                             <tr>
-                                                                                    <th>Acabamento</th>
-                                                                                    @forelse($items_p['pacotes']['pacote_id'] as $id =>$quantity)
-                                                                                        <th>{{$quantity}}</th>
-                                                                                    @empty
-                                                                                        <th></th>
-                                                                                    @endforelse
+                                                                                <th>Enobrecimento</th>
+                                                                                <th>Acabamento</th>
+                                                                                @forelse($items_p['pacotes']['pacote_id'] as $id =>$quantity)
+                                                                                    <th>{{$quantity}}</th>
+                                                                                @empty
+                                                                                    <th></th>
+                                                                                @endforelse
                                                                             </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                            @forelse($acabamentos[$formato_id][$papel_id][$items_c['cor_id']] as $acabamento_id => $items_a)
 
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        @forelse($items_a as $acabamento_nome => $configuracao)
-                                                                                            {{$acabamento_nome}}
-                                                                                        @empty
-                                                                                        @endforelse
-                                                                                    </td>
-                                                                                    @forelse($items_a as $acabamento_nome => $configuracao)
-                                                                                        @forelse($configuracao as $p => $prices)
-                                                                                            <td>
-                                                                                                {!! Form::text('price['.$prices['pacacabamento_id'].']', $prices['price'], ['class' => 'form-control']) !!}
-                                                                                            </td>
-                                                                                        @empty
-                                                                                        @endforelse
+                                                                            @if(in_array($formato_id,$formato_autorizado[0][$papel_id]))
+                                                                                @forelse($acabamentos[$formato_id][$papel_id][$cor_id] as $acabamento_id => $acabamento)
+                                                                                    @forelse($acabamento as $nome_acabamento => $configuracao)
+                                                                                        <tr>
+
+                                                                                            <td>{{$nome_acabamento}}</td>
+                                                                                            @forelse($configuracao as $nome => $conf)
+                                                                                                <td>{{$nome}}</td>
+                                                                                                @forelse($conf as $chave => $value)
+                                                                                                    <td>
+                                                                                                        {!! Form::text('price['.$value['pacacabamento_id'].']', $value['price'], ['class' => 'form-control']) !!}
+
+                                                                                                    </td>
+                                                                                                @empty
+                                                                                                @endforelse
+                                                                                            @empty
+                                                                                            @endforelse
+                                                                                        </tr>
                                                                                     @empty
+                                                                                        <tr>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                    </tr>
                                                                                     @endforelse
-                                                                                </tr>
-                                                                            @empty
-                                                                            @endforelse
+                                                                                @empty
+                                                                                    @endforelse
+                                                                            @endif
+
                                                                             </tbody>
-                                                                        </table>
-                                                                        {!! Form::submit('Adicionar o preço', ['class'=>'btn btn-success pull-right']) !!}
-                                                                        {!!Form::close()!!}
+                                                                            </table>
+                                                                        {!! Form::submit('Atualizar preco', ['class'=>'btn btn-success pull-right']) !!}
+                                                                        {!! Form::close() !!}
                                                                     </td>
                                                                 </tr>
                                                             @empty
