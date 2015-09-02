@@ -30,6 +30,9 @@ class PerfilController extends Controller {
      * @return json
      */
     public function Lista($id) {
+        if($id == 28){
+            $id = 5;
+        }
         $categoria = $this->category->find($id);
         $modais = Modais::modal($categoria);
         if ($modais) {

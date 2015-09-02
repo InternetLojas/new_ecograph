@@ -4,6 +4,8 @@ namespace Ecograph\Http\Controllers;
 
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
+use Ecograph\Perfil;
+use Ecograph\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Ecograph\Libs\Layout;
@@ -80,9 +82,10 @@ class StoreController extends Controller {
      *
      * @return json
      */
-    public function ValidaCaixa() {
+    public function ValidaCaixa(Request $request) {
         $erros = array();
-        $post_inputs = \Request::all();
+        $post_inputs = $request->all();
+//dd($post_inputs);
         //regras a serem validadas
         $rules['payment'] = 'required|numeric';
         //$rules['discount_avista'] = 'required|numeric';
@@ -119,12 +122,12 @@ class StoreController extends Controller {
             'loadurl' => $submit
         );
 
-        //echo '<pre>';print_r($data);exit;
+       // echo '<pre>';print_r($data);exit;
         return json_encode($data);
     }
 
 
-    public function Busca() {
+    public function Busca(Product $product) {
         $keyword = \Request::get('keyword');
         //$filtro = '';
         $filtro = Fichas::trataKeyword($keyword);
@@ -132,15 +135,24 @@ class StoreController extends Controller {
         if (is_array($filtro)) {
             $chave = Fichas::Proibidas($filtro);
             $resultado = Fichas::buscas($chave);
-            //dd($resultado);
+
             if ($resultado) {
+                //$buscaperfil = $perfil->where('nome_perfil', 'LIKE', $chave)->get()->first();
+                //dd($buscaperfil);
                 $products = $resultado->getCollection()->all();
                 $path = $resultado->setPath('loja/busca');
                 $links = $path->appends(['keyword' => $keyword])->render();
                 $layout = $this->layout->classes('0');
-                //dd($products);
+                foreach($products as $prod){
+                    $produto = $product->find($prod->id);
+                    $produto_id = $produto->CategoryProduct()->first()->product_id;
+                    $category[$produto_id] = $produto->CategoryProduct()->first()->category_id;
+
+                }
+                //dd($category);
                 return view('produtos.index')
                     ->with('products', $products)
+                    ->with('category',$category)
                     ->with('keyword', $keyword)
                     ->with('title', STORE_NAME . ' Busca por: ' . $keyword)
                     ->with('page', 'busca')

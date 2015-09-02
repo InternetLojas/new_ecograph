@@ -2,6 +2,7 @@
 
 namespace Ecograph\Http\Controllers;
 
+use Ecograph\Cor;
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class BasketController extends Controller {
       |
      */
 
- 
+
     private $basket;
     private $basket_item;
 
@@ -131,13 +132,17 @@ class BasketController extends Controller {
      */
     public function Adicionar(Request $request) {
         $post_inputs = $request->all();
-
+        //orc_desconto_valor
         $valor = str_replace('R$ ', '',$post_inputs['orc_pacote_valor']);
         $price = str_replace(',', '.',$valor);
         $image = Fichas::ImgProduto($post_inputs['produto_id']);
         $qty = str_replace(' un','',$post_inputs['orc_pacote_qtd']);
-        $pacote_id = Pacote::where('category_id',$post_inputs['orc_subcategoria_id'])
-            ->where('quantity',$qty)->lists('id');
+        if($post_inputs['orc_subcategoria_id']== 29){
+            $pacote_id[0] = 1000;
+        } else {
+            $pacote_id = Pacote::where('category_id',$post_inputs['orc_subcategoria_id'])
+                ->where('quantity',$qty)->lists('id');
+        }
 
         $item = (array('id' => $post_inputs['produto_id'],
             'name' => Fichas::nomeProduto($post_inputs['produto_id']),
@@ -154,10 +159,10 @@ class BasketController extends Controller {
             'papel' => $post_inputs['orc_papel_nome'],
             'acabamento_id' => $post_inputs['orc_acabamento_id'],
             'acabamento' => $post_inputs['orc_acabamento_nome'],
-            'cor_id' => $post_inputs['orc_cores_id'],
-            'cor' => $post_inputs['orc_cores_nome'],
-            //'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
-            //'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
+            'cor_id' => $post_inputs['orc_cor_id'],
+            'cor' => $post_inputs['orc_cor_nome'],
+            'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
+            'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
             'unidade' => $post_inputs['orc_pacote_qtd'],
             'perfil' => $post_inputs['orc_nome_perfil'],
             'perfil_id' => $post_inputs['orc_id_perfil']
@@ -181,9 +186,9 @@ class BasketController extends Controller {
                     $this->basket_item->basket_id = $this->basket->id;
                     $this->basket_item->formato_id = $option['formato_id'];
                     $this->basket_item->papel_id = $option['papel_id'];
-                    $this->basket_item->acabamento_id = $option['acabamento_id'];
                     $this->basket_item->cor_id = $option['cor_id'];
-                    //$this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
+                    $this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
+                    $this->basket_item->acabamento_id = $option['acabamento_id'];
                     $this->basket_item->pacote_id = $pacote_id[0];
                     $this->basket_item->save();
                 }
@@ -199,8 +204,9 @@ class BasketController extends Controller {
             $this->basket_item->basket_id = $this->basket->id;
             $this->basket_item->formato_id = $option['formato_id'];
             $this->basket_item->papel_id = $option['papel_id'];
-            $this->basket_item->acabamento_id = $option['acabamento_id'];
             $this->basket_item->cor_id = $option['cor_id'];
+            $this->basket_item->enoblecimento_id = $option['enoblecimento_id'];
+            $this->basket_item->acabamento_id = $option['acabamento_id'];
             $this->basket_item->pacote_id = $pacote_id[0];
             $this->basket_item->save();
         }
@@ -208,6 +214,7 @@ class BasketController extends Controller {
         $data = array('status' => 'success',
             'info' => 'Itens adicionado na carrinho'
         );
+        //dd($data);
         return json_encode($data);
     }
     /**
@@ -215,7 +222,10 @@ class BasketController extends Controller {
      * @return view
      * incrementa retorna a lista de produtos do carrinho
      */
-    public function Basket() {
+    public function Basket(Request $request) {
+        $post_inputs = $request->all();
+        //echo 'primeiro aqui';
+        //dd($post_inputs);
         if(Cart::count()>0){
             $contents = Cart::content();
             //dd($contents);
@@ -246,6 +256,8 @@ class BasketController extends Controller {
     public function Listar(Request $request) {
         if(Cart::count()>0){
             $post_inputs = $request->all();
+           // echo "aqui";
+            //dd($post_inputs);
             $contents = Cart::content();
             $userId = \Auth::user()->id;
             $customer = Customer::find($userId);
@@ -263,7 +275,7 @@ class BasketController extends Controller {
                 ->with('rota', 'basket.listar');
         }
         else {
-          
+
             return view('clientes.index')
                 ->with('title', STORE_NAME . ' Carrinho Vazio')
                 ->with('page', 'carrinhovazio')
@@ -280,30 +292,52 @@ class BasketController extends Controller {
         $parans = \Request::all();
         //procura a linha do carrinho
         $rowId = Cart::search(array('id' => $parans['product_id'] )); // Returns an array of rowid(s) of found item(s) or false on failure
-        //dd($rowId);
-        if(!Auth::user()) {
-            Cart::remove($rowId[0]);
-        } else {
-            $userId = \Auth::user()->id;
-            $customer = Customer::find($userId);
-            $customer_basket = $customer->basket->toArray();
-            if($customer_basket){
-                foreach($customer_basket as $item){
-                    $row = $this->basket_item->find($item['id']);
-                    if($row)
-                        $row->delete();
-                }
-                $row = $this->basket->find($customer_basket[0]['id']);
-                if($row)
-                    $row->delete();
-            }
-            if($rowId)
+        if($rowId) {
+            if (!Auth::check()) {
                 Cart::remove($rowId[0]);
-        }
-        return json_encode(array(
-            'reload' => 'true',
-            'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
+            } else {
+                /* $userId = \Auth::user()->id;
+                 $customer = Customer::find($userId);
+                 $customer_basket = $customer->basket->toArray();
+                 if($customer_basket){
+                     foreach($customer_basket as $item){
+                         $row = $this->basket_item->find($item['id']);
+                         if($row)
+                             $row->delete();
+                     }
+                     $row = $this->basket->find($customer_basket[0]['id']);
+                     if($row)
+                         $row->delete();
+                 }
+                 if($rowId)
+                     Cart::remove($rowId[0]);*/
 
+                //Cart::remove($rowId[0]);
+                $userId = \Auth::user()->id;
+                $customer = Customer::find($userId);
+                $customer_basket = $customer->basket->toArray();
+                if ($customer_basket) {
+                    foreach ($customer_basket as $item) {
+                        //$basket_itens = BasketIten::
+                        $basket = Basket::find($item['id']);
+                        if ($basket) {
+                            //elimina os itens
+                            $basket->BasketIten()->delete();
+                            //elimina o carrinho
+                            $basket->delete();
+                        }
+                    }
+                }
+                Cart::remove($rowId[0]);
+            }
+            return json_encode(array(
+                'reload' => 'true',
+                'info' => 'Produto ' . $parans['product_id'] . ' removido. Aguarde a atualização da página.'));
+        }
+
+        return json_encode(array(
+            'reload' => 'false',
+            'info' => 'Nada a ser removido'));
     }
 
     /**
@@ -311,8 +345,6 @@ class BasketController extends Controller {
      */
     public function getCart($customer_basket)
     {
-
-
         foreach ($customer_basket as $key => $valor) {
             //procura o produto na sessão do carrinho
             $rowId = Cart::search(['id' => $valor['products_id']]); // Returns an array of rowid(s) of found item(s) or false on failure
@@ -337,7 +369,7 @@ class BasketController extends Controller {
             $cor_id = $option_itens[0]['cor_id'];
             $enoblecimento_id = $option_itens[0]['enoblecimento_id'];
             if ($cor_id != 0) {
-                $cor_nome = Core::find($option_itens[0]['cor_id'])->valor;
+                $cor_nome = Cor::find($option_itens[0]['cor_id'])->valor;
             } else {
                 $cor_nome = '';
             }
@@ -346,7 +378,13 @@ class BasketController extends Controller {
             } else {
                 $enoblecimento_nome = '';
             }
-            $option = array('categoria_id' => $categoria[0]['category_id'],
+            if($categoria[0]['category_id'] == 29){
+                $unidade = 150;
+            } else {
+                $unidade = Pacote::find($option_itens[0]['pacote_id'])->quantity;
+            }
+            $option = [
+                'categoria_id' => $categoria[0]['category_id'],
                 'categoria' => $categoria[0]['products_name'],
                 'formato_id' => $option_itens[0]['formato_id'],
                 'formato' => Formato::find($option_itens[0]['formato_id'])->valor,
@@ -358,10 +396,10 @@ class BasketController extends Controller {
                 'cor' => $cor_nome,
                 'enoblecimento_id' => $enoblecimento_id,
                 'enoblecimento' => $enoblecimento_nome,
-                'unidade' => Pacote::find($option_itens[0]['pacote_id'])->quantity,
+                'unidade' => $unidade,
                 'perfil' => $categoria[0]['products_name'],
                 'perfil_id' => ProdutoPerfil::find($valor['products_id'])->perfis_id
-            );
+            ];
             Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
         }
     }

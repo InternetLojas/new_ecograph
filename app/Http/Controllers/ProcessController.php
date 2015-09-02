@@ -2,12 +2,22 @@
 
 namespace Ecograph\Http\Controllers;
 
+use Ecograph\AddressBook;
+use Ecograph\Basket;
+use Ecograph\BasketIten;
+use Ecograph\Customer;
 use Ecograph\Http\Controllers\Controller;
 use Ecograph\Gateway;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Checkout;
 use Cart;
+use Ecograph\Order;
+use Ecograph\OrderIten;
+use Ecograph\Ordersituacao;
+use Ecograph\OrderTotal;
+use Ecograph\Product;
 use Session;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class ProcessController extends Controller {
@@ -27,8 +37,9 @@ class ProcessController extends Controller {
         $this->layout = $layout;
     }
 
-    public function Process() {
-        $inputs = \Request::except('_token');
+    public function Process(\Illuminate\Http\Request $request) {
+        $inputs = $request->except('_token');
+        Session::set('orc_desconto_valor',$inputs['orc_desconto_valor']);
         //identifica a classe a ser utilizada
         $class = Gateway::find($inputs['payment'])->class;
         //puxa as configurações necessárias para o processo de pagamento
@@ -36,8 +47,6 @@ class ProcessController extends Controller {
 
         //prepara o ambiente espedífico da classe
         $before = $class::before($start, $inputs['orc_tipo_frete'], $inputs['orc_vl_frete']);
-
-        $before["id_pedido"] = $inputs['order_id'];
         $before["redirect"] = "true";
 
         //preparativos para mostrar a página
@@ -103,43 +112,74 @@ class ProcessController extends Controller {
             ->with('layout', $layout);
     }*/
 
-    public function Pedido() {
+    public function Pedido(Gateway $gateway, Checkout $checkout, Customer $customer, Order $order, Ordersituacao $ordersituacao, AddressBook $addressBook, Product $product, OrderIten $orderIten, OrderTotal $orderTotal) {
         $inputs = \Request::except('_token');
-
+        $prossegue = false;
         //identifica a classe a ser utilizada
-        $class = Gateway::find($inputs['id_payment'])->class;
+        $class = $gateway->find($inputs['id_payment'])->class;
         //gera o pedido
-        $order_id = Checkout::order($inputs['payment'], $class);
+        $order_id = $checkout->order($inputs['payment'], $class, $customer,$order,$ordersituacao,$addressBook);
 
-        //gera os valores totais, descontos e acrescimos
-        $value = [
-            Cart::total(),
-            $inputs['vl_frete'],
-            0,
-            $inputs['discount_cupom'],
-            0,
-            $inputs['total_compra']
-        ];
+        if (is_numeric($order_id)) {
+            //gera os valores totais, descontos e acrescimos
+            $value = [
+                Cart::total(),
+                $inputs['vl_frete'],
+                0,
+                Session::get('orc_desconto_valor'),
+                0,
+                $inputs['total_compra']
+            ];
 
-        Checkout::OrderTotal($order_id,$value);
-        //prossegue na criacação dos itens do pedido
+            $o_total = $checkout->OrderTotal($order_id,$value, $orderTotal);
 
-        Checkout::Item($order_id);
+            if($o_total){
+                //prossegue na criacação dos itens do pedido
+                $o_item = $checkout->Item($order_id,$product, $orderIten);
+                if($o_item){
+                    $prossegue = true;
+                }
+            }
 
-        if ($order_id) {
-            //caso true - criou o item de pedido;
-
+            if($prossegue){
                 $data['status'] = 'success';
                 $data['url_interna'] = '';
                 $data['url_externa'] = 'https://www.bcash.com.br/checkout/pay/';
                 $data['metodo'] = 'post';
                 $data['submeter'] = true;
                 $data['neworder_Id'] = $order_id;
-            return json_encode($data);
-        } else{
-           return false;
-        }
+                Session::set('orc_desconto_valor','');
+                //envia o email de confirmação de pedido
+                EnvioEmail::novopedido($order_id);
 
+                //remove o item da tabela
+                //procura a linha do carrinho
+                $userId = \Auth::user()->id;
+                $customer = Customer::find($userId);
+                $customer_basket = $customer->basket->toArray();
+                if ($customer_basket) {
+                    foreach ($customer_basket as $item) {
+                        //procura a linha do carrinho
+                        $basket = Basket::find($item['id']);
+                        if ($basket) {
+                            //elimina os itens
+                            $basket->BasketIten()->delete();
+                            //elimina o carrinho
+                            $basket->delete();
+                        }
+                    }
+                    Cart::destroy();
+                    return json_encode($data);
+                }
+            }
+        }
+        $data['status'] = 'fail';
+        $data['url_interna'] = '';
+        $data['url_externa'] = '';
+        $data['metodo'] = '';
+        $data['submeter'] = false;
+        $data['neworder_Id'] = '';
+        return json_encode($data);
     }
 
 }

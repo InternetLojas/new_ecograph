@@ -2,6 +2,8 @@
 
 namespace Ecograph\Http\Controllers;
 
+use Auth;
+use Ecograph\Acesso;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
@@ -36,14 +38,16 @@ class ProductController extends Controller {
       |
      */
     private $enoblecimentoModel;
+    private $acabamentoModel;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(Enoblecimento $enoblecimentoModel) {
-      $this->enoblecimentoModel = $enoblecimentoModel;
+    public function __construct(Enoblecimento $enoblecimentoModel, Acabamento $acabamentoModel) {
+        $this->enoblecimentoModel = $enoblecimentoModel;
+        $this->acabamentoModel = $acabamentoModel;
     }
 
     /**
@@ -76,7 +80,6 @@ class ProductController extends Controller {
         
         $lista = Fichas::CategoriasPais();
         $listagem = '';
-        $solicitado = '';
         foreach ($lista as $categorias) {
             foreach ($categorias['prole']['filhos'] as $key => $item) {
                 $listagem[] = array($item['id'], $item['nome_filho']);
@@ -88,6 +91,39 @@ class ProductController extends Controller {
             ->with('title', STORE_NAME . ' Calculadora On Line')
             ->with('page', 'detalhes')
             ->with('ativo', 'Detalhes')
+            ->with('listagem', $listagem)
+            ->with('solicitado', $solicitado)
+            ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html);
+    }
+
+    /**
+     * *
+     * apresenta a página detalhes.
+     * @return view
+     */
+    public function DetalhesCartaoGratis($pai, $filho, $nome_html, Acesso $acesso) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        } else {
+            $acesso = $acesso->where('customer_id', Auth::user()->id)->get()->first()->permite_brinde;
+            if($acesso == 0){
+                return 'proibido';
+            }
+        }
+        $lista = Fichas::CategoriasPais(true);
+        $listagem = '';
+        foreach ($lista as $categorias) {
+            foreach ($categorias['prole']['filhos'] as $key => $item) {
+                $listagem[] = array($item['id'], $item['nome_filho']);
+            }
+        }
+        //dd($listagem);
+        $solicitado = array('pai' => $pai, 'filho' => $filho, 'nome_html' => $nome_html);
+
+        return view('produtos.index')
+            ->with('title', STORE_NAME . ' Calculadora On Line')
+            ->with('page', 'detalhescv')
+            ->with('ativo', 'Cartão Grátis')
             ->with('listagem', $listagem)
             ->with('solicitado', $solicitado)
             ->with('rota', 'produtos/detalhes/'.$pai.'/'.$filho.'/'.$nome_html);
@@ -206,25 +242,26 @@ class ProductController extends Controller {
             $papel[] = array('id' => $valor, 'nome' => Papel::find($valor)->valor);
         }
         $enoblecimento_id = $this->enoblecimentoModel->where('category_id', $post_inputs['escolhido'])->get()->lists('valor','id');
-        //dd($enoblecimento_id);
-        foreach ($enoblecimento_id as $k => $valor) {
-            $acabamento_enoblecimento =  Acabamento::where('enoblecimento',$valor)->lists('id');
 
+        foreach ($enoblecimento_id as $id => $valor) {
+            //$acabamento_enoblecimento =  Acabamento::where('enoblecimento',$valor)->lists('id');
+            //dd($acabamento_enoblecimento);
             $enoblecimento[] = [
-                'id' => $acabamento_enoblecimento[0],
-                'nome' => $valor,
-                'enoblecimento_id' => $acabamento_enoblecimento[0]
+                'id' => $id,
+                'nome' => $valor
             ];
+            //$enoblecimento_nome[] = $valor;
         }
-        //dd($enoblecimento);
+
         $acabamento_id = CategoryAcabamento::where('category_id', $post_inputs['escolhido'])->lists('acabamento_id');
           foreach ($acabamento_id as $k => $valor) {
             $acabamento[] = [
                 'id' => $valor,
-                'nome' => Acabamento::find($valor)->valor
+                'nome' => Acabamento::find($valor)->valor,
+                'enobrecimento' => Acabamento::find($valor)->enoblecimento
             ];
         }
-
+        //dd($acabamento);
         $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
         $pacote_qtd = $pacote->toarray();
         foreach ($pacote_qtd as $key => $itens) {
@@ -298,10 +335,39 @@ class ProductController extends Controller {
         $data['informacao'] = array('info' => utf8_encode('Essa categoria ainda não foi cadastrada.'));
         //, JSON_PRETTY_PRINT
         $json_data = json_encode($data);
-
         return $json_data;
     }
+    /**
+     * prepara a configuração de preços e pesos.
+     * de acordo com a categoria
+     * solicitada
+     * @return Json
+     */
+    public function ListaAcabamento($categoria,$papel,$enobrecimento) {
+        if($categoria == 5){
+            switch ($papel) {
+                case 1 :
+                    $autoriza = [2, 3, 4, 5, 6, 7, 8,9];
 
+                    break;
+                case 2 :
+                    $autoriza = [2, 6];
+                    break;
+                case 3 :
+                    $autoriza = [1, 5];
+                    break;
+            }
+        } else {
+            $autoriza = $acabamento_id = $this->acabamentoModel->all()->lists('id');
+        }
+
+        $enobrecimento_nome = $this->enoblecimentoModel->find($enobrecimento)->valor;
+        $acabamento_id = $this->acabamentoModel->where('enoblecimento', $enobrecimento_nome)->wherein('id',$autoriza)->get()->lists('id');
+        $data['acabamento'] = $acabamento_id;
+        $json_data = json_encode($data);
+        return $json_data;
+
+    }
     /**
      * mostra a página de modelos dos produtos
      * selecionados

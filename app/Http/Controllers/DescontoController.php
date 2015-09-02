@@ -29,7 +29,9 @@ class DescontoController extends Controller {
      */
     public static function Desconto(Request $request) {
         $post_inputs = $request->all();
-
+        if(! \Auth::check()){
+            return redirect()->route('clientes.login'); 
+        }
         $erros = array();
         //check if its our form
         //regras a serem validadas

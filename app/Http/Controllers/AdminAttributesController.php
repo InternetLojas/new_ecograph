@@ -5,6 +5,7 @@ namespace Ecograph\Http\Controllers;
 use Ecograph\Acabamento;
 use Ecograph\Category;
 use Ecograph\CategoryAcabamento;
+use Ecograph\CategoryCor;
 use Ecograph\CategoryDescription;
 use Ecograph\CategoryEnoblecimento;
 use Ecograph\CategoryFormato;
@@ -32,6 +33,9 @@ class AdminAttributesController extends Controller {
     private $pacoteModel;
     private $categoryFormato;
     private $categoryPapel;
+    private $categoryCor;
+    private $categoryEnoblecimento;
+    private $categoryAcabamento;
     /**
      * Create a new controller instance.
      *
@@ -45,7 +49,10 @@ class AdminAttributesController extends Controller {
                                 Acabamento $acabamentoModel,
                                 Pacote $pacoteModel,
                                 CategoryFormato $categoryFormato,
-                                CategoryPapel $categoryPapel) {
+                                CategoryPapel $categoryPapel,
+                                CategoryCor $categoryCor,
+                                CategoryEnoblecimento $categoryEnoblecimento,
+                                CategoryAcabamento $categoryAcabamento) {
         //$this->middleware('auth');
         $this->categoryModel = $categoryModel;
         $this->formatoModel = $formatoModel;
@@ -56,11 +63,15 @@ class AdminAttributesController extends Controller {
         $this->pacoteModel = $pacoteModel;
         $this->categoryFormato = $categoryFormato;
         $this->categoryPapel = $categoryPapel;
+        $this->categoryCor = $categoryCor;
+        $this->categoryEnoblecimento = $categoryEnoblecimento;
+        $this->categoryAcabamento = $categoryAcabamento;
     }
 
     public function index(CategoryDescription $category_description) {
         $description = $category_description->all();
         $categories = $this->categoryModel->where('parent_id','<>',0)->paginate(15);
+
         return view('diretoria.atributos.atributos')
             ->with(compact('categories'))
             ->with('description',$description)
@@ -143,16 +154,19 @@ class AdminAttributesController extends Controller {
         $cat = $this->categoryModel->find($category_id);
         foreach($input['valor'] as $key =>$valor) {
             if (!empty($valor)) {
-                $formatos[] = $valor;
+                $formato = $this->formatoModel->firstOrCreate(array('valor' => $valor));
+                $collection = $cat->categoryFormato()->where('formato_id',$formato->id)->get()->first();
+                //$cat->Formato()->attach($formato->id);
+                //$formatos[] = $valor;
             }
         }
-        for ($i = 0; $i < count($formatos); $i ++)
-        {
-            $formato = $this->formatoModel->firstOrCreate(array('valor' => $formatos[$i]));
-            $cat->Formato()->attach($formato->id);
+        if(is_null($collection)){
+            return redirect()->route('categories.atributos',['id'=>$category_id]);
         }
+
         return redirect()->route('atributos.formatos');
     }
+
     /***papeis***/
     public function PapeisCreate(CategoryDescription $categoryDescription) {
         //para popular o select
@@ -169,56 +183,15 @@ class AdminAttributesController extends Controller {
         $category_id = $input['category_id'];
         $cat = $this->categoryModel->find($category_id);
         foreach($input['valor'] as $key =>$valor) {
-            $papel = $this->papelModel->firstOrCreate(array('valor' => $valor));
-            //$cat->Papel()->attach($valor);
-            $collection = $cat->categoryPapel()->where('papel_id',$papel->id)->get()->first();
-            //if (!empty($valor)) {
-           //     $papeis[] = $valor;
-           // }
-        }
-
-        if(is_null($collection)){
-            return redirect()->route('categories.atributo.update',['id'=>$category_id,'atributo' =>'papel']);
-        }
-        /*dd($papeis);
-        for ($i = 0; $i < count($papeis); $i ++)
-        {
-            $papel = $this->papelModel->firstOrCreate(array('valor' => $papeis[$i]));
-            $cat->Papel()->attach($papel->id);
-        }*/
-        return redirect()->route('atributos.papeis');
-    }
-    /*
-     * Enobrecimento
-     */
-    public function EnobrecimentosCreate(CategoryDescription $categoryDescription) {
-        //para popular o select
-        $category = $categoryDescription->all()->lists('categories_name','id');
-        $qtd_inputs = 10;
-        return view('diretoria.atributos.enobrecimentos_create')
-            ->with(compact('category'))
-            ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
-    }
-    public function EnobrecimentosStore(Request $request) {
-        $input = $request->except('_token');
-        $category_id = $input['category_id'];
-        $cat = $this->categoryModel->find($category_id);
-        foreach($input['valor'] as $key =>$valor) {
-            if (!empty($valor)) {
-                $enobrecimento = $this->enobrecimentoModel->firstOrCreate(['valor'=>$valor,'category_id'=>$category_id]);
-                $cat->Enoblecimento()->attach($enobrecimento->id);
+            if(!empty($valor)){
+                $papel = $this->papelModel->firstOrCreate(array('valor' => $valor));
+                $collection = $cat->categoryPapel()->where('papel_id',$papel->id)->get()->first();
             }
         }
-        /*
-         * dd($enobrecimentos);
-        for ($i = 0; $i < count($enobrecimentos); $i ++)
-        {
-            //$enobrecimento = $this->enobrecimentoModel->firstOrCreate(array('valor' => $enobrecimentos[$i]));
-            //$cat->Enoblecimento()->attach($enobrecimento->id);
+        if(is_null($collection)){
+            return redirect()->route('categories.atributos',['id'=>$category_id]);
         }
-         */
-        return redirect()->route('atributos.enobrecimento');
+        return redirect()->route('atributos.papeis');
     }
 
     /***cores***/
@@ -247,13 +220,40 @@ class AdminAttributesController extends Controller {
         }
         return redirect()->route('atributos.cores');
     }
+
+    /*
+     * Enobrecimento
+     */
+    public function EnobrecimentosCreate(CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->all()->lists('categories_name','id');
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.enobrecimentos_create')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'atributos');
+    }
+    public function EnobrecimentosStore(Request $request) {
+        $input = $request->except('_token');
+        $category_id = $input['category_id'];
+        $cat = $this->categoryModel->find($category_id);
+        foreach($input['valor'] as $key =>$valor) {
+            if (!empty($valor)) {
+                $this->enobrecimentoModel->firstOrCreate(['valor'=>$valor,'category_id'=>$category_id]);
+                //$cat->Enoblecimento()->attach($enobrecimento->id);
+            }
+        }
+        return redirect()->route('atributos.enobrecimentos');
+    }
+
     /***acabamento***/
     public function AcabamentosCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
+        $enobrecimentos = $this->enobrecimentoModel->lists('valor','id');
         $qtd_inputs = 10;
         return view('diretoria.atributos.acabamentos_create')
-            ->with(compact('category'))
+            ->with(compact('category','enobrecimentos'))
             ->with('qtd_inputs', $qtd_inputs)
             ->with('page', 'atributos');
     }
@@ -263,12 +263,15 @@ class AdminAttributesController extends Controller {
         foreach($input['valor'] as $key =>$valor) {
             if (!empty($valor)) {
                 $acabamentos[] = $valor;
+                $enobrecimento = $this->enobrecimentoModel->find($input['enobrecimento'][$key])->valor;
+                $enobrecimentos[] = $enobrecimento;
             }
         }
+        //dd($enobrecimentos);
         $acabamento_id = $this->acabamentoModel->lists('id');
         for ($i = 0; $i < count($acabamentos); $i ++)
         {
-            $this->acabamentoModel->firstOrCreate(array('valor' => $acabamentos[$i]));
+            $this->acabamentoModel->firstOrCreate(array('valor' => $acabamentos[$i], 'enoblecimento' => $enobrecimentos[$i] ));
             foreach($acabamento_id as $key => $id){
                 $categoryAcabamento->firstOrCreate([
                     'category_id' => $category_id,
@@ -307,7 +310,8 @@ class AdminAttributesController extends Controller {
         }
         return redirect()->route('categorie.papeis.edit', ['id'=> $id ]);
     }
-/**atualizacação de preçso**/
+
+    /**atualizacação de preçso**/
     public function PricesUpdate(Request $request,$id, Pacacabamento $pacacabamento){
         //dd($request->input());
         $input = $request->except('_token');
@@ -326,7 +330,7 @@ class AdminAttributesController extends Controller {
     public function updateAtributos($id, $atributo,Request $request) {
         $input = $request->except('_token');
         $cat = $this->categoryModel->find($id);
-
+        $cat_p = $this->categoryPapel->where('category_id',$id)->get()->lists('papel_id','id');
         $atributos = [
             'pacote' =>'pacote',
             'formato' =>'formato',
@@ -360,25 +364,35 @@ class AdminAttributesController extends Controller {
                         $newcat = $cat->categoryFormato()->firstOrCreate($row);
                         $collection = $this->categoryFormato->find($newcat->id);
                         if(is_null($collection->PacFormatos()->first())){
-                            $CategoryFormato = $cat->CategoryFormato()->where('category_id',$id)->get();
-                            $pacotes_id = $cat->Pacotes()->lists('id');
-                            foreach($pacotes_id as $pacote_id){
-                                foreach($CategoryFormato as $CatFormato){
-                                    $row_pac = [
+                            $CategoryFormato = $cat->CategoryFormato()->where('category_id',$id)
+                                ->where('formato_id',$key)->get();
+                            $pacotes = $cat->Pacotes()->lists('quantity','id');
+                            foreach ($CategoryFormato as $key => $CatFormato) {
+                                foreach ($pacotes as $pacote_id => $quantity) {
+                                    /*$rows_pac[] = [
                                         'category_id' => $id,
                                         'category_formato_id' => $CatFormato->id,
                                         'pacote_id' => $pacote_id
-                                    ];
-                                    $collection->PacFormatos()->firstOrCreate($row_pac);
+                                    ];*/
+                                    $CatFormato->PacFormatos()->firstOrCreate([
+                                        'category_id' => $id,
+                                        'category_formato_id' => $CatFormato->id,
+                                        'pacote_id' => $pacote_id
+                                    ]);
                                 }
-                            }
 
+                            }
                         }
+
                     }
                 }
+                //dd($rows_pac);
                 break;
             case 'papel':
                 foreach($input[$atributo] as $key =>$valor) {
+                    $autoriza = $this->Autoriza($id, $cat_p);
+                    //$autoriza_a = $autoriza[0];
+                    $autoriza_f = $autoriza[1];
                     if (!empty($valor)) {
                         $row = [
                             'papel_id' => $key,
@@ -386,80 +400,205 @@ class AdminAttributesController extends Controller {
                         ];
                         $newcat = $cat->categoryPapel()->firstOrCreate($row);
                         $collection = $this->categoryPapel->find($newcat->id);
+
                         if(is_null($collection->PacPapeis()->first())){
-                            $CategoryFormato = $cat->CategoryFormato()->where('category_id',$id)->get()->first();
-                            //dd($CategoryFormato->PacFormatos);
-                            foreach($CategoryFormato->PacFormatos as $CatFormato){
-                                $row_pac = [
-                                    'category_id' => $id,
-                                    'pacformato_id' => $CatFormato->id,
-                                    'category_papel_id' => $newcat->id,
-                                    'pacote_id' => $CatFormato->pacote_id,
-                                    'weight' =>  0
-                                ];
-                                $collection->PacPapeis()->firstOrCreate($row_pac);
+                            $CategoryFormatos = $cat->CategoryFormato()
+                                ->where('category_id',$id)->get();
+                            //$pacotes = $cat->Pacotes()->lists('quantity','id');
+                            foreach ($cat_p as $category_papel_id => $papel_id) {
+                                foreach ($CategoryFormatos as $k => $CategoryFormato) {
+                                    if(in_array($CategoryFormato->formato_id,$autoriza_f[$papel_id]))
+                                    {
+                                        $CategoryPapel = $this->categoryPapel->find($category_papel_id);
+                                        foreach($CategoryFormato->PacFormatos()->get() as $PacFormato){
+                                            //dd($PacFormato);
+                                            $row_pac = [
+                                                'category_id' => $id,
+                                                'pacformato_id' => $PacFormato->id,
+                                                'category_papel_id' => $category_papel_id,
+                                                'pacote_id' => $PacFormato->pacote_id,
+                                                'weight' =>  0
+                                            ];
+                                            $CategoryPapel->PacPapeis()->firstOrCreate($row_pac);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+               // dd($row_pac);
+                break;
+            case 'cor':
+                foreach($input[$atributo] as $cor_id =>$valor) {
+                    $autoriza = $this->Autoriza($id, $cat_p);
+                    //$autoriza_a = $autoriza[0] ;
+                    $autoriza_f = $autoriza[1];
+                    if (!empty($valor)) {
+                        $row = [
+                            'cor_id' => $cor_id,
+                            'category_id' => $id
+                        ];
+                        $PacCores = $this->categoryCor->where('category_id',$id)->where('cor_id',$cor_id)->get()->first();
+                        //dd($PacCores->PacCor);
+                        $newcat = $cat->CategoryCor()->firstOrCreate($row);
+                        $collection = $this->categoryCor->find($newcat->id);
+                        if (is_null($collection->PacCor()->first())) {
+                            $cat_f = $cat->CategoryFormato;
+                            $cat_papel = $cat->CategoryPapel;
+                            $categoryCor =  $this->categoryCor->where('category_id',$id)
+                                ->where('cor_id',$cor_id)->get();
+                            foreach ($cat_papel->toArray() as $papel) {
+                                foreach ($cat_f->toArray() as $key => $formato) {
+                                    if (in_array($formato['formato_id'], $autoriza_f[$papel['papel_id']])) {
+                                        foreach ($categoryCor as $items) {
+                                            if(!is_null($items)){
+                                                //começa a criar as entradas
+                                                $categoryFormato = $cat_f->find($formato['id']);
+                                                $PacFormatos = $categoryFormato->PacFormatos;
+                                                $CategoryCor = $this->categoryCor->where('category_id',$id)
+                                                    ->where('cor_id',$cor_id)->get()->toArray();
+                                                foreach ($PacFormatos as $k => $items_pacFormatos) {
+                                                    $PacPapeis = $items_pacFormatos->PacPapeis;
+                                                    foreach ($PacPapeis as $ch => $items_pacPapeis) {
+                                                        $row_pac = [
+                                                            'category_id' => $id,
+                                                            'pacpapel_id' => $items_pacPapeis->id,
+                                                            'category_cor_id' =>$CategoryCor[0]['id'],
+                                                            'pacote_id' => $items_pacPapeis->pacote_id
+                                                            ];
+                                                        $PacCores->PacCor()->firstOrCreate($row_pac);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case 'enobrecimento':
+                foreach($input[$atributo] as $key =>$valor) {
+                    if (!empty($valor)) {
+                          $row = [
+                                'enoblecimento_id' => $key,
+                                'category_id' => $id
+                            ];
+                            $cat->CategoryEnoblecimento()->firstOrCreate($row);
+
+                    }
+                }
+                break;
+            case 'acabamento':
+                $autoriza = $this->Autoriza($id, $cat_p);
+                $autoriza_a = $autoriza[0];
+                $autoriza_f = $autoriza[1];
+                $CatFormatos = $this->categoryFormato->where('category_id',$id)->get()->lists('formato_id','id');
+                $CatPapeis = $this->categoryPapel->where('category_id',$id)->get()->lists('papel_id','id');
+                $CatCores = $this->categoryCor->where('category_id',$id)->get()->lists('cor_id','id');
+                $CatAcabamentos = $this->categoryAcabamento->where('category_id',$id)->lists('acabamento_id','id');
+                $pacotes = $this->pacoteModel->where('category_id',$id)->lists('quantity','id');
+                ini_set('max_execution_time', 120);
+
+                foreach($input[$atributo] as $acabamento_id =>$valor) {
+                    if (!empty($valor)) {
+                        $row = [
+                            'acabamento_id' => $acabamento_id,
+                            'category_id' => $id
+                        ];
+
+                        $newcat = $cat->categoryAcabamento()->firstOrCreate($row);
+                        $collection = $this->categoryAcabamento->find($newcat->id);
+                        if(is_null($collection->PacAcabamentos()->first())) {
+                            foreach ($CatPapeis as $category_papel_id => $papel_id) {
+                                foreach ($CatFormatos as $category_formato_id => $formato_id) {
+                                    //verifica se o formato é autorizado para o papel corrente
+                                    if (in_array($formato_id, $autoriza_f[$papel_id])) {
+                                        $Formatos = $this->categoryFormato->find($category_formato_id);
+                                        $PacFormato_ID = $Formatos->PacFormatos()->where('category_formato_id',$category_formato_id)->get()->first()->id;
+                                        $Papeis = $this->categoryPapel->find($category_papel_id);
+                                        $PacPapel_ID = $Papeis->Pacpapeis()->where('category_papel_id',$category_papel_id)
+                                            ->where('pacformato_id',$PacFormato_ID)->get()->first()->id;
+                                        foreach ($CatCores as $category_cor_id => $cor_id) {
+                                            foreach ($CatAcabamentos as $category_acabamento_id => $acab_id) {
+
+                                               if($acabamento_id == $acab_id && (in_array($acabamento_id, $autoriza_a[$papel_id]))){
+
+                                                   $Cores = $this->categoryCor->find($category_cor_id);
+                                                   $PacCor = $Cores->PacCor()->where('category_cor_id',$category_cor_id)
+                                                       ->where('pacpapel_id',$PacPapel_ID)->get();
+
+                                                   foreach ($PacCor as $items) {
+                                                       foreach ($pacotes as $pacote_id => $quantity) {
+                                                           $rows_cat = [
+                                                               'category_id' => $id,
+                                                               'paccor_id' => $items->id,
+                                                               'category_acabamento_id' => $category_acabamento_id,
+                                                               'pacote_id' => $pacote_id,
+                                                               'price' => 0.0000
+                                                           ];
+                                                           $PacAcabamentos = $this->categoryAcabamento->find($category_acabamento_id);
+                                                           $PacAcabamentos->PacAcabamentos()->firstOrCreate($rows_cat);
+                                                       }
+                                                   }
+                                                    //   }
+                                                   //}
+                                                   break;
+                                               }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
 
                 break;
-            case 'cor':
-                foreach($input[$atributo] as $key =>$valor) {
-
-                    if (!empty($valor)) {
-                        $row = [
-                            'cor_id' => $key,
-                            'category_id' => $id
-                        ];
-
-                       $cat->categoryCor()->firstOrCreate($row);
-
-                    }
-                }
-                break;
-            case 'enobrecimento':
-
-                foreach($input[$atributo] as $key =>$valor) {
-                    if (!empty($valor)) {
-                        $catenobrecimentos = $cat->CategoryEnoblecimento()->first();
-                        if(is_null($catenobrecimentos)){
-                            $row = [
-                                'enoblecimento_id' => $key,
-                                'category_id' => $id
-                            ];
-                            CategoryEnoblecimento::firstOrCreate($row);
-                        }else{
-                            $cat->categoryEnoblecimento()->attach($key);
-                        }
-
-                    }
-                }
-
-                break;
-            case 'acabamento':
-                foreach($input[$atributo] as $key =>$valor) {
-                    if (!empty($valor)) {
-                        $row = [
-                            'acabamento_id' => $key,
-                            'category_id' => $id
-                        ];
-                        $cat->categoryAcabamento()->firstOrCreate($row);
-                    }
-                }
-                break;
         }
-
         return redirect()->route('categories.atributos',['id' =>$id]);
-//return 'aqui';
     }
-    public function updatePapeis(CategoryPapel $categoryPapel) {
-        //$this->categoryModel->find($id)->update($request->all());
-//dd($categoryFormato);
-        return redirect()->route('diretoria.categories');
-//return 'aqui';
-    }
-    public function CatformatosEdit($id) {
-        return 'Vou edita os dados do identificador da categoria '.$id;
+
+    /**
+     * @param $id
+     * @param $cat_p
+     * @param $autoriza_f
+     * @return mixed
+     */
+    public function Autoriza($id, $cat_p)
+    {
+        $autoriza_a = [];
+        $autoriza_f = [];
+        if ($id == 5) {
+            foreach ($cat_p as $cat_p_id => $pap_id) {
+                switch ($pap_id) {
+                    case 1 :
+                        $autoriza_a[1] = [2, 3, 4, 5, 6, 7, 8,9];
+                        $autoriza_f[1] = [1, 2, 3, 4];
+                        break;
+                    case 2 :
+                        $autoriza_a[2] = [2, 6];
+                        $autoriza_f[2] = [2, 4];
+                        break;
+                    case 3 :
+                        $autoriza_a[3] = [1, 5];
+                        $autoriza_f[3] = [5];
+                        break;
+                }
+            }
+        } else {
+            $acabamentos = $this->categoryAcabamento->where('category_id',$id)->get()->lists('acabamento_id');
+            $formatos = $this->categoryFormato->where('category_id',$id)->get()->lists('formato_id');
+            foreach ($cat_p as $cat_p_id => $pap_id) {
+                $autoriza_a[$pap_id] = $acabamentos;
+                $autoriza_f[$pap_id] = $formatos;
+            }
+        }
+        //dd($autoriza_a,$autoriza_f);
+        return [$autoriza_a,$autoriza_f];
     }
 }

@@ -30,6 +30,7 @@ class CustomerController extends Controller {
      */
     public function __construct(Layout $layout) {
         $this->layout = $layout;
+
     }
 
     /**
@@ -43,11 +44,11 @@ class CustomerController extends Controller {
         $layout = $this->layout->classes('0');
         $layout['color_bg_footer'] = '#003366';
         return view('clientes.index')
-                        ->with('title', STORE_NAME . '  Acesso a loja')
-                        ->with('page', 'login')
-                        ->with('ativo', 'Login')
-                        ->with('rota', 'clientes/login.html')
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . '  Acesso a loja')
+            ->with('page', 'login')
+            ->with('ativo', 'Login')
+            ->with('rota', 'clientes/login.html')
+            ->with('layout', $layout);
     }
 
     /**
@@ -78,22 +79,105 @@ class CustomerController extends Controller {
             ->with('class', LAYOUT);
     }
 
-    public function Conta() {
-        if (Auth::user()->id) {
-            // get the customer
-            $customer = Customer::find(Auth::user()->id);
-            $order = $customer->Order;
-            $address =$customer->AddressBook;
+    public function Conta($id) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
         }
-        return view('clientes.index',compact('order', 'address'))
-                        ->with('title', STORE_NAME . ' Minha Conta')
-                        ->with('message', 'Bem Vindo :' . $customer->customers_firstname)
-                        ->with('page', 'minhaconta')
-                        ->with('ativo', 'Minha Conta')
-                        ->with('rota', 'minhaconta')
-                        ->with('customers', $customer);
-    }
+        // get the customer
+        $customer = Customer::find($id);
+        //dd($customer);
+        $order = $customer->Order;
 
+        $address =$customer->AddressBook;
+
+        return view('clientes.index',compact('order', 'address'))
+            ->with('title', STORE_NAME . ' Minha Conta')
+            ->with('message', 'Bem Vindo :' . $customer->customers_firstname)
+            ->with('page', 'minhaconta')
+            ->with('ativo', 'Minha Conta')
+            ->with('rota', 'minhaconta')
+            ->with('customers', $customer);
+    }
+    /**
+     * quando o cliente deseja editar sua conta.
+     *
+     * @param  info  $id
+     * @return view
+     */
+    public function ContaEdit($id) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        $address = array();
+        $customers = Customer::find($id);
+// get the customer
+        /*if ($info == 'dados') {
+            $page = 'editarconta';
+            $conta = '';
+        }
+        if ($info == 'endereco') {
+            $page = 'editarendereco';
+            $conta = ' - Meus endereços';
+            $address_book = Addressbook::where('customer_id', $id)->get();
+            $address = $address_book->toarray(); //print_r($address);exit;
+        }
+        if ($info == 'pedido') {
+            $page = 'editarpedido';
+            $conta = ' - Meus pedidos';
+        }*/
+
+// show the view and pass the nerd to it
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Minha conta - Meus Dados')
+            ->with('page', 'editarconta')
+            ->with('ativo', 'Minha Conta - Meus dados' )
+            ->with('rota', 'clientes/index')
+            ->with('customers', $customers)
+            ->with('address', $address);
+    }
+    public function CadastroUpdate(Request $request,$id, Customer $customer) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        $erros = array();
+        //check if its our form
+        $post_inputs = $request->all($request->except('_token'));
+        /*
+         * "customers_firstname" => "Leandro"
+          "customers_lastname" => "Bezerra"
+          "customers_gender" => "m"
+          "customers_dob" => "26/06/1961"
+          "email" => "leanbez@gmail.com"
+          "customers_cpf_cnpj" => "703.346.417/72"
+          "customers_rg_ie" => "9102622611"*/
+        //regras a serem validadas
+        //$rules = $customer->rules;
+        $customers_cpf_cnpj = $post_inputs['customers_cpf_cnpj'];
+        if (!empty($customers_cpf_cnpj)) {
+            if (!Utilidades::validate_cpf($customers_cpf_cnpj)) {
+                $erros[] = 'CPF no formato errado.';
+            }
+        } else {
+            $erros[] = 'Inform CPF/CNPJ.';
+        }
+        $email = $post_inputs['email'];
+        if (!empty($email)) {
+            if (!Utilidades::validate_email($email)) {
+                $erros[] = 'O seu email parece não estar no formato correto.';
+            } else {
+                $check_email = $customer->where('email', $email)->lists('id');
+                if (count($check_email) > 0) {
+                    $erros[] = 'Esse email ja está cadastrado.';
+                }
+            }
+        } else {
+            $erros[] = 'Informe seu email.';
+        }
+
+        $customer->find($id)->update($post_inputs);
+
+        return redirect()->route('clientes.conta', ['id' =>$id]);
+    }
     /**
      * controla o modal com o form formtipoconta
      * quando o cliente passa as informações sobre o login.
@@ -101,6 +185,70 @@ class CustomerController extends Controller {
      * @param
      * @return json
      */
+    public function EnderecoEdit($id, Customer $customer, AddressBook $addressBook) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        //$address = array();
+        $customers = $customer->find($id);
+        $address_book = $customers->AddressBook;
+        $address = $address_book->toarray();
+// get the customer
+        /*if ($info == 'dados') {
+            $page = 'editarconta';
+            $conta = '';
+        }
+        if ($info == 'endereco') {
+            $page = 'editarendereco';
+            $conta = ' - Meus endereços';
+            $address_book = Addressbook::where('customer_id', $id)->get();
+            $address = $address_book->toarray(); //print_r($address);exit;
+        }
+        if ($info == 'pedido') {
+            $page = 'editarpedido';
+            $conta = ' - Meus pedidos';
+        }*/
+
+// show the view and pass the nerd to it
+        return view('clientes.index')
+            ->with('title', STORE_NAME . ' Minha conta - Meus Endereços')
+            ->with('page', 'editarendereco')
+            ->with('ativo', 'Minha Conta - Meus Endereços' )
+            ->with('rota', 'clientes/index')
+            ->with('customers', $customers)
+            ->with('address', $address);
+    }
+
+    /**
+     * quando o cliente deseja ver um pedido específico.
+     *
+     * @param  $id
+     * @return view
+     */
+    public function Pedidos($id,Customer $customer) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        $customer_id = Auth::user()->id;
+        // get the customer
+        $customers = $customer->find($customer_id);
+        //dd($customers);
+        $order = $customers->Order()->where('id',$id)->get()->first();
+        //dd($order);
+        $address =$customers->AddressBook;
+        //$customers = Customer::find($id);
+        //$check_order = Order::where('customer_id', $id)->paginate(NR_PRODUTOS_POR_PAGINA);
+        //$paginas = $check_order;
+        //$order = $check_order->toarray();
+        if ($order) {
+            return view('clientes.index', compact('customers','order','address'))
+                ->with('title', STORE_NAME . ' Minha conta - Meus pedidos')
+                ->with('page', 'pedidos')
+                ->with('ativo', 'Minha Conta')
+                ->with('rota', 'clientes/index')
+                ->with('total', 1);
+        }
+    }
     public function ContaCriada() {
         $layout = $this->layout->classes(0);
         return View::make('clientes.index')
@@ -136,20 +284,20 @@ class CustomerController extends Controller {
             }
             $layout = $this->layout->classes('6');
             return view('clientes.index')
-                            ->with('title', STORE_NAME . ' Cadastro de Clientes')
-                            ->with('page', 'novaconta')
-                            ->with('ativo', 'Cadastro')
-                            ->with('rota', 'clientes/index')
-                            ->with('tipo', $tipo)
-                            ->with('entry_postcode', $entry_postcode)
-                            ->with('entry_street_address', ($entry_street_address))
-                            ->with('entry_suburb', ($entry_suburb))
-                            ->with('entry_city', ($entry_city))
-                            ->with('entry_state', $entry_state)
-                            ->with('customers_firstname', $customers_firstname)
-                            ->with('customers_lastname', $customers_lastname)
-                            ->with('email', $email)
-                            ->with('layout', $layout);
+                ->with('title', STORE_NAME . ' Cadastro de Clientes')
+                ->with('page', 'novaconta')
+                ->with('ativo', 'Cadastro')
+                ->with('rota', 'clientes/index')
+                ->with('tipo', $tipo)
+                ->with('entry_postcode', $entry_postcode)
+                ->with('entry_street_address', ($entry_street_address))
+                ->with('entry_suburb', ($entry_suburb))
+                ->with('entry_city', ($entry_city))
+                ->with('entry_state', $entry_state)
+                ->with('customers_firstname', $customers_firstname)
+                ->with('customers_lastname', $customers_lastname)
+                ->with('email', $email)
+                ->with('layout', $layout);
         }
     }
     /**
@@ -221,7 +369,7 @@ class CustomerController extends Controller {
                 'loadurl' => '');
             return json_encode($data);
         } else {
-             //prepara os dados para o cliente
+            //prepara os dados para o cliente
             $customer = new Customer;
             $customer->customers_gender = $post_inputs['customers_gender'];
             $customer->remember_token = $post_inputs['_token'];
@@ -229,10 +377,10 @@ class CustomerController extends Controller {
             $customer->password = Hash::make($password);
             $customer->customers_firstname = $post_inputs['customers_firstname'];
             $customer->customers_lastname = $post_inputs['customers_lastname'];
-           $customer->email = $post_inputs['email'];
+            $customer->email = $post_inputs['email'];
             $customer->customers_telephone = $post_inputs['customers_telephone'];
             $customer->customers_telephone1 = $post_inputs['customers_telephone1'];
-           $customer->customers_cel = $post_inputs['customers_cel'];
+            $customer->customers_cel = $post_inputs['customers_cel'];
             $customer->customers_cel1 = $post_inputs['customers_cel1'];
             $customer->customers_newsletter = $post_inputs['customers_newsletter'];
             $customer->customers_cpf_cnpj = $post_inputs['customers_cpf_cnpj'];
@@ -259,19 +407,23 @@ class CustomerController extends Controller {
             $address->entry_nr_rua = $post_inputs['entry_nr_rua'];
             $address->entry_comp_ref = $post_inputs['entry_comp_ref'];
             $address->entry_ref_entrega = $post_inputs['entry_ref_entrega'];
+
             //dados de endereços aramzenados para o cliente
             $address->save();
+
             //setando o endereço padrão para o cliente
             $customer->customers_default_address_id = $address->id;
             $customer->update();
 
             $acessos = new Acesso;
             $acessos->customer_id = $customer->id;
+            //seta o valor de 1 para permitir cv grátis
+            $acessos->permite_brinde = 1;
             //dados de acesso criado para o cliente
             $salve = $acessos->save();
             return $this->TratarEmail($salve, $customer);
         }
-      }
+    }
     /**
      * Script CheckCadastro faz validação de alguns campos antes de postar.
      *
@@ -314,12 +466,15 @@ class CustomerController extends Controller {
             }
         }
     }
-        /**
+    /**
      * Mosta página orcamento.
      *
      * @return View
      */
     public function Orcamento(Request $request) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
         $post_inputs = $request->all();
         $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
         $layout = $this->layout->classes($pai);
@@ -351,13 +506,13 @@ class CustomerController extends Controller {
         $OrcProduto->save();
 
         return view('clientes.index',compact('customer'))
-                        ->with('title', STORE_NAME . ' Imprima seu orçamento')
-                        ->with('page', 'imprimir')
-                        ->with('ativo', 'Imprimir')
-                        ->with('inputs_orc', $post_inputs)
-                        ->with('rota', 'orcamento')
-                        ->with('orcamento_id', $orcamento->id)
-                        ->with('layout', $layout);
+            ->with('title', STORE_NAME . ' Imprima seu orçamento')
+            ->with('page', 'imprimir')
+            ->with('ativo', 'Imprimir')
+            ->with('inputs_orc', $post_inputs)
+            ->with('rota', 'orcamento')
+            ->with('orcamento_id', $orcamento->id)
+            ->with('layout', $layout);
     }
     public function TratarEmail($check, $customer) {
         $erro = array();
