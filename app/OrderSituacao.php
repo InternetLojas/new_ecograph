@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ordersituacao extends Model {
 	protected $table = 'ordersituacaos';
-    protected $fillable = [];
+    protected $fillable = [
+        'status_name',
+        'class'
+    ];
 
     public function scopeStatus($query, $class) {
         return $query->where('class', '=', $class)

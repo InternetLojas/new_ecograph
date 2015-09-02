@@ -20,6 +20,6 @@ class Pacacabamento extends Model {
     }
 
     public function PacCor(){
-        return $this->BelongsTo(Ecograph\Paccor);
+        return $this->BelongsTo('Ecograph\Paccor');
     }
 }

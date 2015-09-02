@@ -113,10 +113,28 @@ Route::group(['prefix' => 'clientes'], function() {
         'as' => 'clientes.endereco',
         'uses' => 'CustomerController@Endereco'
     ]);
-    /**ver detalhes de endereco**/
+    /**editar a conta**/
+    Route::get('endereco/edit/{id}', [
+        'as' => 'clientes.endereco.edit',
+        'uses' => 'CustomerController@EnderecoEdit'
+    ]);
+    Route::put('{id}/endereco/update.html', [
+        'as' => 'endereco.update',
+        'uses' => 'CustomerController@EnderecoUpdate'
+    ]);
+    /**ver detalhes da conta**/
     Route::get('cadastro/{id}', [
         'as' => 'clientes.conta',
-        'uses' => 'CustomerController@Cadastro'
+        'uses' => 'CustomerController@Conta'
+    ]);
+    /**editar a conta**/
+    Route::get('cadastro/edit/{id}', [
+        'as' => 'clientes.conta.edit',
+        'uses' => 'CustomerController@ContaEdit'
+    ]);
+    Route::put('{id}/cadastro/update.html', [
+        'as' => 'cadastro.update',
+        'uses' => 'CustomerController@CadastroUpdate'
     ]);
     /*     * *controla o modal com o form formtipoconta retorna JSON* */
     Route::post('tipoContaJson', array(
@@ -153,7 +171,11 @@ Route::group(['prefix' => 'produtos'], function() {
         "as" => "produtos.detalhes",
         "uses" => "ProductController@Detalhes"
     ]);
-
+//somente para cartao de visita grátis
+    Route::get('detalhes/cartao-gratis/{pai}/{filho}/{nome_categoria}', [
+        "as" => "produtos.detalhes.cartao.gratis",
+        "uses" => "ProductController@DetalhesCartaoGratis"
+    ]);
     Route::post('enviarpdf.html', [
         'as' => 'produtos.enviarpdf',
         'uses' => 'ProductController@EnviarPDF'
@@ -183,6 +205,10 @@ Route::post('calcula_frete/{cep}', [
 Route::get("lista_perfis/{categoria}", [
     "as" => "lista_perfis/{categoria}",
     "uses" => "PerfilController@Lista"
+]);
+Route::get("lista_acabamento/{categoria}/{papel}/{enobrecimento}", [
+    "as" => "lista_acabamento/{categoria}/{papel}/{enobrecimento}",
+    "uses" => "ProductController@ListaAcabamento"
 ]);
 
 
