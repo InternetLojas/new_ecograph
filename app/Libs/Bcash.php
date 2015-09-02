@@ -8,6 +8,7 @@ use Ecograph\Customer;
 use Ecograph\AddressBook;
 use Auth;
 use Cart;
+use Illuminate\Support\Facades\Session;
 
 Class Bcash extends Payments {
 
@@ -43,7 +44,14 @@ Class Bcash extends Payments {
                     break;
             }
         }
-
+        $frac = 0;
+        if (Session::has('orc_desconto_valor')) {
+            $desc = Session::get('orc_desconto_valor');
+            if(is_numeric(($desc)) && $desc > 0){
+                $nr_itens = Cart::count();
+                $frac = $desc/$nr_itens;
+            }
+        }
         $dados["frete"] = $vl_frete;
         $dados["tipo_frete"] = $frete;
         $i = 0;
@@ -59,7 +67,7 @@ Class Bcash extends Payments {
                 $itens['options']['perfil'] . '<br>' .
                 $itens['options']['unidade'];
             $dados["produto_qtde_" . ($i + 1)] = $itens['qty'];
-            $dados["produto_valor_" . ($i + 1)] = $preco;
+            $dados["produto_valor_" . ($i + 1)] = $preco - $frac;
             $i++;
         }
 
@@ -72,7 +80,7 @@ Class Bcash extends Payments {
         $dados["endereco"] = $default_address->entry_street_address;
         $dados["bairro"] = $default_address->entry_suburb;
         $dados["cidade"] = $default_address->entry_city;
-        $dados["estado"] = $default_address->entry_state;
+        $dados["estado"] = $default_address->entry_state_code;
         $dados["cep"] = $default_address->entry_postcode;
         // print_r($dados);exit;
         return $dados;
@@ -114,6 +122,7 @@ Class Bcash extends Payments {
                 $inputs[$key] = $value;
             }
         }
+        //dd($inputs);
         return $inputs;
     }
 

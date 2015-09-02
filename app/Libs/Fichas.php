@@ -11,22 +11,42 @@ use Ecograph\ProductDescription;
 
 Class Fichas {
 
-    public static function CategoriasPais() {
-        $categorias = Category::all();
-        $array_categ = $categorias->toArray();
-        foreach ($array_categ as $categoria) {
-            if ($categoria['parent_id'] == 0 && $categoria['id'] <> 28) {
-                $sons = Category::where('parent_id', $categoria['id'])->get();
+    public static function CategoriasPais($gratis = false) {
+        if(!$gratis){
+            $categorias = Category::all();
+            $array_categ = $categorias->toArray();
+            foreach ($array_categ as $categoria) {
+
+                if ($categoria['parent_id'] == 0 && $categoria['id'] <> 28) {
+                    $sons = Category::where('parent_id', $categoria['id'])->get();
+                    $prole = $sons->toarray();
+                    if (count($prole) > 0) {
+                        foreach ($prole as $key => $item) {
+                            $nome_filho = CategoryDescription::find($item['id'])->categories_name;
+                            $prole[$key]['nome_filho'] = $nome_filho;
+                            $filhos = array('filhos' => $prole, 'nr_filhos' => count($prole));
+                            $pais[$categoria['id']] = array('nome' => CategoryDescription::find($categoria['id'])->categories_name, 'prole' => $filhos);
+                        }
+                    }
+                }
+            }
+        } else{
+            $categorias = Category::find(28);
+            $array_categ = $categorias->toArray();
+
+            //foreach ($array_categ as $categoria) {
+                //dd($categoria);
+                $sons = Category::where('parent_id', $array_categ['id'])->get();
                 $prole = $sons->toarray();
                 if (count($prole) > 0) {
                     foreach ($prole as $key => $item) {
                         $nome_filho = CategoryDescription::find($item['id'])->categories_name;
                         $prole[$key]['nome_filho'] = $nome_filho;
                         $filhos = array('filhos' => $prole, 'nr_filhos' => count($prole));
-                        $pais[$categoria['id']] = array('nome' => CategoryDescription::find($categoria['id'])->categories_name, 'prole' => $filhos);
+                        $pais[$array_categ['id']] = array('nome' => CategoryDescription::find($array_categ['id'])->categories_name, 'prole' => $filhos);
                     }
                 }
-            }
+            //}
         }
 
         if ($pais) {

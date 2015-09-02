@@ -30,6 +30,7 @@ Class Pages {
             'portfolio' => 'produtos.pages.portfolio',
             'listagem' => 'produtos.pages.listagem',
             'detalhes' => 'produtos.pages.detalhes',
+            'detalhescv' => 'produtos.pages.detalhescv',
             'categoria' => 'produtos.pages.categorias',
             'busca' => 'produtos.pages.buscas',
             'enviarpdf' => 'produtos.pages.enviarpdf',

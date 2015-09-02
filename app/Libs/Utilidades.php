@@ -5,6 +5,7 @@ namespace Ecograph\Libs;
 use Ecograph\Confdesconto;
 use Ecograph\Basket;
 use Auth;
+use Ecograph\Ordersituacao;
 
 Class Utilidades {
 
@@ -87,6 +88,9 @@ Class Utilidades {
     }
 
     public static function SituacaoPedido($orders_status) {
+        if($orders_status>62){
+            $orders_status = 54;
+        }
         $orders_status = Ordersituacao::find($orders_status)->status_name;
         return $orders_status;
     }

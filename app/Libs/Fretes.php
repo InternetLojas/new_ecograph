@@ -48,27 +48,37 @@ Class Fretes {
     }
 
     public static function makeURL($peso, $cepdestino, $srv, $nVlValorDeclarado = '') {
-        $nVlValorDeclarado = 1000;
-        return '?nCdEmpresa=&sDsSenha=&sCepOrigem=' . STORE_CEP . '&sCepDestino=' . $cepdestino . '&nVlPeso=' . $peso . '&nCdFormato=1&nVlComprimento=20&nVlAltura=10&nVlLargura=15&sCdMaoPropria=n&nVlValorDeclarado=' . $nVlValorDeclarado . '&sCdAvisoRecebimento=n&nCdServico=' . $srv . '&nVlDiametro=60&StrRetorno=xml';
+        //$nVlValorDeclarado = 1000;
+        return '?nCdEmpresa=&sDsSenha=&sCepOrigem=' . STORE_CEP . '&sCepDestino=' . $cepdestino . '&nVlPeso=' . $peso . '&nCdFormato=1&nVlComprimento=20&nVlAltura=10&nVlLargura=15&sCdMaoPropria=N&nVlValorDeclarado=' . $nVlValorDeclarado . '&sCdAvisoRecebimento=N&nCdServico=' . $srv . '&nVlDiametro=60&StrRetorno=xml&nIndicaCalculo=3';
     }
 
     public static function GetRequestCorreio($URL) {
-        $endereco_wsdl = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPreco';
+         //Base da URL
+        $endereco_wsdl = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo';
         $xml = simplexml_load_file($endereco_wsdl . $URL);
         $response = array();
         foreach ($xml->Servicos->cServico as $value) {
             if ($value->Valor != '0,00') {
-                $response = array('erro' => false,'valor'=> $value->Valor);
-                //$valor = $value->Valor;
+                $response = [
+                    'erro' => false,
+                    'valor'=> $value->Valor
+                ];
                 break;
             } else {
-                $response = array('erro' => true,'erro'=>$value->MsgErro );
-                //$valor['Erro'] = $value->MsgErro;
+                $response = [
+                    'erro' => true,
+                    'erro'=>$value->MsgErro
+                ];
                 break;
             }
         }
 
         return $response;
+    }
+    public static function UF($cepdestino) {
+        $url = "https://viacep.com.br/ws/".$cepdestino."/xml/";
+        $xml = simplexml_load_file($url);
+        return $xml->uf;
     }
 
     public static function CurlRequestCorreio($dados) {
@@ -105,13 +115,6 @@ Class Fretes {
         //http://www.toolsweb.com.br/webservice/clienteWeb
         //print_r($resposta);exit;
         return $resposta;
-    }
-
-    public static function UF($cepdestino) {
-        $url = "http://www.toolsweb.com.br/webservice/clienteWebService.php?cep=" . $cepdestino . "&amp;formato=xml";
-
-        $xml = simplexml_load_file($url);
-        return $xml->dados->estado;
     }
 
     public static function TipodeFrete($product_id = '') {

@@ -69,17 +69,19 @@ class EnvioEmail {
      */
     public static function EnviarContato() {
         $input = \Request::all();
-        if (Mail::send('emails.contato', $input, function($message) {
-                    $info = \Request::all();
-                    $message->from($info['email'], $info['nome']);
-                    $message->to(STORE_EMAIL_TESTE, STORE_NAME)->subject("Contato de Cliente.");
-                    //enviando o feedback para o cliente;
-                    //$message->from(STORE_EMAIL_TESTE, STORE_NAME);
-                    //$message->to($info['email'], $info['nome'])->subject("Recebemo sua mensagem.");
-                })) {
+        $envio = Mail::send('emails.contato', $input, function($message) {
+            $info = \Request::all();
+            $message->from($info['email'], $info['nome']);
+            $message->to(STORE_EMAIL_TESTE, STORE_NAME)->subject("Contato de Cliente.");
+
+            //enviando o feedback para o cliente;
+            //$message->from(STORE_EMAIL_TESTE, STORE_NAME);
+            //$message->to($info['email'], $info['nome'])->subject("Recebemo sua mensagem.");
+        });
+        if ( $envio ) {
             $html = array('status' => 'pass',
                 'info' => 'Caro Sr(a)' . $input['nome'] . '! Recebemos seu contato, em breve entraremos em contato.',
-                'erro' => '',
+                'erro' => $errors,
                 'loadurl' => ''
             );
         } else {
@@ -90,6 +92,7 @@ class EnvioEmail {
                 'loadurl' => ''
             );
         }
+
         return $html; 
     }
 
