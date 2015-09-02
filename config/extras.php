@@ -12,7 +12,7 @@ define('META_KEYWORDS', 'cartões de visita por tema, cartão de visita por prof
 define('META_SUBJECTS', 'Gráfica e impressos em geral');
 
 // INFORMAÇÕES SOBRE O VENDEDOR
-define('STORE_NAME', 'Gráfica Ecograph '); /* usado no banner oferta */
+define('STORE_NAME', 'Gráfica Ecograph'); /* usado no banner oferta */
 define('STORE_OWNER', 'Márcio'); /* usado no banner oferta */
 define('STORE_OWNER_EMAIL_ADDRESS', 'vendas@ecograph.com.br'); /* usado no banner oferta */
 define('STORE_EMAIL_TESTE', 'newsite@ecograph.com.br');
@@ -65,6 +65,7 @@ define('QTD_PRODUTOS_SHOPPING', '200');
 define('LAYOUT', 'color4'); //color1//color2//....situado em /public/css/colors
 //POLÍTICA DE FRETE
 define('VALOR_TRANSPORTE_GRATIS', '1');
+define('ESTADO_FRETE_GRATIS', '1');
 define('PESO_LIMITE_TRANSPORTE_GRATIS', '30');
 define('VALOR_LIMITE_TRANSPORTE_GRATIS', '200');
 

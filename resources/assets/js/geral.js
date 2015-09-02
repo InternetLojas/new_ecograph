@@ -263,6 +263,7 @@ function Calculadora(current_id, categoria) {
         $('#lista_formato').html();
         $('#lista_cores').html();
         $('#lista_papel').html();
+        $('#lista_enoblecimento').html();
         $('#lista_acabamento').html();
         //$('#naocadastrado').css.('display','none');
         $('#lista_preco').html();
@@ -379,8 +380,10 @@ function TrocaCheked(whoo, localizador, categoria) {
         $('ul#list_papel li').each(function(p) {
             $('#papel_' + p).attr("checked", false);
         });
+        $('ul#list_enoblecimento li').each(function(e) {
+            $('#enoblecimento_' + e).attr("checked", false);
+        });
         $('ul#list_acabamento li').each(function(a) {
-
             $('#acabamento_' + a).attr("checked", false);
             $('#acabamento_' + a).attr('disabled', true);
         });
@@ -393,13 +396,20 @@ function TrocaCheked(whoo, localizador, categoria) {
     }
     if (whoo === 'cores') {
         param = $('#param_cores_' + localizador).text();
-        $('#cores_id').val(valor);
+        $('#cor_id').val(valor);
         $('#cor_nome').val(param);
+        $('#orc_cor_id').val(valor);
+        $('#orc_cor_nome').val(param);
         $('ul#list_papel li').each(function(i) {
             $('#papel_' + i).attr("checked", false);
         });
-        $('ul#list_acabamento li').each(function(i) {
-            $('#acabamento_' + i).attr("checked", false);
+        $('ul#list_enoblecimento li').each(function(e) {
+            $('#enoblecimento_' + e).attr("checked", false);
+        });
+        $('ul#list_acabamento li').each(function(a) {
+
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
         });
 
     }
@@ -408,39 +418,52 @@ function TrocaCheked(whoo, localizador, categoria) {
         $('#papel_id').val(valor);
         $('#papel_nome').val(param);
         if (categoria === '5') {
-
+            disabilita = false;
+            $('ul#list_enoblecimento li').each(function(e) {
+                $('#enoblecimento_' + e).attr("checked", false);
+                $('#enoblecimento_' + e).attr('disabled', true);
+            });
             if(valor === '1'){
-                $('#acabamento_0').attr('disabled', true);
-                $('#acabamento_1').attr('disabled', false);
-                $('#acabamento_2').attr('disabled', false);
-                $('#acabamento_3').attr('disabled', false);
-                $('#acabamento_4').attr('disabled', false);
-                $('#acabamento_5').attr('disabled', false);
-                $('#acabamento_6').attr('disabled', false);
-                $('#acabamento_7').attr('disabled', false);
-                $('#acabamento_8').attr('disabled', false);
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', true);
+                $('#enoblecimento_1').attr('disabled', false);
+                $('#enoblecimento_2').attr('disabled', false);
             }
             if(valor === '2'){
-                $('#acabamento_0').attr('disabled', true);
-                $('#acabamento_1').attr('disabled', false);
-                $('#acabamento_2').attr('disabled', true);
-                $('#acabamento_3').attr('disabled', true);
-                $('#acabamento_4').attr('disabled', true);
-                $('#acabamento_5').attr('disabled', false);
-                $('#acabamento_6').attr('disabled', true);
-                $('#acabamento_7').attr('disabled', true);
-                $('#acabamento_8').attr('disabled', true);
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', true);
+                $('#enoblecimento_1').attr('disabled', false);
+                $('#enoblecimento_2').attr('disabled', false);
             }
-            if(valor === '3'){
-                $('#acabamento_0').attr('disabled', false);
-                $('#acabamento_1').attr('disabled', true);
-                $('#acabamento_2').attr('disabled', false);
-                $('#acabamento_3').attr('disabled', true);
-                $('#acabamento_4').attr('disabled', true);
-                $('#acabamento_5').attr('disabled', true);
-                $('#acabamento_6').attr('disabled', true);
-                $('#acabamento_7').attr('disabled', true);
-                $('#acabamento_8').attr('disabled', true);
+            if(valor === '3' ){
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', false);
+                $('#enoblecimento_1').attr('disabled', true);
+                $('#enoblecimento_2').attr('disabled', false);
             }
         } else {
             $('ul#list_acabamento li').each(function(i) {
@@ -451,6 +474,48 @@ function TrocaCheked(whoo, localizador, categoria) {
 
 
     }
+
+    if (whoo === 'enoblecimento') {
+        param = $('#param_enoblecimento_' + localizador).text();
+        $('#enobrecimento_id').val(valor);
+        $('#enobrecimento_nome').val(param);
+        $('#orc_enoblecimento_id').val(valor);
+        $('#orc_enoblecimento_nome').val(param);
+        disabilita = false;
+        $('ul#list_acabamento li').each(function(a) {
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
+        });
+        var valor_p = '';
+        $('ul#list_papel li').each(function(p) {
+            if($('#papel_' + p).is(':checked')){
+                valor_p = $('#papel_' + p).val();
+            }
+        });
+        var url_modal = 'lista_acabamento' + '/' + categoria + '/' + valor_p + '/' + valor;
+        $.getJSON(
+            url_modal,
+            function(data) {
+                console.log(data);
+                var permite = [];
+                $.each(data.acabamento, function(key, val) {
+                    $('ul#list_acabamento li').each(function(a) {
+                        vl_acabamento = $('#acabamento_' + a).val();
+                        if( vl_acabamento == val){
+                            permite.push(a);
+                            return false;
+                       }
+                    });
+
+                });
+                console.log(permite);
+                $.each(permite, function(k, indentificador) {
+                    $('#acabamento_' + indentificador).attr('disabled', false);
+                });
+            }
+        );
+    }
+
     if (whoo === 'acabamento') {
         param = $('#param_acabamento_' + localizador).text();
         $('#acabamento_id').val(valor);
@@ -482,10 +547,10 @@ function CalculaPreco(categoria, localizador) {
 
     url = $('#calculadora').attr('action');
     $('#categ_selecionada').val(categoria);
-    cor_id = $('#orc_cores_id').val();
-    cor_nome = $('#orc_cores_nome').val();
-    $('#cor_id').val(cor_id);
-    $('#cor_nome').val(cor_nome);
+    //cor_id = $('#cores_'+localizador).val();
+    //cor_nome = $('#param_cores_'+localizador).html;
+    //$('#cor_id').val(cor_id);
+    //$('#cor_nome').val(cor_nome);
     var formulario = $('#calculadora').serializeArray();
     $.post(url, formulario, function(data) {
         localizador = 0;
@@ -501,8 +566,8 @@ function CalculaPreco(categoria, localizador) {
             localizador = 0;
             data.preco.forEach(function(entry) {
                 valor = parseFloat(entry).toFixed(2);
-                $('#preco_' + localizador).html('<strong>R$ ' + valor.replace(".", ",") + '</strong>');
                 $('#pacote_' + localizador).val(valor);
+                $('#preco_' + localizador).html('<strong>R$ ' + valor.replace(".", ",") + '</strong>');
                 $('#pacote_' + localizador).attr('disabled', false);
                 localizador = localizador + 1;
             });
@@ -546,7 +611,11 @@ function SetaEscolhas(localizador, imagem) {
     $('logar').css('display', 'none');
     var qtd = $('#qtd_' + localizador).text();
     var peso = $('#peso_selecionado_' + localizador).val();
-    //alert(peso);
+    //seta o valor declarado para o frete grátis
+    vl_declarado = $('#pacote_' + localizador).val();
+    //seta o valor declarado para controlar o frete grátis
+    $('#vl_declarado').val(vl_declarado);
+
     var preco = $('#preco_' + localizador).text();
     var produto = $('#nome_categoria').val();
     //var qt_vl = qtd + " - " + preco;
@@ -558,12 +627,14 @@ function SetaEscolhas(localizador, imagem) {
     //var enoblecimento = $('#enoblecimento_nome').val();
     var formato = $('#formato_nome').val();
     var papel = $('#papel_nome').val();
+    var enobrecimento = $('#enobrecimento_nome').val();
     var acabamento = $('#acabamento_nome').val();
     var escolhas_finais = {
         "Produto": produto,
         "Formato": formato,
         "Cores": cor,
         "Material": papel,
+        "Enobrecimento": enobrecimento,
         "Acabamento": acabamento,
         "Qtd": qtd,
         "Valor": preco
@@ -798,41 +869,75 @@ function FreteOrcamento() {
         var url = "calcula_frete/" + CEP;
         $.post(url, formulario, function(data) {
             var obj = JSON.parse(data);
-            //console.log(obj);
-            if (obj.erro) {
-                $("#wait").delay(4000).fadeOut('fast');
-                $('#info_correio').addClass('alert alert-danger');
-                $('#info_correio').html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
-                $('#info_correio').slideDown('slow');
-                $('#info_correio').delay(4000).fadeOut('slow', function() {
-                    $('#orc_cep').focus();
-                    $('#info_correio').removeClass('alert alert-danger');
+            if (peso > 30) {
+                $('#info_correio').addClass('alert alert-info');
+                $('#info_correio').html('<p class="fg-black text-medio"><i class="icon-smiley on-left"></i> Carrinho com produto acima de 30KG: "<b>Somente Transportadora ou Retirada na loja.</b>"</p>');
+                labelsedex = "R$ " + '999999,99';
+                $('#vl_sedex').html(labelsedex);
+                $('#frete_sedex').val('0.00');
+
+                $('#mensagens').slideDown('slow');
+                $('#mensagens').delay(5000).slideUp('500', function() {                    //
+                    $('#wait').fadeOut('slow');
+                    $('#info_correio').removeClass('alert alert-info');
+                    $('#resultado').css('display', 'block');
+                    $('#desconto').css('display', 'block');
                 });
                 return false;
             }
-            $("#wait").delay(4000).fadeOut('fast',function() {
+            if (obj.erro) {
+                $('#info_correio').addClass('alert alert-danger');
+                $('#info_correio').html('<p class="fg-black text-medio"><i class="icon-smiley on-left"></i> Por favor observe a mensagem do correio: "<b>' + obj.mensagem[0] + '</b>"</p>');
+                $('#mensagens').slideDown('slow');
+                $('#mensagens').delay(5000).slideUp('500', function() {                    //
+                    $('#wait').fadeOut('slow');
+                    $('#info_correio').removeClass('alert alert-danger');
+                    $('#orc_cep').focus();
+                });
+                return false;
+            }
+
+            if (obj.mensagem !='') {
+                $('#info_correio').addClass('alert alert-info');
+                $('#info_correio').html('<p class="fg-black text-medio"><i class="icon-smiley on-left"></i> Frete zero para o seu estado.</p>');
+                labelsedex = "R$ " + '0,00';
+                $('#vl_sedex').html(labelsedex);
+                $('#frete_sedex').val('0.00');
+                $('#mensagens').slideDown('slow');
+                $('#mensagens').delay(5000).slideUp('500', function() {                    //
+                    $('#wait').fadeOut('slow');
+                    $('#info_correio').removeClass('alert alert-info');
+                    $('#resultado').css('display', 'block');
+                });
+                return false;
+            } else {
+                $('#info_correio').addClass('alert alert-info');
+                $('#info_correio').html('<p class="fg-black text-medio"><i class="icon-smiley on-left"></i> Sucesso! Escolha forma de envio para prosseguir.</p>');
                 sedex = parseFloat(obj.SEDEX[0]) + 5;
                 labelsedex = sedex.toFixed(2);
                 labelsedex = labelsedex.replace('.', ',');
                 labelsedex = "R$ " + labelsedex;
                 $('#vl_sedex').html(labelsedex);
                 $('#frete_sedex').val(sedex.toFixed(2));
-                $('#resultado').slideDown('slow', function () {
+                $('#mensagens').slideDown('slow');
+                $('#mensagens').delay(5000).slideUp('500', function() {                    //
+                    $('#wait').fadeOut('slow');
+                    $('#info_correio').removeClass('alert alert-info');
                     $('#resultado').css('display', 'block');
-                    $('#desconto').css('display', 'block');
                 });
-            });
+            }
         });
-    } else {
+    }else {
         $('#info_correio').addClass('alert alert-danger');
-        $('#info_correio').html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor informe o CEP de destino</p>');
-        $('#info_correio').fadeOut('slow');
-        $('#info_correio').fadeOut('slow', function() {
+        $('#info_correio').html('<p class="fg-black text-medio"><i class="icon-smiley on-left"></i> Por favor informe o CEP de destino</p>');
+        $('#mensagens').slideDown('slow');
+        $('#mensagens').delay(5000).slideUp('500', function() {
             $('#orc_cep').focus();
+            //$('#desconto').css('display', 'block');
+            $('#wait').fadeOut('slow');
             $('#info_correio').removeClass('alert alert-danger');
         });
     }
-    $('#wait').delay(4000).fadeIn('slow');
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -1080,7 +1185,7 @@ function ValidaCaixa(whoo){
     var formulario = $('#' + whoo).serializeArray();
     var url_validacao = $('#' + whoo).attr('action');//'loja/validacaixa';
     $.post(url_validacao, formulario, function(data) {
-        //alert(url_validacao);
+        console.log(data);
         var obj = JSON.parse(data);
         //alert(obj.loadurl);
         if (obj.status === 'fail') {
@@ -1167,7 +1272,12 @@ function PreparaUpload(midia) {
  ***   script para controle da cupom    ***
  *******************************************************
  */
-function ValidaCupom(whoo, URL){
+function ValidaCupom(whoo, URL, check){
+    if(check === '0'){
+        $('#especificacoes_envio').slideUp('low');
+        $('#logar').slideDown('fast');
+        return false;
+    }
 
     $('#btn-validar').attr('disabled', 'false');
 //$('#btn_cupom_confirmar').css('display', 'none');
@@ -1249,8 +1359,8 @@ function chamar_gateway() {
 /*  controla A GERAÇÃO DE UM NOVO PEDIDO
  /*-----------------------------------------------------------------------------------*/
 function GerarPedido(whoo) {
-    orc_desconto_valor = $('#orc_desconto_valor').val();
-    $('#discount_cupom').val(orc_desconto_valor);
+   // orc_desconto_valor = $('#orc_desconto_valor').val();
+    //$('#discount_cupom').val(orc_desconto_valor);
     var url = $('#' + whoo).attr('action');
     var formulario = $('#' + whoo).serializeArray();
     $.post(url, formulario, function(data) {
@@ -1269,10 +1379,10 @@ function GerarPedido(whoo) {
 function CheckOutFail(obj, whoo) {
     $('#mensagem_' + whoo).html('');
     $('#info_' + whoo).html('');
-    $('#mensagem_' + whoo).addClass('alert warning');
+    $('#mensagem_' + whoo).addClass('alert alert-danger');
     $('#mensagem_' + whoo).html('ERRO!');
-    $('#mensagem_' + whoo).delay(2000).fadeOut(600, function() {
-        $('#info_' + whoo).addClass('alert info');
+    $('#mensagem_' + whoo).delay(8000).fadeOut(600, function() {
+        $('#info_' + whoo).addClass('alert alert-info');
         $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! Não foi possivel fazer o requerimento.</p>');
         $('#info_' + whoo).fadeOut('800');
         $('#info_' + whoo).fadeOut('800');
@@ -1280,9 +1390,8 @@ function CheckOutFail(obj, whoo) {
 }
 function CheckOutSucess(obj, whoo) {
     console.log(obj);
-    var neworder_Id = obj.neworder_Id;
     var submeter = obj.submeter;
-    $('#order_id').val(neworder_Id);
+
     $('#fase1_' + whoo).fadeIn(600);
     $('#fase2_' + whoo).delay(3000).fadeIn(600);
     $('#fase3_' + whoo).delay(6000).fadeIn(600);
@@ -1300,11 +1409,14 @@ function CheckOutSucess(obj, whoo) {
  **  Acessa checkout externo **
  */
 function CheckoutSubmeter(obj, form_interno) {
+    var neworder_Id = obj.neworder_Id;
+    //$('#order_id').val(neworder_Id);
+    $('#id_pedido').val(neworder_Id);
     $('#processamento_info').slideUp('slow',function(){
-        $('#processamento_finalizado').slideDown('last');
+        $('#processamento_finalizado').slideDown('fast');
         $('#'+form_interno).attr('method', obj.metodo);
         $('#'+form_interno).attr('action', obj.url_externa);
-        $('#neworder_Id').html(obj.neworder_Id);
+        $('#neworder_Id').html(neworder_Id);
     });
     setTimeout(function(){
         $('#'+form_interno).submit()

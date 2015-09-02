@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'host' => env('MAIL_HOST', 'smtp.ecograph.com.br'),
+	'host' => env('MAIL_HOST', 'smtp.kinghost.net'),
 
 
 	/*
@@ -55,7 +55,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => 'newsite@ecograph.com.br', 'name' => STORE_NAME],
+	'from' => ['newsite@ecograph.com.br', 'name' => STORE_NAME],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return [
 	|
 	*/
 
-	'encryption' => 'tls',
+	'encryption' => 'ssl',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -120,6 +120,6 @@ return [
 	|
 	*/
 
-	'pretend' => false,
+	'pretend' => true,
 
 ];
