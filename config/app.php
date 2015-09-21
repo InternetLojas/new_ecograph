@@ -126,6 +126,7 @@ return [
         'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
         'Laravel\Socialite\SocialiteServiceProvider',
         'Collective\Html\HtmlServiceProvider',
+        'Intervention\Image\ImageServiceProvider',
         /*
          * Application Service Providers...
          */        

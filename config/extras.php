@@ -16,8 +16,8 @@ define('STORE_NAME', 'Gráfica Ecograph'); /* usado no banner oferta */
 define('STORE_OWNER', 'Márcio'); /* usado no banner oferta */
 define('STORE_OWNER_EMAIL_ADDRESS', 'vendas@ecograph.com.br'); /* usado no banner oferta */
 define('STORE_EMAIL_TESTE', 'newsite@ecograph.com.br');
-define('STORE_ADDRESS', 'Rua Alonso Vasconcelos Pacheco, 853.<br>Vila Augusto. Mauá-SP. CEP 09350-281'); /* usado no banner oferta */
-define('STORE_ADDRESS_EMAIL', 'Rua Alonso Vasconcelos Pacheco, 853.<br>Vila Augusto. Mauá-SP. CEP 09350-281');
+define('STORE_ADDRESS', 'Rua Alonso Vasconcelos Pacheco, 853.<br>Vila Augusto. Mauá-SP. CEP 09310-695'); /* usado no banner oferta */
+define('STORE_ADDRESS_EMAIL', 'Rua Alonso Vasconcelos Pacheco, 853.<br>Vila Augusto. Mauá-SP. CEP 09310-695');
 define('STORE_BAIRRO', 'Vila Augusto'); /* usado no banner oferta */
 define('STORE_CIDADE', 'Mauá'); /* usado no banner oferta */
 define('STORE_ESTADO', 'SP'); /* usado no banner oferta */
@@ -27,8 +27,9 @@ define('STORE_FONE2', ' (11) 4541-8070'); /* usado no banner oferta */
 define('STORE_FAX', ' (11) 4543-0715'); /* usado no banner oferta */
 define('STORE_SITE', 'http::/www.ecograph.com.br'); /* usado no banner oferta */
 define('STORE_CNPJ', '33.733.296/0001-09'); /* usado no banner oferta */
-define('STORE_ADDRESS_CONTACT', 'Rua Alonso Vasconcelos Pacheco, 853.<br>Vila Augusto. Mauá-SP. CEP 09350-281'); //Av. Brigadeiro Faria Lima 394, Guarulhos, SP
-define('LOGOTIPO', 'images/theme/logotipo.png'); /* usado no banner oferta */
+define('STORE_ADDRESS_CONTACT', 'Rua Alonso Vasconcelos Pacheco, 853.');
+define('STORE_ADDRESS_COMPLEMENTO_CONTACT','Vila Augusto. Mauá-SP. CEP 09310-695');
+define('LOGOTIPO', 'images/theme/logo.png'); /* usado no banner oferta */
 
 // CONFIGURA��O PARA O BANNER NA P�GINA INDEX
 define('LIMITE_BANNER', '8'); /* usado no banner oferta */

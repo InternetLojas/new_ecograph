@@ -47,6 +47,11 @@ return [
 			'driver' => 'local',
 			'root'   => storage_path().'/app',
 		],
+        //armazena as imagens dos uploads dos clientes
+        'public_local' => [
+            'driver' => 'local',
+            'root'   => public_path('images/documentos/') ,//public_path('images/products')
+        ],
 
 		's3' => [
 			'driver' => 's3',

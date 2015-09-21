@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'host' => env('MAIL_HOST', 'smtp.kinghost.net'),
+	'host' => env('MAIL_HOST', 'smtp.ecograph.com.br'),
 
 
 	/*
@@ -55,7 +55,7 @@ return [
 	|
 	*/
 
-	'from' => ['newsite@ecograph.com.br', 'name' => STORE_NAME],
+	'from' => ['address' => 'newsite@ecograph.com.br', 'name' => 'Gráfica Ecograph'],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -68,7 +68,7 @@ return [
 	|
 	*/
 
-	'encryption' => 'ssl',
+	'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return [
 	|
 	*/
 
-	'username' => env('MAIL_USERNAME','newsite@ecograph.com.br'),
+	'username' => env('MAIL_USERNAME'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return [
 	|
 	*/
 
-	'password' => env('MAIL_PASSWORD','Senha123Teste'),
+	'password' => env('MAIL_PASSWORD'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -120,6 +120,6 @@ return [
 	|
 	*/
 
-	'pretend' => true,
+	'pretend' => false,
 
 ];
