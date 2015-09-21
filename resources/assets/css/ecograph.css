@@ -1640,13 +1640,19 @@ hr {
     font-size:2.22em;
 }
 .text-big{
-    font-size:2.4em;
+    font-size:2.488em;
+}
+.text-smallmedio{
+    font-size:0.75em;
 }
 .text-medio{
     font-size:0.82em;
 }
 .text-mediobig{
-    font-size:0.95em;
+    font-size:0.99em;
+}
+.text-nav{
+    font-size:1.1em;
 }
 span.afasta{
     font-weight: 600;
@@ -1657,9 +1663,30 @@ span.right.afasta{ float:right;margin-right:4px;}
     display: block;
     float: left;
     text-align: center;
-    padding-top: 10px;
+    padding:0 10px 0 10px;
     width: 24%;
     border:1px solid #ffffff;
+}
+.umquarto.perfil {
+    padding:0;
+
+}
+.umquarto a.link-perfil{
+    padding:0;
+    position: relative;
+    height:42px!important;
+    font-size:0.89em;
+}
+.umquarto a.link-perfil img{
+    position: absolute;
+    left:-20px;
+    max-width:40px!important;
+    display:block;
+}
+.umquarto button span.text-medio{
+    position: absolute;
+    left:55px;
+    font-size:0.90em!important;
 }
 /*
  =======================================================================
@@ -1672,11 +1699,12 @@ span.right.afasta{ float:right;margin-right:4px;}
     width:100%;
 }
 .pre-header{
-    padding:0 5px;
+    padding:0;
     background-color:#808080;
 }
 .pre-header ul.list-group li.list-group-item{
     border:none;
+    padding: 0;
 }
 .pre-header ul.list-group li.list-group-item >a{
     border:none;
@@ -1710,6 +1738,10 @@ span.element-divider-end{
     border-left: 1px #323233 solid;
     opacity: .3;
     position: relative;
+}
+span.element-divider{
+    position:relative;
+    top:12px;
 }
 span.element-divider:before{
     content: "|";
@@ -1752,6 +1784,9 @@ li.pd-5{
 span.mg-left5{
     margin-left:5px;
 }
+span.mg-left32{
+    margin-left:32px;
+}
 .mg-left50{
     margin-left:50px;
 }
@@ -1788,32 +1823,20 @@ table.body_cadastro td.col-cesta-img{
 }
 
 h1.title-border {
-  margin: 0 15px;
-  margin-bottom: 30px;
-  position: relative;
-}
-h1.title-border:after{
-    content: " ";
-    position: absolute;
-    border: 1px solid #f5f5f5;
-    bottom:8px;
-    left: 0;
-    width: 100%;
-    height: 0;
-    z-index: -2;
-}
-h1.title-border:before{
-    content: " ";
-    position: absolute;
-    background: #fff;
-    bottom: -6px;
-    width: 220px;
-    height: 30px;
-    z-index: -1;
-    left: 50%;
-    margin-left: -110px;
+    margin: 5px 0 5px 30%;
+    position: relative;
+    background-color: #FFFFFF;
+    width:40%;
+    z-index:10;
 }
 
+hr.title-hr{
+    position:relative;
+    top: -40px;
+    height:1px;
+    background-color: #950000;
+    z-index: 9;
+}
 .title_pagina {
     display:block;
     width:100%;
@@ -2029,12 +2052,19 @@ table.items td{
  CUSTOMIZAÇÃO PARA HEADER
  =======================================================================
 */
-img .logo {
-    margin: auto !important;
+a.logo{
+    padding:0;
+}
+img .img-logo {
+   margin-left:0;
 }
 input.search {
     padding: 21px 0;
     color: #3c3c3c;
+}
+.no-padding{
+    padding: 0!important;
+    margin-left:-5px;
 }
 .ecograph.input-control.text .btn-search{
     background: #343434;
@@ -2391,8 +2421,8 @@ img.img-cart {
 /*-----------------------------------------------------------------------------------*/
 /*  BOTOES DA NAVAEGAÇÃO
  /*-----------------------------------------------------------------------------------*/
-//
-//activered bullet_default hoverblue
+
+/*activered bullet_default hoverblue*/
 /*menu cinza*/
 a.activegray, button.activegray {
       background-color: #333333;
@@ -2471,19 +2501,53 @@ a.hoverviolet:hover {
  /*-----------------------------------------------------------------------------------*/
 .container_footer{
     background-color:#555555;
-    padding:15px;
+    padding:15px 4px;
 }
-footer.section {
+footer.footer {
+    padding: 10px 0;
     margin-bottom:15px
 }
-footer.section ul >li{
+footer.footer ul >li{
     padding: 5px;
 }
-footer.section a.link-footer {
+footer.footer a.link-footer {
     color:#ffffff!important;
 }
 
 
 /*-----------------------------------------------------------------------------------*/
-/*  PAGINADOR
+/*  MEDIA SCREEN
  /*-----------------------------------------------------------------------------------*/
+/*DESKTOPS ANTIGOS.*/
+@media only screen and (min-width: 701px) and (max-width: 800px) {
+    h1{font-size:1.6em}
+    p{font-size: 1.2em}
+    .nav a.user{font-size: 0.9em;}
+    a.nav-hz{font-size: 0.88em;}
+}
+    /*TABLET.*/
+@media only screen and (min-width: 601px) and (max-width: 700px) {
+    h1{font-size:1.5em}
+    p{font-size: 1.1em}
+    .nav a.user{font-size: 0.87em}
+    a.nav-hz{font-size: 0.80em;}
+    #MenuLeft{width:30%;}
+}
+/*IPHONE.*/
+@media only screen and (min-width: 480px) and (max-width: 600px) {
+    h1{font-size:1.3em}
+    p{font-size: 1em}
+    .nav a.user{font-size: 0.9em}
+    a.nav-hz{font-size: 0.88em;color:#000080!important}
+    /* Menu horizontal das categoria */
+    #MenuLeft{display:none;width:0;}
+
+}
+/* -- CELULARES. Smartphone em modo retrato -- */
+@media only screen and (min-width: 0) and (max-width: 479px) {
+    h1{font-size:1.2em}
+    p{font-size: 0.8em}
+    /* Menu horizontal das categoria */
+    #MenuLeft{display:none;width:0;}
+    a.nav-hz{font-size: 0.88em}
+}

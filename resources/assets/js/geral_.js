@@ -333,36 +333,21 @@ function Calculadora(current_id, categoria) {
  /*-----------------------------------------------------------------------------------*/
 function GeraLista(parametros, category_id) {
     var cat_id = $('#orc_categoria_id').val();
-    var last = '';
     $.each(parametros, function(tipo, parans) {
         var radio = '';
-        var ul = '';
         $.each(parans, function(k, item) {
             on_click_troca = 'TrocaCheked(\'' + tipo + '\',' + k + ',\''+ category_id +'\');';
-
+            on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' + k + ');';
             if (tipo !== 'acabamento') {
-                on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' + k + ');';
                 radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_troca + '" value=\"' + item.id + '\" />\n\n\
          <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
-                $('#lista_' + tipo).html('<ul id="list_' + tipo + '" class=\"list-unstyled\">\n' + radio + '\n</ul>');
             } else {
-
-                $.each(item, function(e,item_a) {
-                    on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' +k+e + ');';
-                    valores = item_a.valores;
-                    radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_'+k + e + '\" onclick=\"' + on_click_calcula + '" value=\"' + valores.id + '\"  />\n\n\
-                                <span class=\"afasta\" id=\"param_' + tipo + '_' + e+ '\">' + valores.nome + '</span>\n</li>\n';
-                });
-                ul += '<ul id="list_' + tipo + k + '" class=\"list-unstyled hide\">\n' + radio + '\n</ul>';
-                radio = '';
-                $('#lista_' + tipo).html(ul);
+                radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_' + k + '\" onclick=\"' + on_click_calcula + '" value=\"' + item.id + '\" disabled />\n\n\
+         <span class=\"afasta\" id=\"param_' + tipo + '_' + k + '\">' + item.nome + '</span>\n</li>\n';
             }
-            last = k;
         });
-       if (tipo === 'acabamento') {
-            $('#list_acabamento'+last).removeClass('hide');
-        }
 
+            $('#lista_' + tipo).html('<ul id="list_' + tipo + '" class=\"list-unstyled\">\n' + radio + '\n</ul>');
 
     });
 }
@@ -373,7 +358,7 @@ function GeraQtd(y, qtd, imagem) {
     var valor = '';
     valor += '<li>\n<input type=\"radio\" name=\"pacote\" id=\"pacote_' + y + '\" onclick=\"SetaEscolhas(\'' + y + '\',\'' + imagem + '\')\" value=\"\" disabled />\n\
         <span class=\"afasta\" id=\"qtd_' + y + '\">' + qtd.unidade + ' un</span>\n\
-        <span class=\"right afasta text-danger\" id=\"preco_' + y + '\"></span>\n\n\
+        <span class=\"right afasta\" id=\"preco_' + y + '\"></span>\n\n\
         <div class=\"clearfix\"></div>\n\n\
         </li>\n';
     return valor;
@@ -391,23 +376,22 @@ function TrocaCheked(whoo, localizador, categoria) {
         $('#formato_nome').val(param);
         $('#formato_id').val(valor);
         $('ul#list_cores li').each(function(c) {
-            //$('#cores_' + c).attr("checked", false);
-            $('#cores_' + c).removeAttr("checked");
+            $('#cores_' + c).attr("checked", false);
         });
         $('ul#list_papel li').each(function(p) {
-            //$('#papel_' + p).attr("checked", false);
-            $('#papel_' + p).removeAttr("checked");
+            $('#papel_' + p).attr("checked", false);
         });
         $('ul#list_enoblecimento li').each(function(e) {
-            //$('#enoblecimento_' + e).attr("checked", false);
-            $('#enoblecimento_' + e).removeAttr("checked");
-            $('ul#list_acabamento'+ e).addClass('hide');
+            $('#enoblecimento_' + e).attr("checked", false);
         });
-
+        $('ul#list_acabamento li').each(function(a) {
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
+        });
         $('ul#list_preco li').each(function(i) {
-            $('#pacote_' + i).removeAttr("checked");
-            $('span#preco_' + i).text('');
-            $('span#preco_' + i).addClass('hide');
+            $('#pacote_' + i).attr("checked", false);
+            $('#pacote_' + i).attr("disabled", true);
+            $('span#preco_' + i).text();
         });
 
     }
@@ -421,13 +405,12 @@ function TrocaCheked(whoo, localizador, categoria) {
             $('#papel_' + i).attr("checked", false);
         });
         $('ul#list_enoblecimento li').each(function(e) {
-            $('#enoblecimento_' + e).removeAttr("checked");
-            $('ul#list_acabamento'+ e).addClass('hide');
+            $('#enoblecimento_' + e).attr("checked", false);
         });
-        $('ul#list_preco li').each(function(i) {
-            $('#pacote_' + i).removeAttr("checked");
-            $('span#preco_' + i).text('');
-            $('span#preco_' + i).addClass('hide');
+        $('ul#list_acabamento li').each(function(a) {
+
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
         });
 
     }
@@ -438,87 +421,110 @@ function TrocaCheked(whoo, localizador, categoria) {
         if (categoria === '5') {
             disabilita = false;
             $('ul#list_enoblecimento li').each(function(e) {
-
-                $('#enoblecimento_' + e).removeAttr("checked");
-                $('ul#list_acabamento'+ e).addClass('hide');
-                if(valor === '1'){
-                    $('#enoblecimento_0').attr('disabled', true);
-                    $('#enoblecimento_1').attr('disabled', false);
-                    $('#enoblecimento_2').attr('disabled', false);
-                }
-                if(valor === '2'){
-                    $('#enoblecimento_0').attr('disabled', true);
-                    $('#enoblecimento_1').attr('disabled', false);
-                    $('#enoblecimento_2').attr('disabled', false);
-                }
-                if(valor === '3'){
-                    $('#enoblecimento_0').attr('disabled', false);
-                    $('#enoblecimento_1').attr('disabled', true);
-                    $('#enoblecimento_2').attr('disabled', false);
-                }
+                $('#enoblecimento_' + e).attr("checked", false);
+                $('#enoblecimento_' + e).attr('disabled', true);
             });
-
+            if(valor === '1'){
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', true);
+                $('#enoblecimento_1').attr('disabled', false);
+                $('#enoblecimento_2').attr('disabled', false);
+            }
+            if(valor === '2'){
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', true);
+                $('#enoblecimento_1').attr('disabled', false);
+                $('#enoblecimento_2').attr('disabled', false);
+            }
+            if(valor === '3' ){
+                $('#acabamento_0').attr('disabled', disabilita);
+                $('#acabamento_1').attr('disabled', disabilita);
+                $('#acabamento_2').attr('disabled', disabilita);
+                $('#acabamento_3').attr('disabled', disabilita);
+                $('#acabamento_4').attr('disabled', disabilita);
+                $('#acabamento_5').attr('disabled', disabilita);
+                $('#acabamento_6').attr('disabled', disabilita);
+                $('#acabamento_7').attr('disabled', disabilita);
+                $('#acabamento_8').attr('disabled', disabilita);
+                $('#enoblecimento_0').attr('disabled', false);
+                $('#enoblecimento_1').attr('disabled', true);
+                $('#enoblecimento_2').attr('disabled', false);
+            }
         } else {
-            $('ul#list_enoblecimento li').each(function(e) {
-                $('#enoblecimento_' + e).removeAttr("checked");
+            $('ul#list_acabamento li').each(function(i) {
+                $('#acabamento_' + i).attr("disabled", false);
+                $('#acabamento_' + i).attr("checked", false);
             });
         }
-        $('ul#list_preco li').each(function(i) {
-            $('#pacote_' + i).removeAttr("checked");
-            $('span#preco_' + i).text('');
-            $('span#preco_' + i).addClass('hide');
-        });
-    }
 
+
+    }
     if (whoo === 'enoblecimento') {
         param = $('#param_enoblecimento_' + localizador).text();
         $('#enobrecimento_id').val(valor);
         $('#enobrecimento_nome').val(param);
         $('#orc_enoblecimento_id').val(valor);
         $('#orc_enoblecimento_nome').val(param);
-        ativo = '';
-        var acab_ativo = [];
-        var acab_desativo = [];
-        $('ul#list_enoblecimento li').each(function(e) {
-            //Check se há alguma opção selecionada
-            if($('#enoblecimento_'+e).is(':checked')){
-                ativo = $('#enoblecimento_'+e).val();
-                acab_ativo.push(ativo);
-            } else {
-                desativa = $('#enoblecimento_'+e).val();
-                acab_desativo.push(desativa);
-            }
-            $('ul#list_acabamento'+e+' li').each(function(a) {
-                $('#acabamento_' +e+a).removeAttr("checked");
-            });
+        disabilita = false;
+        $('ul#list_acabamento li').each(function(a) {
+            $('#acabamento_' + a).attr("checked", false);
+            $('#acabamento_' + a).attr('disabled', true);
         });
-        $('ul#list_acabamento'+acab_ativo[0]).removeClass('hide');
-        for (var i=0; i < acab_desativo.length; i++) {
-            $('ul#list_acabamento'+acab_desativo[i]).addClass('hide');
-        }
-        console.log(acab_desativo);
         var valor_p = '';
         $('ul#list_papel li').each(function(p) {
             if($('#papel_' + p).is(':checked')){
                 valor_p = $('#papel_' + p).val();
             }
         });
-        $('ul#list_preco li').each(function(i) {
-            $('#pacote_' + i).removeAttr("checked");
-            $('span#preco_' + i).text('');
-            $('span#preco_' + i).removeClass('hide');
-        });
-    }
+        var url_modal = 'lista_acabamento' + '/' + categoria + '/' + valor_p + '/' + valor;
+        $.getJSON(
+            url_modal,
+            function(data) {
+                console.log(data);
+                var permite = [];
+                $.each(data.acabamento, function(key, val) {
+                    $('ul#list_acabamento li').each(function(a) {
+                        vl_acabamento = $('#acabamento_' + a).val();
+                        if( vl_acabamento == val){
+                            permite.push(a);
+                            return false;
+                        }
+                    });
 
+                });
+                console.log(permite);
+                $.each(permite, function(k, indentificador) {
+                    $('#acabamento_' + indentificador).attr('disabled', false);
+                });
+            }
+        );
+    }
     if (whoo === 'acabamento') {
         param = $('#param_acabamento_' + localizador).text();
         $('#acabamento_id').val(valor);
+        $('#acabamento_nome').val(param);
 
     }
 
-    /*$('#list_preco').each(function(i) {
+    $('#list_preco').each(function(i) {
         $('#preco_' + i).text();
-    });*/
+    });
     $('#orc_' + whoo + '_id').val(valor);
     $('#orc_' + whoo + '_nome').val(param);
     $('#especificacoes').slideUp('slow');
@@ -541,11 +547,7 @@ function CalculaPreco(categoria, localizador) {
 
     url = $('#calculadora').attr('action');
     $('#categ_selecionada').val(categoria);
-    //cor_id = $('#cores_'+localizador).val();
-    //cor_nome = $('#param_cores_'+localizador).html;
-    //$('#cor_id').val(cor_id);
-    //$('#cor_nome').val(cor_nome);
-    var formulario = $('#calculadora').serializeArray();
+     var formulario = $('#calculadora').serializeArray();
     $.post(url, formulario, function(data) {
         localizador = 0;
         peso_selecionado = '';
@@ -1318,17 +1320,21 @@ function ValidaCupom(whoo, URL, check){
             $('#info_' + whoo).html('');
             //overlay('on', whoo);
             $('#mensagem_' + whoo).addClass('alert alert-danger');
-            //$('#mensagem_' + whoo).html('ERRO!');
+            $('#mensagem_' + whoo).html('ERRO!');
             $('#mensagem_' + whoo).delay(2000).fadeOut(500);
-            //$('#enviando_' + whoo).delay(1000).fadeOut(500);
+            $('#enviando_' + whoo).delay(1000).fadeOut(500);
             $('#info_' + whoo).addClass('alert alert-danger');
             var li = '';
             obj.erro.forEach(function(entry) {
                 li += '<li>' + entry + '</li>';
             });
-            $('#info_' + whoo).html('<ul class="list-unstyled text-muted">' + li + '</ul>');
+            $('#info_' + whoo).html('<ul class="list-unstyled">' + li + '</ul>');
+            $('#' + whoo).css({
+                opacity: 1
+            });
+
             $('#discount_code').focus();
-            $('#info_' + whoo).delay(3000).fadeOut(800);
+            $('#info_' + whoo).delay(2000).fadeOut(800);
             $('#btn-validar').attr('disabled', false);
 
         } else {
@@ -1404,7 +1410,7 @@ function CheckOutFail(obj, whoo) {
     $('#mensagem_' + whoo).html('ERRO!');
     $('#mensagem_' + whoo).delay(8000).fadeOut(600, function() {
         $('#info_' + whoo).addClass('alert alert-info');
-        $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! Não foi possível fazer o requerimento.</p>');
+        $('#info_' + whoo).html('<p class="fg-black"><i class="icon-smiley on-left"></i>Por favor! Não foi possivel fazer o requerimento.</p>');
         $('#info_' + whoo).fadeOut('800');
         $('#info_' + whoo).fadeOut('800');
     });

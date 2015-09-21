@@ -83,7 +83,8 @@ return array(
       | of "email". This simply helps us make messages a little cleaner.
       |
      */
-    'attributes' => array('confirmed' => '<b>Confirmação</b>',
+    'attributes' => [
+        'confirmed' => '<b>Confirmação</b>',
         'message' => '<b>Mensagem</b>',
         'zipcode' => 'CEP',
         'uf' => 'Estado',
@@ -111,6 +112,7 @@ return array(
         'password' => 'Senha',
         'password_confirmation' => 'Confirme a senha',
         'customers_newsletter' => 'Oferta por e-mail',
-        'agree' => 'Concorde com as regras'
-    ),
+        'agree' => 'Concorde com as regras',
+        "passwords.user" => "O :attribute não foi encotrado no nosso banco de dados",
+    ]
 );
