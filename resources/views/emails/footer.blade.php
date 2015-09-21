@@ -29,6 +29,12 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr>
+                            <td class="mail-pattern" style="padding-bottom:10px;">
+                                <div style="padding:0 12px;text-align:left;line-height:14px;font-family:Arial,Helvetica,sans-serif !important;font-size:8.5px">
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!--fim da endereço-->

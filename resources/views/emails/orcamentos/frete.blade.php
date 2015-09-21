@@ -7,7 +7,7 @@
     </tr>
     <tr>
         <td valign="top" align="left">
-            Frete: {!!$inputs_orc['orc_tipo_frete']!!} <strong>5 dias úteis</strong>
+            Frete: {!!$orc_tipo_frete!!} <strong>5 dias úteis</strong>
         </td>
     </tr>
     </tbody>

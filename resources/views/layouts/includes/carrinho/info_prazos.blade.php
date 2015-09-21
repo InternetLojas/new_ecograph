@@ -33,7 +33,7 @@
                         {!!$post_inputs['orc_tipo_frete']!!}
                     </td>
                     <td class="">
-                        <p>Prazo de produção - 5 dias úteis.</p>
+                        <p class="text-medio text-danger">Prazo de produção - 5 dias úteis.</p>
 
                     </td>
                     <td></td>

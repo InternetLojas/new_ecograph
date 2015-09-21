@@ -27,7 +27,7 @@
         @if ($page=="home")
             <div class="container">
                 <!--============================== banner =================================-->
-                <div class="col-md-12">
+                <div class="col-md-12 hidden-xs section">
                     @include('layouts.includes.banner_slider')
                 </div>
                 <!--============================== banner =================================-->
@@ -35,7 +35,7 @@
             @endif
                     <!--============================== conteúdo  =================================-->
             <div class="container">
-                <div class="wrapper">
+                <div class="">
                     @yield('content')
                 </div>
             </div>
@@ -50,9 +50,13 @@
                 </div>
             </div>
             <!-- ====================    footer   ========================== -->
-            <footer class="section section-primary">
-                @include('layouts.includes.footer')
-            </footer>
+            <div class="section">
+                <div class="container">
+                    <footer class="footer">
+                        @include('layouts.includes.footer')
+                    </footer>
+                </div>
+            </div>
             <!-- ====================    SCRIPTS   ========================== -->
         @section('script')
             @include('layouts.includes.scripts')

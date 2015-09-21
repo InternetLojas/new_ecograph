@@ -1,4 +1,4 @@
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+<div class = "col-xs-12 col-sm-6 col-md-3 col-lg-3">
     <div class="thumbnail bg-very-smallgray">
         <div class="text-center">
             <span class="badge fg-black position-top">Foto vitrine</span>
@@ -8,7 +8,7 @@
         </a>
     </div>
 </div>
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+<div class = "col-xs-12 col-sm-6 col-md-3 col-lg-3">
     <div class="thumbnail bg-very-smallgray">
         <div class="text-center">
             <span class="badge fg-black position-top">Foto vitrine</span>
@@ -18,7 +18,7 @@
         </a>
     </div>
 </div>
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+<div class = "col-xs-12 col-sm-6 col-md-3 col-lg-3">
     <div class="thumbnail bg-very-smallgray">
         <div class="text-center">
             <span class="badge fg-black position-top">Foto vitrine</span>
@@ -28,7 +28,7 @@
         </a>
     </div>
 </div>
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+<div class = "col-xs-12 col-sm-6 col-md-3 col-lg-3">
     <div class="thumbnail bg-very-smallgray">
         <div class="text-center">
             <span class="badge fg-black position-top">Foto vitrine</span>

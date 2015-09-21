@@ -1,7 +1,7 @@
 <div id="especificacoes_envio" class="destaque_home" data-token="{!!csrf_token()!!}">
     <div id="cupom_frete" style="display:none;" data-acao="imprimir">
         <div class="col-md-6">
-            <div class="well well-md">
+            <div class="well well-md no-radius">
                 <p class="text-medio" style="min-height:60px">
                     Ganhe descontos na sua compra.<br>
                     Se você possue código de desconto informe no campo abaixo e clique para validá-lo.
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="well well-md">
+            <div class="well well-md no-radius">
                 <p class="text-medio" style="min-height:60px">
                     Informe o CEP para pesquisar o valor do frete:<br>
                 </p>
@@ -30,7 +30,6 @@
         <div class="col-md-12">
             <div class="text-center">
                 <p class="text-medio text-center"><strong>Escolha uma forma de envio para continuar.</strong></p>
-
                @include('layouts.includes.boxes.forms.form_resultado_frete')
             </div>
             <div id="label_frete" style="display:none;padding:10px 0">

@@ -62,7 +62,7 @@
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="formato[{{$formato->id}}]" value="{{$formato->id}}" @if(in_array($formato->id,$catformatos)) checked @endif >{{$formato->valor}}</label>
+                                        <input type="checkbox" name="formato[{{$formato->id}}]" value="{{$formato->id}}" @if(in_array($formato->id,array_keys($catformatos))) checked @endif >{{$formato->valor}}</label>
                                 </div>
                             </div>
                         @empty

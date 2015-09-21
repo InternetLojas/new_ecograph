@@ -37,13 +37,13 @@
                                 {!!$inputs_orc['orc_pacote_valor']!!}
                             </td>
                             <td >
-                                R$ 0,00
+                               {!!Utilidades::toReal($inputs_orc['orc_desconto_valor'])!!}
                             </td>
                             <td >
                                 {!!Utilidades::toReal($inputs_orc['orc_vl_frete'])!!}
                             </td>
                             <td >
-                                {!!$inputs_orc['orc_vl_frete']!!}
+                               {!!Utilidades::toReal($inputs_orc['orc_vl_frete']+$vl_total-$inputs_orc['orc_desconto_valor'])!!}
                             </td>
                         </tr>
                     </tbody>

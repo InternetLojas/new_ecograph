@@ -6,7 +6,7 @@
                     Entrega
                 </span>
             </td>
-            <td>Tipo de Frete</td>
+            <td></td>
             <td>Endereço</td>
             <td></td>
             <td></td>
@@ -30,7 +30,7 @@
                             <td class="vinte">                                
                             </td>
                             <td>
-                                frete
+                                #
                             </td>
                             <td class="text-medio endereco">
 

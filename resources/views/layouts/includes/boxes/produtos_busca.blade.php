@@ -1,8 +1,8 @@
 <!-- BUSCAS -->
-@foreach(Utilidades::Agrupa($products, '4','busca') as $row)
+
     <div class="row">
-        @foreach($row as $key=>$item)
-            <div class= "col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+        @foreach($products as $key=>$item)
+            <div class = "col-xs-6 col-sm-4 col-md-4 col-lg-3">
                 <div class="thumbnail border no-radius">
                     <div class="text-center">
                         <div class="thumb_cat bg-transparent text-center">
@@ -33,4 +33,3 @@
             </div>
         @endforeach
     </div>
-@endforeach

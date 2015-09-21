@@ -10,7 +10,7 @@
                             <tbody>
                             <tr>
                                 <td class="mail-first-child" valign="bottom" width="400" align="center">
-                                    <img class="contentImgEditable" alt="logo" src="images/theme/escudo.png">
+                                    <img class="contentImgEditable" alt="logo" src="{{URL::to('images/theme/escudo.png')}}">
                                 </td>
                                 <td class="mail-header-menu" valign="bottom" align="right">
                                     <div class="contentEditable">

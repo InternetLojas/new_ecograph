@@ -1,8 +1,9 @@
 <div class="destaque_home">
-    <h1 class="text-center text-muted">Produtos em Destaques.</h1>
+    <h1 class="text-center fg-gray title-border">Produtos em Destaques.</h1>
+    <hr class="title-hr">
     <div class="row">
         <div class="col-md-3">
-            <div class="thumbnail">
+            <div class="thumbnail no-radius">
                 <img src="images/banners/banners_destaques/destaque-ecograph1.png" class="img-responsive">
                 <div class="caption">               
                     <p class="text-center text-muted text-medio">
@@ -13,7 +14,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="thumbnail">
+            <div class="thumbnail  no-radius">
                 <img src="images/banners/banners_destaques/destaque-ecograph1.png" class="img-responsive">
                 <div class="caption">               
                     <p class="text-center text-muted text-medio">
@@ -24,7 +25,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="thumbnail">
+            <div class="thumbnail  no-radius">
                 <img src="images/banners/banners_destaques/destaque-ecograph1.png" class="img-responsive">
                 <div class="caption">               
                     <p class="text-center text-muted text-medio">
@@ -35,7 +36,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="thumbnail">
+            <div class="thumbnail  no-radius">
                 <img src="images/banners/banners_destaques/destaque-ecograph1.png" class="img-responsive">
                 <div class="caption">               
                     <p class="text-center text-muted text-medio">

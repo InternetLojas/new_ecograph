@@ -15,7 +15,6 @@
 <!--================= informações sobre entrega ==========================-->
 @include('layouts.includes.carrinho.info_endereco')
 @if(is_array($post_inputs))
-
     @include('layouts.includes.carrinho.info_prazos')
     @include('layouts.includes.carrinho.info_cupom')
     @include('layouts.includes.carrinho.info_pagamento')
@@ -32,7 +31,6 @@
             @foreach($post_inputs as $key=>$valor)
                 <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">
             @endforeach
-            <input type="hidden" name="order_id" id="order_id" value="2" />
             <input type="hidden" name="payment" id="payment" value="2" />
             <input type="hidden" name="forma_pagamento" id="forma_pagamento" value="Bcash" />
             <input type="hidden" name="total_compra" id="total_compra" value="{{Cart::total()+$post_inputs['orc_vl_frete']-$post_inputs['orc_desconto_valor']}}" />
@@ -44,7 +42,6 @@
     <div id="mensagem_formresumo"></div>
     <div id="info_formresumo"></div>
     {!!form::close()!!}
-
 @include('layouts.includes.resumo.ficha_resumo')
 @else
     <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>

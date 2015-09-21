@@ -30,7 +30,7 @@
                             <td class="vinte">                                
                             </td>
                             <td>
-                                 Cupom Utilizado - 
+                                 Cupom Utilizado <b>{!!Session::get('discount_code')!!}</b>
                             </td>
                             <td></td>
                             <td></td>

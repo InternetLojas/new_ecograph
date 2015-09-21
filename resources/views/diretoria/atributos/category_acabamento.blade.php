@@ -68,9 +68,10 @@
                                                                             </tr>
                                                                             </thead>
                                                                             <tbody>
-
                                                                             @if(in_array($formato_id,$formato_autorizado[0][$papel_id]))
+
                                                                                 @forelse($acabamentos[$formato_id][$papel_id][$cor_id] as $acabamento_id => $acabamento)
+
                                                                                     @forelse($acabamento as $nome_acabamento => $configuracao)
                                                                                         <tr>
 
@@ -89,22 +90,23 @@
                                                                                         </tr>
                                                                                     @empty
                                                                                         <tr>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                        <td></td>
-                                                                                    </tr>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                        </tr>
                                                                                     @endforelse
                                                                                 @empty
-                                                                                    @endforelse
+                                                                                @endforelse
+                                                                            @else
                                                                             @endif
 
                                                                             </tbody>
@@ -148,7 +150,7 @@
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="papel[{{$acabamento->id}}]" value="{{$acabamento->id}}" @if(in_array($acabamento->id,$catacabamentos)) checked @endif >{{$acabamento->valor}}</label>
+                                        <input type="checkbox" name="papel[{{$acabamento->id}}]" value="{{$acabamento->id}}" @if(in_array($acabamento->id,array_keys($catacabamentos))) checked @endif >{{$acabamento->valor}}</label>
                                 </div>
                             </div>
                         @empty

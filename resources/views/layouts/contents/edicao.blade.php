@@ -7,6 +7,7 @@
     <div class="destaque_home_edicao">
         <!--============================== content =================================-->
         <div id="info_upload"></div>
+        <div id="info_upload_erro"></div>
         <form name="upload" id="upload" method="post" enctype="multipart/form-data" role="form">
             <div class="editor com-md-12">
                 <div class="col-md-7">
@@ -22,8 +23,7 @@
                     
                     <div class="row">
                         <img src="images/{!!$img_categoria!!}" class="img-responsive img-editor" />
-                    </div>
-                    <div class="row">
+                   <br>
                         <button type="button" onclick="UploadValidar('{{route('editor.validar')}}')" name="Resumo" class="btn btn-editor bg-dark fg-white no-radius">
                             Finalizar compra
                         </button>

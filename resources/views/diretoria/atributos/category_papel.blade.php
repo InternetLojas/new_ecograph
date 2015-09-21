@@ -98,7 +98,7 @@
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="papel[{{$papel->id}}]" value="{{$papel->id}}" @if(in_array($papel->id,$catpapeis)) checked @endif >{{$papel->valor}}</label>
+                                        <input type="checkbox" name="papel[{{$papel->id}}]" value="{{$papel->id}}" @if(in_array($papel->id,array_keys($catpapeis))) checked @endif >{{$papel->valor}}</label>
                                 </div>
                             </div>
                         @empty

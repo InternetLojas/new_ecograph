@@ -1,6 +1,6 @@
 <!-- PRE-HEADER-->
 
-<div class="col-md-12 text-center pre-header hidden-xs">
+<div class="text-center pre-header hidden-xs">
     <ul class="list-group list-inline">
         <li class="list-group-item bg-transparent">
             <a href="#" class="btn btn-default bg-transparent">Todo site com 10% de desconto</a>

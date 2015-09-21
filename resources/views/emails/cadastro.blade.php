@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="description" content="{{META_DESCRIPTION}}" />
         <meta name="keywords" content="{{META_KEYWORDS}}" />
-        <meta name="subject" content="Ferramentas automotivas a baixo preço" />
+        <meta name="subject" content="{{META_SUBJECTS}}" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.,user-scalable=no">         
-        <title>*LEMBRAR PRODUTO*</title>
+        <title>*CADASTRO REALIZADO*</title>
         <style type="text/css">
             body {
                 margin-left: 0px;

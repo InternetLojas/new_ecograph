@@ -5,7 +5,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Clique nesse botão para ignorar o cupom e fechar essa janela">×</button>
-                        <h4 class="modal-title">Tema para o produto <span id="modal_escolhido"></span></h4>
+                        <h4 class="modal-title text-medio">Tema para o produto <span id="modal_escolhido"></span></h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">

@@ -23,7 +23,6 @@
             </tbody>
         </table>
         <form class="form-inline">
-
             <fieldset>
                 <div class="control-group">
                     <label>Concordo com esse resumo.
@@ -32,16 +31,16 @@
                     <span id="concorde" class="red" style="display:none"><strong>Verifique</strong></span>
                 </div>
             </fieldset>
-            <div class="text-right">
-                <a href="{{route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn btn-lg bg-dark fg-white no-radius ">
-                    <i class="icon-arrow-left icon-white"></i> Início
-                </a>
-
-                <button type="button" data-original-title="Ir para o caixa" title="Efetuar o pagamento" class="btn btn-lg btn-red no-radius btn-warning" id="btn_resumo">
-                    <i class="icon-ok-circle icon-white"></i> Caixa
-                </button>
-            </div>
         </form>
+        <div class="text-right">
+            <!--<a href="{{route('index')}}" title="Acrescentar mais produtos no carrinho" class="btn btn-lg bg-dark fg-white no-radius ">
+                <i class="icon-arrow-left icon-white"></i> Início
+            </a>-->
+
+            <a href="javascript:void(0)"  onclick="ValidaCaixa('formresumo');" title="Efetuar o pagamento com seguranca" class="btn btn-lg bg-green fg-white no-radius " id="btn_resumo">
+                <i class="icon-ok-circle icon-white"></i> Finalizar Compra
+            </a>
+        </div>
     </div>
 </div>
 <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>

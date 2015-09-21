@@ -20,19 +20,15 @@
                 </table>
                 <!--fim assunto-->
                 <!--descricao-->
+
                 <table>
                     <tbody>
                         <tr>
                             <td width="650" align="left" style="font-family:Verdana,Geneva,sans-serif;font-size:12px !important;line-height:16px">
-                                <p>Foi solicitado o que se segue.</p>
-                                <blockquote style="text-align:justify;line-height:20px;border-left: 10px solid #D1D1D6;  padding: 10px; color: #212121;">
-                                    <ul style="padding: 5px 0;display:block; margin:auto;font-size:14px !important;">
-                                        <li>Nome: {{ $nome }}</li>  
-                                        <li>E-mail: {{ $email }}</li>  
-                                        <li>Telefone: {{ $telefone }}</li>  
-                                        <li>Mensagem: {{ $mensagem }}</li>  
-                                    </ul>
-                                </blockquote>
+                                <p>Você tem um contato de: "<b>{{$nome}}</b>". Como mensagem foi enviado:<br>
+                                {{ $mensagem }}</p>
+                                <p>Contate  "<b>{{$nome}}</b>" via email, "{{ $email }}" ou via telefone  "{{ $telefone }}".</p>
+
                             </td>
                         </tr>
                     </tbody>

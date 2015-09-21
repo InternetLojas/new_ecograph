@@ -1,4 +1,4 @@
-<form id="form_orcamento" name="form_orcamento" method="POST" >
+<form id="form_orcamento" name="form_orcamento" method="POST">
     <input id="orc_peso" type="hidden" value="" name="orc_peso">
     <input id="orc_vl_frete" type="hidden" value="" name="orc_vl_frete">
     <input id="orc_tipo_frete" type="hidden" value="" name="orc_tipo_frete">
@@ -20,6 +20,7 @@
     <input id="orc_pacote_valor" type="hidden" value="" name="orc_pacote_valor">
     <input id="orc_desconto_valor" type="hidden" value="" name="orc_desconto_valor">
     <!-- parte referente ao portifólio -->
+    <input id="orc_produto" type="hidden" value="{{$solicitado['nome_html']}}" name="orc_produto">
     <input id="orc_id_perfil" type="hidden" value="" name="orc_id_perfil">
     <input id="orc_nome_perfil" type="hidden" value="" name="orc_nome_perfil">
     <input type="hidden" name="_token" value="{!!csrf_token()!!}"/>

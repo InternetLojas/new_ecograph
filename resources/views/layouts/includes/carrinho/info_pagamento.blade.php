@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         <img src="images/gateway/bcash.png" alt="bcash.png" title="Bcash &eacute; uma solu&ccedil;&atilde;o do Buscap&eacute; Company que oferece servi&ccedil;os financeiros para compradores e vendedores pela internet. Com o Bcash, voc&ecirc; tem toda a experi&ecirc;ncia da maior plataforma de digital commerce da Am&eacute;rica Latina." class="img-responsive" />
-                              </td>
+                    </td>
                     <td></td>
                     <td></td>
                     <td></td>

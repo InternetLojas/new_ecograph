@@ -64,12 +64,29 @@
             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Clientes<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>
-                    <a href="#">Gerenciar Clientes</a>
+                    <a href="{{route('diretoria.clientes')}}">Gerenciar Clientes</a>
                 </li>
             </ul>
             <!-- /.nav-second-level -->
         </li>
         <li>
+            <a href="#"><i class="fa fa-edit fa-fw"></i> Pedidos<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="{{route('diretoria.pedidos')}}">Gerenciar Pedidos</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fa fa-edit fa-fw"></i> Orçamentos<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li>
+                    <a href="{{route('diretoria.orcamentos')}}">Gerenciar Orçamentos</a>
+                </li>
+            </ul>
+        </li>
+
+            <li>
             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Clientes<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li>

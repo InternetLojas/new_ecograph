@@ -1,6 +1,6 @@
 <div id="info_listagem"></div>
 @foreach($perfis_produtos->items() as $key=> $row)
-<div class = "col-xs-3 col-sm-3 col-md-3 col-lg-3 span3">
+<div class = "col-xs-12 col-sm-6 col-md-3 col-lg-3">
     <div class="thumbnail border no-radius">
         <div class="text-center">
             <div class="thumb_cat bg-transparent text-center">
@@ -22,10 +22,10 @@
                 <button type="button" onclick="FrenteVerso('{{$row['original']['id']}}');" class="btn bg-gray fg-white no-radius" title="Ver frente ou verso {{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
                     <span id="label_{{$row['original']['id']}}">Verso</span>
                 </button>
-                <button type="button" onclick="Comprar('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="Comprar {{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
+                <!--<button type="button" onclick="Comprar('$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="Comprar  Fichas::nomeProduto($row['original']['id']) }}" id="$row['original']['id']}}">
                     <i class="icon-cart on-left"></i>Comprar
-                </button>
-                <button type="button" onclick="Editar('{{$row['original']['id']}}');" class="btn btn-warning fg-white no-radius" title="Editar {{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
+                </button>-->
+                <button type="button" onclick="Editar('{{$row['original']['id']}}');" class="btn btn-success fg-white no-radius" title="Editar {{ Fichas::nomeProduto($row['original']['id']) }}" id="{{$row['original']['id']}}">
                     Editar
                 </button>
             </div>

@@ -36,10 +36,19 @@
         </tbody>
     </table>
 </div>
-<div class="printer">
-    <div class="row  text-center">
-        <img src="images/theme/printer.jpg" alt="calculadora.png"  width="90" class="img-responsive" />
-        <a class="btn bg-green fg-white no-radius text-center" title="Clique para imprimir" href="#" onclick="window.print();">Imprimir Orçamento</a>
+
+<div class="row">
+    <div style="display:block;margin:auto !important; max-width:650px;padding:15px 0;text-align:center">
+        <div id="mensagem_orcamento"></div>
+        <div id="info_orcamento"></div>
+        <div class="col-md-6">
+            <a title="Clique para imprimir" href="#">
+                <img src="images/theme/printer.jpg" alt="calculadora.png"  width="90" class="img-responsive" >
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a class="btn bg-green fg-white no-radius " title="Clique encaminhar o orçamento por email para a loja" href="javascript:void(0)" id="data_orcamento" data-orcamento="{{$html}}">Imprimir</a>
+        </div>
     </div>
 </div>
 <!--================= informações sobre entrega ==========================-->

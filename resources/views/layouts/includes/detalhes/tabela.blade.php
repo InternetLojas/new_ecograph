@@ -15,8 +15,8 @@
                     <th class="text-center">Formato</th>
                     <th class="text-center">Cores</th>
                     <th class="text-center">Papel/Material</th>
-                    <th class="text-center">Enobrecimento</th>
                     <th class="text-center">Acabamento</th>
+                    <th class="text-center">Enobrecimento</th>
                     <th class="text-center">
                         Qtd/Valor                                   
                     </th>

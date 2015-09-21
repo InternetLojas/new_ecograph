@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="description" content="{{META_DESCRIPTION}}" />
         <meta name="keywords" content="{{META_KEYWORDS}}" />
-        <meta name="subject" content="Ferramentas automotivas a baixo preço" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.,user-scalable=no">         
-        <title>*CONSULTA DE PRODUTO*</title>
+        <meta name="subject" content="{{META_SUBJECTS}}" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.,user-scalable=no">
+        <title>*ORÇAMENTO ONLINE*</title>
         <style type="text/css">
             body {
                 margin-left: 0px;
@@ -32,14 +32,14 @@
                             .mail a,.mail a:link{text-decoration:none!important}
 
                             /* Base CSS */
-                            @media only screen and (max-width: 599px) {
+                            @media only screen and (max-width: 650px) {
                                 td[class="mail-wrapper"] {
                                     padding: 10px 0!important;
                                 }                                
                             }
 
                             /* Header CSS*/
-                            @media only screen and (max-width: 599px) {
+                            @media only screen and (max-width: 650px) {
                                 td[class="mail-header"] table { width: 100%; }
                                 td[class="mail-header"] img {
                                     width: 100%;

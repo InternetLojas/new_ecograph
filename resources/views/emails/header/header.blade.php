@@ -46,7 +46,7 @@
                                                                                                                         'facebook-share-dialog',
                                                                                                                         'width=626,height=436,top=' + ((screen.height - 436) / 2) + ',left=' + ((screen.width - 626) / 2)
                                                                                                                         );" >
-                                                                                    <img src ="{{URL::to('images/icons/fb.png')}}" alt="images" width="30">
+                                                                                    <img src ="{{URL::to('images/theme/facebook.png')}}" alt="images" width="30">
                                                                                 </a>
                                                                                 <span>&nbsp;</span>
                                                                                 <a title="Compartilhe no twitter" href="javascript:void(0)" onclick="window.open(
@@ -54,29 +54,12 @@
                                                                                                                                                         'facebook-share-dialog',
                                                                                                                                                         'width=626,height=436,top=' + ((screen.height - 436) / 2) + ',left=' + ((screen.width - 626) / 2)
                                                                                                                                                         );" >
-                                                                                    <img src ="{{URL::to('images/icons//tw.png')}}" alt="images" width="30">
+                                                                                    <img src ="{{URL::to('images/theme/twitter.png')}}" alt="images" width="30">
                                                                             </a>
-                                                                            <span>&nbsp;</span>
-                                                                            <a title="Compartilhe no Google Plus" href="javascript:void(0)" onclick="window.open(
-                                                                                                            'https://twitter.com/share?url=' + encodeURIComponent('{{ URL::to('/') }}') + '&t=' + encodeURIComponent('{{STORE_NAME}} ##{{FACEBOOK_PAGE}} #snippet'),
-                                                                                                                                                        'facebook-share-dialog',
-                                                                                                                                                        'width=626,height=436,top=' + ((screen.height - 436) / 2) + ',left=' + ((screen.width - 626) / 2)
-                                                                                                                                                        );" >
-                                                                                <img src="{{URL::to('images/icons/gp.png')}}" alt="images" width="30">
-                                                                            </a>
-                                                                            <span>&nbsp;</span>
-                                                                            <a title="Compartilhe no Pinterest" href="javascript:void(0)" onclick="window.open(
-                                                                                                            'https://pinterest.com/share?url=' + encodeURIComponent('{{ URL::to('/') }}') + '&t=' + encodeURIComponent('{{STORE_NAME}} ##{{FACEBOOK_PAGE}} #snippet'),
-                                                                                                                                                        'facebook-share-dialog',
-                                                                                                                                                        'width=626,height=436,top=' + ((screen.height - 436) / 2) + ',left=' + ((screen.width - 626) / 2)
-                                                                                                                                                        );" >
-                                                                                <img src="{{URL::to('images/icons/pt.png')}}" alt="images" width="30">
-                                                                            </a>
-                                                                            <span>&nbsp;</span>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td>
+                                                                        <td style="font-size: 90%">
                                                                             {{STORE_SITE}}<br>
                                                                             {{date('d/m/Y')}}
                                                                         </td>

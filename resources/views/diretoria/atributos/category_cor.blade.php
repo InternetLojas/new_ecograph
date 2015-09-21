@@ -99,7 +99,7 @@
                             <div class="col-sm-3">
                                 <div class="checkbox">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" name="cor[{{$cores->id}}]" value="{{$cores->id}}" @if(in_array($cores->id,$catcores)) checked @endif >{{$cores->valor}}</label>
+                                        <input type="checkbox" name="cor[{{$cores->id}}]" value="{{$cores->id}}" @if(in_array($cores->id,array_keys($catcores))) checked @endif >{{$cores->valor}}</label>
                                 </div>
                             </div>
                         @empty

@@ -26,7 +26,7 @@
                             <td width="650" align="left" style="font-family:Verdana,Geneva,sans-serif;font-size:12px !important;line-height:16px">
                                 <blockquote style="text-align:justify;line-height:20px;border-left: 10px solid #D1D1D6;  padding: 10px; color: #212121;">
                                     Recebemos sua solicitação para gerar nova senha.<br>
-                                    Por favor siga o <a href="#" title="Mude sua senha">link</a> e mude sua senha.
+                                    Por favor siga o <a href="{{ url('password/reset/'.$token) }}" title="Mude sua senha">link</a> e mude sua senha.
                                     Obrigado por seu interesse.
                                 </blockquote>
                             </td>

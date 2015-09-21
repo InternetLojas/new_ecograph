@@ -10,7 +10,7 @@
 </div>
 <div id="info_carrinho"></div>
 <!--================= tabela dos produtos do carrinho ===================-->
-@include('layouts.includes.carrinho.itens_carrinho')
+@include('layouts.includes.carrinho.itens_uploads')
 @include('layouts.includes.boxes.forms.form_carrinho')
 <!--================= informações sobre entrega ==========================-->
 @include('layouts.includes.carrinho.info_endereco')
@@ -31,7 +31,6 @@
             @foreach($inputs_orc as $key=>$valor)
                 <input id="{{$key}}" type="hidden" value="{{$valor}}" name="{{$key}}" class="form-control">
             @endforeach
-            <input type="hidden" name="order_id" id="order_id" value="2" />
             <input type="hidden" name="payment" id="payment" value="2" />
             <input type="hidden" name="forma_pagamento" id="forma_pagamento" value="Bcash" />
             <input type="hidden" name="total_compra" id="total_compra" value="{{Cart::total()+$post_inputs['orc_vl_frete']-$post_inputs['orc_desconto_valor']}}" />
@@ -42,8 +41,16 @@
     </fieldset>
     <div id="mensagem_formresumo"></div>
     <div id="info_formresumo"></div>
-
     {!!form::close()!!}
+    @include('layouts.includes.resumo.ficha_resumo')
+@else
+    <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
+    <div class="text-right">
+        <a href="{{route('index')}}" data-original-title="Voltar para o início" title="Acrescentar mais produtos no carrinho" class="btn btn-lg bg-dark fg-white no-radius ">
+            <i class="icon-arrow-left icon-white"></i> Início
+        </a>
+    </div>
+    <div style="display:block;width:100%;padding:12px 0;height:5px;"></div>
 @endif
-@include('layouts.includes.resumo.ficha_resumo')
+
 

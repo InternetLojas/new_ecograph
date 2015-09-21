@@ -1,4 +1,3 @@
-
 <script>
     $(function() {
         'use strict';
@@ -8,7 +7,8 @@
 //<![CDATA[
 
             //Inicio Mascara Telefone
-            jQuery('input[type=tel]').mask("(99) 9999-9999?9").ready(function(event) {
+            var $mascara = $('input[type=tel]').mask("(99) 9999-9999?9");
+            $mascara.ready(function(event) {
                 var target, phone, element;
                 target = (event.currentTarget) ? event.currentTarget : event.srcElement;
                 phone = target.value.replace(/\D/g, '');
@@ -20,6 +20,7 @@
                     element.mask("(99) 9999-9999?9");
                 }
             });
+
             $("#telephone").mask("(99) 9999-9999");
             $("#telephone1").mask("(99) 9999-9999");
             //Fim Mascara Telefone
@@ -38,7 +39,7 @@
             //Inicio Mascara RG
             $("#rg").mask("99.999.999-*");
             //Fim Mascara CPF
-            (jQuery);
+           // (jQuery);
 //]]>
             //*uploads*//
             $("#logo1").change(function() {
@@ -60,6 +61,7 @@
                 $(this).prev().html($(this).val());
             });
             //****fim do upolads***//
+
             $('#btn_orcar').click(function()
             {
                 Encerrar('orcar');
@@ -82,11 +84,15 @@
                 @endif
                 Encerrar('comprar', logado);
             });
+
             //através da modal o cliente escolhe o tipo de conta e cep para criar o cadastro
             var $btn_tipoconta = $('#btn_tipoconta');
             $btn_tipoconta.on('click', function() {
                 EnderecoCEP();
             });
+            @if($page === 'imprimir')
+                EmailOrcamentoEnviar('orcamento','{{$orcamento_id}}');
+            @endif
             @if($page === 'editor')
             /*através da modal o cliente escolhe o tipo de conta e cep para criar o cadastro*/
             var $btn_editor = $('#btn_editor');
@@ -94,17 +100,21 @@
                 ValidarFormEdicao();
             });
             @endif
-            @if($page === 'carrinho' || $page=='resumo_orc')
-            var $btn_resumo = $('#btn_resumo');
-            $btn_resumo.on('click', function() {
-                ValidaCaixa('formresumo');
-            });
+
+            @if($page === 'carrinho' || $page ==='resumo_orc')
+               $('btn_resumo').click(function(){
+                   ValidaCaixa('formresumo');
+               });
+               /* var $btn_resumo = $('#btn_resumo');
+                $btn_resumo.on('click', function() {
+                    ValidaCaixa('formresumo');
+                });*/
             @endif
             @if($page === 'detalhes')
             <!--if(isset($solicitado))-->
             Calculadora('{!! $solicitado['filho'] !!}', '{!! Fichas::nomeCategoria($solicitado['filho']) !!}');
             <!--endif-->
-                    var $btn_imprimir = $('#btn_imprimir');
+            var $btn_imprimir = $('#btn_imprimir');
             $btn_imprimir.on('click', function() {
                 GerarOrcamento();
             });
@@ -123,8 +133,7 @@
             });
                     @endif
 
-                    var $btn_contato = $('#btn_contato');
-            $btn_contato.on('click', function() {
+            $('#btn_contato').click(function(){
                 var url = $('#contato').attr('action');
                 EmailEnviar('contato', url);
             });
