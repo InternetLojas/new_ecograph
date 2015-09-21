@@ -5,6 +5,7 @@ namespace Ecograph\Http\Controllers;
 use Ecograph\AddressBook;
 use Ecograph\Basket;
 use Ecograph\BasketIten;
+use Ecograph\Confdesconto;
 use Ecograph\Customer;
 use Ecograph\Http\Controllers\Controller;
 use Ecograph\Gateway;
@@ -85,33 +86,6 @@ class ProcessController extends Controller {
             ->with('layout', $layout);
     }
 
-   /* public function Checkout() {
-        $inputs = \Request::all();
-        $layout = $this->layout->classes(0);
-        //$payment = Gateway::find($inputs['payment']);
-        //identifica a classe
-        $class_payment = Gateway::find($inputs['payment'])->class;
-        $title_class = Gateway::find($inputs['payment'])->title;
-        $class_id = Gateway::find($inputs['payment'])->id;
-        //identifica se é um gateway interno ou externo
-        $gateway_externo = Gateway::find($inputs['payment'])->gateway_externo;
-        if ($gateway_externo == 0) {
-            $submeter = false;
-        } else {
-            $submeter = true;
-        }
-        return view('loja.index')
-            ->with('title', STORE_NAME . ' Checkout ' . $title_class)
-            ->with('page', 'checkout')
-            ->with('ativo', $title_class)
-            ->with('gateway', $title_class)
-            ->with('class_payment', $class_payment)
-            ->with('rota', 'loja/checkout.html')
-            ->with('submeter', $submeter)
-            ->with('class', $class_id)
-            ->with('layout', $layout);
-    }*/
-
     public function Pedido(Gateway $gateway, Checkout $checkout, Customer $customer, Order $order, Ordersituacao $ordersituacao, AddressBook $addressBook, Product $product, OrderIten $orderIten, OrderTotal $orderTotal) {
         $inputs = \Request::except('_token');
         $prossegue = false;
@@ -148,13 +122,30 @@ class ProcessController extends Controller {
                 $data['metodo'] = 'post';
                 $data['submeter'] = true;
                 $data['neworder_Id'] = $order_id;
-                Session::set('orc_desconto_valor','');
+
                 //envia o email de confirmação de pedido
-                EnvioEmail::novopedido($order_id);
+                \EnvioEmail::novopedido($order_id);
 
                 //remove o item da tabela
                 //procura a linha do carrinho
                 $userId = \Auth::user()->id;
+
+                //guarda a informação do uso do cupom
+                if (Session::has('conf_descontos_code_id')) {
+                   $cliente = $customer->find($userId);
+                    $conf_descontos_code_id = Session::get('conf_descontos_code_id');
+                    if(!empty($conf_descontos_code_id)){
+                       $CustomerDiscount = $cliente->CustomerDiscount()
+                    ->where('conf_descontos_code_id',$conf_descontos_code_id)
+                    ->where('customer_id',$userId)->first();
+                 
+                    $CustomerDiscount->update(['discount_order_id',$order_id]);
+                    //destproi a sessão
+                    Session::set('conf_descontos_code_id','');  
+                    Session::set('discount_code',''); 
+                    }                                   
+                
+                }
                 $customer = Customer::find($userId);
                 $customer_basket = $customer->basket->toArray();
                 if ($customer_basket) {

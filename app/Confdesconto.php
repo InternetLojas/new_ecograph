@@ -13,8 +13,9 @@ class Confdesconto extends Model {
     // Don't forget to fill this array
     protected $fillable = [];
 
-    public function desconto() {
-        return $this->belongsTo('Descontoacrescimo');
+
+    public function DescontoAcrescimo() {
+        return $this->belongsTo('Ecograph\Descontoacrescimo');
     }
 
 }

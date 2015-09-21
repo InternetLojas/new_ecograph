@@ -486,7 +486,9 @@ Class Fichas {
     }
 
     public static function nomeProduto($id) {
-        return ProductDescription::find($id)->products_name;
+        $name_composto = explode(" [", ProductDescription::find($id)->products_name);
+        $description = ProductDescription::find($id)->products_description;
+        return $name_composto[0].  '['.$description.']';
     }
 
     public static function ImgProduto($id, $verso = false) {

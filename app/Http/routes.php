@@ -59,6 +59,11 @@ Route::group(['prefix' => '/'], function() {
         'as' => 'orcamento',
         'uses' => 'CustomerController@Orcamento'
     ]);
+    //pra enviar o email
+    Route::get('orcamento.html', [
+        'as' => 'orcamento',
+        'uses' => 'CustomerController@Orcamento'
+    ]);
     //retorna a view de informações de omo comprar
     Route::get('como-comprar.html', [
         'as' => 'comocomprar',
@@ -163,10 +168,7 @@ Route::post('desconto', array(
 /*            Controller PRODUCT             */
 /* ============================================================== */
 Route::group(['prefix' => 'produtos'], function() {
-    Route::get('portfolio.html', [
-        'as' => 'produtos.index',
-        'uses' => 'ProductController@Index'
-    ]);
+
     Route::get('detalhes/{pai}/{filho}/{nome_categoria}', [
         "as" => "produtos.detalhes",
         "uses" => "ProductController@Detalhes"
@@ -180,7 +182,11 @@ Route::group(['prefix' => 'produtos'], function() {
         'as' => 'produtos.enviarpdf',
         'uses' => 'ProductController@EnviarPDF'
     ]);
-    Route::post('portfolio.html', [
+    Route::get('portfolio/{nome_categoria}', [
+        'as' => 'produtos.index',
+        'uses' => 'ProductController@Index'
+    ]);
+    Route::post('portfolio/{nome_categoria}', [
         'as' => 'produtos.portfolio',
         'uses' => 'ProductController@Portfolio'
     ]);
@@ -251,7 +257,7 @@ Route::group(['prefix' => 'loja'], function() {
         "uses" => "StoreController@Caixa"
     ));
     //executa o processamento do pedido e o pagamento
-    Route::post('loja/finalizacao.html', array(
+    Route::get('finalizacao.html', array(
         "as" => 'loja.finalizacao',
         "uses" => 'StoreController@Finalizacao'
     ));
@@ -262,7 +268,7 @@ Route::group(['prefix' => 'loja'], function() {
 /* ============================================================== */
 
 //faz envio dos innputs a serem utilizados no upload***/
-Route::post('editor/personalizar.html', [
+Route::post('editor/personalizar/{produto}', [
     "as" => "editor.personalizar",
     "uses" => "EditorController@Personalizar"
 ]);
@@ -487,10 +493,10 @@ Route::group(['prefix' => 'diretoria',
                 'as' => 'enobrecimentos.store',
                 'uses' => 'AdminAttributesController@EnobrecimentosStore'
             ]);
-            Route::put('{id}/update.html', [
+            /*Route::put('{id}/update.html', [
                 'as' => 'weight.update',
                 'uses' => 'AdminAttributesController@WeightUpdate'
-            ]);
+            ]);*/
         });
         Route::get('cores.html', [
             'as' => 'atributos.cores',
@@ -525,5 +531,23 @@ Route::group(['prefix' => 'diretoria',
             ]);
         });
     });
+
+    /****controllers para CLIENTES *****/
+    Route::get('clientes.html', [
+        'as' => 'diretoria.clientes',
+        'uses' => 'AdminClientesController@index'
+    ]);
+
+    /****controllers para Pedidos *****/
+    Route::get('pedidos.html', [
+        'as' => 'diretoria.pedidos',
+        'uses' => 'AdminPedidosController@index'
+    ]);
+
+    /****controllers para Orçamentos *****/
+    Route::get('orcamentos.html', [
+        'as' => 'diretoria.orcamentos',
+        'uses' => 'AdminOrcamentosController@index'
+    ]);
 });
 

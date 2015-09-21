@@ -63,7 +63,12 @@ class Customer extends Model implements AuthenticatableContract, CanResetPasswor
     public function Orcamento() {
         return $this->hasMany('Ecograph\Orcamento');
     }
-
+    public function Acesso() {
+        return $this->hasMany('Ecograph\Acesso');
+    }
+    public function CustomerDiscount() {
+        return $this->hasMany('Ecograph\CustomerDiscount');
+    }
     /**
      * The attributes excluded from the model's JSON form.
      *

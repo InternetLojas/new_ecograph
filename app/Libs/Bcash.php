@@ -125,8 +125,15 @@ Class Bcash extends Payments {
         //dd($inputs);
         return $inputs;
     }
-
-    static function redireciona($url_envio = '', $dados, $html) {
+    static function redireciona( ) {
+        return view('loja.index')
+            ->with('title', STORE_NAME . ' Ckeckout Bcash')
+            ->with('page', 'sucesso')
+            ->with('ativo', 'Bcash')
+            ->with('parametros', '')
+            ->with('rota', 'loja/sucesso');
+    }
+    /*static function redireciona($url_envio = '', $dados, $html) {
         $atualizacarrinho = Basket::where('customer_id', '=', Auth::user()->id)->delete();
 
         Session::forget('carrinho');
@@ -144,6 +151,6 @@ Class Bcash extends Payments {
             ->with('message', Session::get('messages'))
             ->with('class', LAYOUT);
         ;
-    }
+    }*/
 
 }

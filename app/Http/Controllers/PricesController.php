@@ -90,6 +90,11 @@ class PricesController extends Controller {
         if(count($PacAcabamentos)>0){
             $span_preco = array();
             foreach ($PacAcabamentos as $k => $preco) {
+                if ($preco ==0){
+                    $data['status'] = 'erro';
+                    $data['info'] = 'Preço ainda não cadastrado';
+                    return ($data);
+                }
                 $span_preco[] = Utilidades::RealBusca($preco);
                 //$data = array('preco' => $span_preco);
             }

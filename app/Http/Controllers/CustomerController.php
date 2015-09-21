@@ -487,6 +487,7 @@ class CustomerController extends Controller {
         //dados do cliente armazenados em customers
         $orcamento->save();
         //prepara os dados dos itens do orçamento
+        //$orcamento->id = 1;
         $OrcProduto = new OrcamentoProduto;
         $OrcProduto->orcamento_id = $orcamento->id;
         $OrcProduto->orc_peso = $post_inputs['orc_peso'];
@@ -504,16 +505,23 @@ class CustomerController extends Controller {
         $OrcProduto->orc_pacote_valor = $post_inputs['orc_pacote_valor'];
         $OrcProduto->orc_vl_frete = $post_inputs['orc_vl_frete'];
         $OrcProduto->save();
-
+        $vl = str_replace("R$ ","",$post_inputs['orc_pacote_valor']);
+        $vl_total = str_replace(',','.',$vl);
+        //dd($vl_total + $post_inputs['orc_vl_frete'] - $post_inputs['orc_desconto_valor']);
+        //envia o email de com os dados para o orçamento
+        $html = \EnvioEmail::EnviarOrcamento($orcamento->id);
         return view('clientes.index',compact('customer'))
             ->with('title', STORE_NAME . ' Imprima seu orçamento')
             ->with('page', 'imprimir')
             ->with('ativo', 'Imprimir')
             ->with('inputs_orc', $post_inputs)
+            ->with('html',$html)
+            ->with('vl_total',$vl_total)
             ->with('rota', 'orcamento')
             ->with('orcamento_id', $orcamento->id)
             ->with('layout', $layout);
     }
+
     public function TratarEmail($check, $customer) {
         $erro = array();
         if ($check) {
@@ -523,12 +531,12 @@ class CustomerController extends Controller {
                 $data = array('status' => 'pass',
                     'info' => 'Sua conta foi criada com sucesso. Enviarmos uma email com suas informações.',
                     'erro' => '',
-                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
+                    'loadurl' => route('clientes.conta.sucesso'));
             } else {
                 $data = array('status' => 'pass',
                     'info' => 'Sua conta foi criada com sucesso. No entanto não conseguimos enviar um email com suas informações.',
                     'erro' => '',
-                    'loadurl' => URL::to('clientes/conta/sucesso.html'));
+                    'loadurl' => route('clientes.conta.sucesso'));
                 //Session::put('error', 'Sua conta foi criada com sucesso, mas não conseguimos enviar um email com suas informações.');
             }
         } else {
@@ -536,7 +544,7 @@ class CustomerController extends Controller {
             $data = array('status' => 'fail',
                 'info' => 'Erro na criação da conta',
                 'erro' => $erro,
-                'loadurl' => URL::to('cliente/conta/sucesso.html'));
+                'loadurl' => route('clientes.conta.sucesso'));
             //Session::put('error', 'Erro na criação da conta. Por favor tente novamente.');
             //return Redirect::to('inicio')->withError();
         }

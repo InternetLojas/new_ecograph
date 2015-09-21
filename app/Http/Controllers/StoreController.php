@@ -4,6 +4,7 @@ namespace Ecograph\Http\Controllers;
 
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
+use Ecograph\Libs\Bcash;
 use Ecograph\Perfil;
 use Ecograph\Product;
 use Illuminate\Http\Request;
@@ -174,5 +175,14 @@ class StoreController extends Controller {
             ->with('layout', $layout)
             ->with('message', 'A busca por ' . $keyword . ' não obteve resultado.');
     }
+    public function Finalizacao() {
 
+        return view('loja.index')
+            ->with('title', STORE_NAME . ' Ckeckout Bcash')
+            ->with('page', 'sucesso')
+            ->with('ativo', 'Bcash')
+            ->with('parametros', '')
+            ->with('rota', 'loja/sucesso');
+
+    }
 }

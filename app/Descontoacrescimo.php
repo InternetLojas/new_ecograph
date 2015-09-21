@@ -15,7 +15,7 @@ class Descontoacrescimo extends Model {
     );
     protected $guarded = ['id'];
 
-    public function confdesconto() {
+    public function ConfDesconto() {
         return $this->hasMany('Ecograph\Confdesconto');
     }
 

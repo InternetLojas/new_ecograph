@@ -157,12 +157,12 @@ class BasketController extends Controller {
             'formato' => $post_inputs['orc_formato_nome'],
             'papel_id' => $post_inputs['orc_papel_id'],
             'papel' => $post_inputs['orc_papel_nome'],
-            'acabamento_id' => $post_inputs['orc_acabamento_id'],
-            'acabamento' => $post_inputs['orc_acabamento_nome'],
             'cor_id' => $post_inputs['orc_cor_id'],
             'cor' => $post_inputs['orc_cor_nome'],
             'enoblecimento_id' => $post_inputs['orc_enoblecimento_id'],
             'enoblecimento' => $post_inputs['orc_enoblecimento_nome'],
+            'acabamento_id' => $post_inputs['orc_acabamento_id'],
+            'acabamento' => $post_inputs['orc_acabamento_nome'],
             'unidade' => $post_inputs['orc_pacote_qtd'],
             'perfil' => $post_inputs['orc_nome_perfil'],
             'perfil_id' => $post_inputs['orc_id_perfil']
@@ -238,7 +238,7 @@ class BasketController extends Controller {
                 ->with('title', STORE_NAME . ' Itens no carrinho')
                 ->with('page', 'carrinho')
                 ->with('ativo', 'carrinho')
-                ->with('post_inputs', '')
+                ->with('post_inputs', $post_inputs)
                 ->with('contents', $contents->toarray())
                 ->with('cart_total', Cart::total())
                 ->with('default_address', $default_address)

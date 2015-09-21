@@ -137,7 +137,8 @@ class ProductController extends Controller {
      */
     public function Orcamento(Request $request) {
         $post_inputs = $request->all();
-        $pai = Fichas::parentCategoria($post_inputs['orc_categoria_id']);
+        //envia o email de com os dados para o orçamento
+        \EnvioEmail::EnviarOrcamento();
             return view('produtos.index')
             ->with('title', STORE_NAME)
             ->with('page', 'imprimir')
@@ -167,6 +168,10 @@ class ProductController extends Controller {
      */
     public function Portfolio(Request $request) {
         $post_inputs = $request->all();
+        if(empty($post_inputs['orc_acabamento_nome'])){
+            $orc_acabamento_nome = Acabamento::find($post_inputs['orc_acabamento_id']);
+            $post_inputs['orc_acabamento_nome'] = $orc_acabamento_nome->valor;
+        }
 
         //quem é o pai da categoria enviada
         $pai = Category::find($post_inputs['orc_subcategoria_id'])->parent_id;
@@ -242,26 +247,30 @@ class ProductController extends Controller {
             $papel[] = array('id' => $valor, 'nome' => Papel::find($valor)->valor);
         }
         $enoblecimento_id = $this->enoblecimentoModel->where('category_id', $post_inputs['escolhido'])->get()->lists('valor','id');
+        $acabamento_id = CategoryAcabamento::where('category_id', $post_inputs['escolhido'])->lists('acabamento_id');
 
         foreach ($enoblecimento_id as $id => $valor) {
-            //$acabamento_enoblecimento =  Acabamento::where('enoblecimento',$valor)->lists('id');
-            //dd($acabamento_enoblecimento);
+
             $enoblecimento[] = [
                 'id' => $id,
                 'nome' => $valor
             ];
-            //$enoblecimento_nome[] = $valor;
+
         }
 
-        $acabamento_id = CategoryAcabamento::where('category_id', $post_inputs['escolhido'])->lists('acabamento_id');
-          foreach ($acabamento_id as $k => $valor) {
-            $acabamento[] = [
-                'id' => $valor,
-                'nome' => Acabamento::find($valor)->valor,
-                'enobrecimento' => Acabamento::find($valor)->enoblecimento
-            ];
+        foreach ($acabamento_id as $k => $valor) {
+              $enoblec_id = $this->enoblecimentoModel
+                  ->where('valor', Acabamento::find($valor)->enoblecimento)->get()->first()->id;
+
+              $acabamento[$enoblec_id][] = [
+                    'valores' => [
+                        'id' => $valor,
+                        'nome' => Acabamento::find($valor)->valor,
+                        'enobrecimento' => Acabamento::find($valor)->enoblecimento
+                    ]
+              ];
         }
-        //dd($acabamento);
+
         $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
         $pacote_qtd = $pacote->toarray();
         foreach ($pacote_qtd as $key => $itens) {

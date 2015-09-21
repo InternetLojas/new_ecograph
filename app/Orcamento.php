@@ -6,12 +6,14 @@ class Orcamento extends Model {
 
     protected $table = "orcamentos";
     protected $guarded = ["id"];
-    protected $fillable = ['customer_id',
+    protected $fillable = [
+        'customer_id',
         'file_id',
-        'orcamento_status'];
+        'orcamento_status'
+    ];
 
     public function Customer() {
-        return $this->belongsTo('Ecograph\Customer', 'customer_id');
+        return $this->belongsTo('Ecograph\Customer');
     }
 
     public function OrcamentoProduto() {

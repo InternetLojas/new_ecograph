@@ -4,6 +4,7 @@ namespace Ecograph\Http\Controllers;
 
 use Ecograph\Http\Requests;
 use Ecograph\Http\Controllers\Controller;
+use Ecograph\Libs\Fichas;
 use Ecograph\Libs\Layout;
 use Ecograph\Customer;
 use Ecograph\AddressBook;
@@ -12,7 +13,11 @@ use Ecograph\FileTexto;
 use Ecograph\FileMidia;
 use Ecograph\Category;
 use Cart;
+use Ecograph\Pacote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Intervention\Image\Facades\Image;
 
 class EditorController extends Controller {
 
@@ -92,31 +97,45 @@ class EditorController extends Controller {
     /* função e chamada pela função carregar() do javascript */
 
     public function Validar(Request $request) {
-
         $post_inputs = $request->all();
+        //dd($post_inputs);
         $erros = [];
-        $inputs_files = [];
-        //local onde se armazena fisicamente os arquivos enviados dos clientes
-        $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
         foreach($post_inputs as $key => $input){
             if($key !=='files'){
-                $find_orc   = 'orc_';
-                $find_id   = '_id';
-                $pos = strpos($key, $find_orc);
-                $pos1 = strpos($key, $find_id);
-                if ($pos === false) {
-                    $inputs[$key] = $input;
-                } else if($pos1 === false){
-                    $inputs_orc[$key] = $input;
+                if(empty($input)){
+                    if($key !=='orc_peso' && $key !=='orc_vl_frete' && $key !=='orc_desconto_valor' && $key !=='orc_id_perfil' && $key!="orc_nome_perfil" && $key!="cel" && $key!="cel1" && $key!="fone" && $key!="fone1" && $key!="site" && $key!="obs"){
+                        $erros[] = $key;
+                    }
+
+                } else{
+                    $find_orc   = 'orc_';
+                    $find_id   = '_id';
+                    $pos = strpos($key, $find_orc);
+                    $pos1 = strpos($key, $find_id);
+                    if ($pos === false) {
+                        $inputs[$key] = $input;
+                    } else if($pos1 === false){
+                        $inputs_orc[$key] = $input;
+                    }
                 }
+
             }
         }
 
-        $data = array('status' => 'success',
-            'inputs' => $inputs,
-            'inputs_orc'=>$inputs_orc,
-            'loadurl'=>route('files.upload')
-        );
+        if(count($erros)>0){
+            $data = array('status' => 'fail',
+                'erro' => $erros,
+                'loadurl'=>''
+            );
+        }else{
+            //Cart::add($item['id'], $item['name'], $item['quantity'], $item['price'], $option);
+            $data = array('status' => 'success',
+                'inputs' => $inputs,
+                'inputs_orc'=>$inputs_orc,
+                'loadurl'=>route('files.upload')
+            );
+        }
+
         return json_encode($data);
 
     }
@@ -126,7 +145,7 @@ class EditorController extends Controller {
         $erros = [];
         $inputs_files = [];
         //local onde se armazena fisicamente os arquivos enviados dos clientes
-        $storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
+        //$storagePath = storage_path() . '/documentos/' . \Auth::user()->id;
         foreach($post_inputs as $key => $input){
             if($key !=='files'){
                 $find_orc   = 'orc_';
@@ -140,24 +159,32 @@ class EditorController extends Controller {
                 }
             }
         }
-
-        foreach($post_inputs['files'] as $key => $files){
-            if($files){
-                $logos[$key] = $files->getClientOriginalName();
-                //$files->move($storagePath,  $logos[$key]);
-                $erros[] =$files->isValid();
-            }
-        }
-        //dd($post_inputs['files']);
         $user_id = \Auth::user()->id;
-
+        $storagePath = '';
         //preparando os arquivos para upload
         $file = $this->fileModel->fill(['customer_id'=>$user_id]);
         $file->save();
         $inputs['file_id'] = $file->id;
         $filetexto = $this->fileTextoModel->fill($inputs);
         $filetexto->save();
-        $logos['file_id'] =  $inputs['file_id'];
+        foreach($post_inputs['files'] as $key => $files){
+            if(!is_null($files)){
+                $arq = $request->file('files')[$key];
+                $extension = $request->file('files')[$key]->getClientOriginalExtension();
+                $img = Image::make($arq)->resize(225, 219);
+                $logos[$key] =  $user_id.'_'.$key.'.'.$extension;
+                //Storage::disk('public_local')->put($user_id.'/'.$user_id.'_'.$key.'.'.$extension, $arq);
+// resizing an uploaded file
+                //$path = 'images/documentos/'.$user_id.'/'.$user_id.'_'.$key.'.'.$extension;
+                $storagePath =  'images/documentos/'.$user_id.'/';
+                //Image::make($image->getRealPath())->resize(468, 249)->save($path);
+               //->save($storagePath);
+                $arq->move($storagePath, $user_id.'_'.$key.'.'.$extension);
+                //$erros[] =$files->isValid();
+            }
+        }
+
+        $logos['file_id'] = $file->id;
         $filemidia = $this->fileMidiaModel->fill($logos);
         $filemidia->save();
         //armazenando os dados para o orçamento
@@ -172,15 +199,16 @@ class EditorController extends Controller {
         $orcamento_produto = $this->orcamentoProdutoModel->fill($inputs_orc);
         $orcamento_produto->save();
         $customer = Customer::find($user_id);
-        $customer_basket = $customer->basket->toArray();
-        //dd($customer_basket);
 
         $contents = Cart::content();
         $layout = $this->layout->classes($post_inputs['orc_categoria_id']);
 
         //levanta o endereço do cliente
+        $arq_file = $this->fileModel->find($file->id);
+        $arq_filetexto = $arq_file->filetextos;
+        $arq_filemidia = $arq_file->filemidias;
         $default_address = AddressBook::find($customer->customers_default_address_id);
-        return view('loja.index')
+        return view('loja.index', compact('arq_file','arq_filetexto','arq_filemidia'))
             ->with('title', STORE_NAME)
             ->with('page', 'resumo_orc')
             ->with('ativo', 'Resumo')

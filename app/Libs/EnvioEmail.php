@@ -1,5 +1,9 @@
 <?php
 namespace Ecograph\Libs;
+use Ecograph\Customer;
+use Ecograph\Orcamento;
+use Ecograph\Order;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Mail;
 class EnvioEmail {
@@ -28,6 +32,35 @@ class EnvioEmail {
                 'erro' => $erro,
                 'loadurl' => ''
             );
+        }
+        return $html;
+    }
+
+    /**
+     * Controla o email para lembrar cliente que produto está disponível
+     *
+     * @return json
+     */
+    public static function EnviarOrcamento($orcamento_id) {
+        $customer = Customer::find(\Auth::user()->id);
+        $orcamentos = $customer->Orcamento()->find($orcamento_id);
+        $orcamentosProdutos = $orcamentos->OrcamentoProduto()->get()->first();
+        //encontra o valor do produto
+        $vl = str_replace("R$ ","",$orcamentosProdutos->orc_pacote_valor);
+        $vl_total = str_replace(',','.',$vl);
+        $data = array_merge($orcamentos->toArray(),$orcamentosProdutos->toArray());
+        $data['vl_total'] = $vl_total;
+
+        if (Mail::send('emails.orcamento', $data, function ($m) use ($customer) {
+            $m->to($customer->email,$customer->customers_firstname.' '.$customer->customers_lastname)
+                ->subject('Orçamento Online!')
+                ->from('newsite@ecograph.com.br', 'Gráfica Ecograph')
+                ->cc('suporte@internetlojas.com');
+        })
+        ){
+            $html = 'pass';
+        } else {
+            $html = 'fail';
         }
         return $html;
     }
@@ -68,32 +101,34 @@ class EnvioEmail {
      * @return json
      */
     public static function EnviarContato() {
-        $input = \Request::all();
-        $envio = Mail::send('emails.contato', $input, function($message) {
-            $info = \Request::all();
-            $message->from($info['email'], $info['nome']);
-            $message->to(STORE_EMAIL_TESTE, STORE_NAME)->subject("Contato de Cliente.");
+        $inputs = \Request::all();
+        $data['nome'] = $inputs['nome'];
+        $data['email'] = $inputs['email'];
+        $data['telefone'] = $inputs['telefone'];
+        $data['mensagem'] = $inputs['mensagem'];
 
-            //enviando o feedback para o cliente;
-            //$message->from(STORE_EMAIL_TESTE, STORE_NAME);
-            //$message->to($info['email'], $info['nome'])->subject("Recebemo sua mensagem.");
-        });
-        if ( $envio ) {
+        if (Mail::send('emails.contato', $data, function ($m) use ($inputs) {
+             $m->to('newsite@ecograph.com.br', 'Gráfica Ecograph')
+                ->subject('Contato de Cliente!')
+                ->from($inputs['email'], $inputs['nome'])
+                ->cc('suporte@internetlojas.com');
+        })
+        ){
+            $erro[] = '';
             $html = array('status' => 'pass',
-                'info' => 'Caro Sr(a)' . $input['nome'] . '! Recebemos seu contato, em breve entraremos em contato.',
-                'erro' => $errors,
+                'info' => 'Caro Sr(a)' . $inputs['nome'] . '! Recebemos seu contato, em breve entraremos em contato.',
+                'erro' => $erro,
                 'loadurl' => ''
             );
         } else {
             $erro[] = 'Problemas no envio do email';
             $html = array('status' => 'fail',
-                'info' => 'Caro Sr(a)' . $input['nome'] . '! Tivemos dificuldade no envio de seu email. Por favor tente novamente.',
+                'info' => 'Caro Sr(a)' . $inputs['nome'] . '! Tivemos dificuldade no envio de seu email. Por favor tente novamente.',
                 'erro' => $erro,
                 'loadurl' => ''
             );
         }
-
-        return $html; 
+        return $html;
     }
 
     /**
@@ -192,43 +227,55 @@ class EnvioEmail {
     public static function NovoCadastro($customer) {
         $data = $customer->toarray();
         $info = \Request::all();
-        if (Mail::send('emails.cadastro', $data, $info, function($message) {
-                    //$info = \Request::all();
-                    $message->from(STORE_EMAIL_TESTE, STORE_NAME);
-                    $message->to($info['email'], $info['customers_firstname'] . ' ' .
-                                    $info['customers_lastname'])
-                            ->cc('suporte@internetlojas.com')
-                            ->subject('Informações da nova conta!');
-                })) {
-            return true;
+        if (Mail::send('emails.cadastro', $data, function ($m) use ($info) {
+            $m->to($info['email'], $info['customers_firstname'] . ' ' .$info['customers_lastname'])
+                ->subject('Informações de sua conta!')
+                ->from('ecograph@ecograph.com.br', 'Ecograph')
+                ->cc('suporte@internetlojas.com');
+        })
+        ){
+            $erro[] = '';
+            $html = array('status' => 'pass',
+                'info' => 'Caro Sr(a)' . $info['customers_firstname'] . '! Seu cadastro foi realizado com sucesso.',
+                'erro' => $erro,
+                'loadurl' => ''
+            );
         } else {
-            return false;
+            $erro[] = 'Problemas no envio do email';
+            $html = array('status' => 'fail',
+                'info' => 'Caro Sr(a)' . $info['customers_firstname'] . '! Tivemos dificuldade no envio de seu email. Por favor tente novamente.',
+                'erro' => $erro,
+                'loadurl' => ''
+            );
         }
+        return $html;
     }
 
     public static function NovoPedido($order_id) {
-        $order = Order::find($order_id);
-        $data = $order->toarray();
-
-        if (Mail::send('emails.pedido', $data, function($message) {
-                    $info = Order::where('customer_id', Auth::user()->id)
-                            ->orderBy('created_at')
-                            ->get();
-
-                    $order_id = $info->toarray();
-                    foreach ($order_id as $key => $value) {
-                        $pedido = $value;
-                    }                //echo "<pre>" ;
-                    //print_r($pedido);exit;
-                    $message->from(STORE_EMAIL_TESTE, STORE_NAME);
-                    $message->to($pedido['customers_email_address'], $pedido['customers_name'])
-                            ->cc('suporte@internetlojas.com')
-                            ->subject('Informações sobre o pedido!');
-                })) {
-            return true;
-        } else {
-            return false;
+        $customer = Customer::find(\Auth::user()->id);
+        $orders = $customer->Order()->findOrFail($order_id);
+        $orderItems = $orders->OrderItem()->get();
+        $orderTotal = $orders->OrderTotal()->get();
+        $data['pedido'] = $orders->toArray();
+        $data['items'] = $orderItems->toArray();
+        $orderTotais = $orderTotal->toArray();
+        foreach ($orderTotais as $id => $orderTotal) {
+            $data['totais'][$orderTotal['title']] = $orderTotal['value'];
         }
+
+        //dd($data);
+        if (Mail::send('emails.pedido', $data, function ($m) use ($customer) {
+            $m->to($customer->email,$customer->customers_firstname.' '.$customer->customers_lastname)
+                ->subject('Informações sobre seu pedido!')
+                ->from(STORE_EMAIL_TESTE, STORE_NAME)
+                ->cc('newsite@ecograph.com');
+        })
+        ){
+            $html = 'pass';
+        } else {
+            $html = 'fail';
+        }
+        return $html;
     }
 
     public static function Comentario() {

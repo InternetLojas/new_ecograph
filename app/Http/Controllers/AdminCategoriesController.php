@@ -9,6 +9,7 @@ use Ecograph\CategoryEnoblecimento;
 use Ecograph\CategoryFormato;
 use Ecograph\CategoryPapel;
 use Ecograph\Cor;
+use Ecograph\Customer;
 use Ecograph\Enoblecimento;
 use Ecograph\Formato;
 use Ecograph\Http\Requests;
@@ -23,6 +24,7 @@ use Ecograph\Pacote;
 use Ecograph\Product;
 use Ecograph\ProdutoPerfil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminCategoriesController extends Controller {
 
@@ -55,7 +57,7 @@ class AdminCategoriesController extends Controller {
                                 Enoblecimento $enoblecimentoModel,
                                 Acabamento $acabamentoModel,
                                 Pacote $pacoteModel){
-        //$this->middleware('auth');
+
         $this->categoryModel = $categoryModel;
         $this->categoryFormato = $categoryFormato;
         $this->categoryPapel = $categoryPapel;
@@ -68,13 +70,14 @@ class AdminCategoriesController extends Controller {
         $this->enoblecimentoModel = $enoblecimentoModel;
         $this->acabamentoModel = $acabamentoModel;
         $this->pacoteModel = $pacoteModel;
+
     }
     /*
      * Quando entra na área administrativa é apresentada essa página
      */
     public function index(CategoryDescription $category_description) {
         $description = $category_description->all();
-        $categories = $this->categoryModel->paginate(15);
+        $categories = $this->categoryModel->paginate(45);
         return view('diretoria.category.category')
             ->with(compact('categories'))
             ->with('description',$description)
@@ -186,26 +189,37 @@ class AdminCategoriesController extends Controller {
             case 5 :
                 $prefixo = '-frente.png';
                 $diretorio = 'produtos/';
+                $info_category = $category_description->find($id)->toArray();
                 $extra='';
                 break;
             case 9 :
                 $prefixo = '.png';
                 $diretorio = 'produtos/';
+                $info_category = $category_description->find($id)->toArray();
                 $extra='medio';
+                break;
+            case 10 :
+                $prefixo = '.png';
+                $diretorio = 'produtos/';
+                $info_category['categories_name'] = 'papelcarta';
+                $extra='';
                 break;
             case 29 :
                 $diretorio = 'produtos/cv-gratis/';
                 $prefixo = '-gratis.png';
+                $info_category = $category_description->find($id)->toArray();
                 $extra='';
                 break;
             default :
                 $diretorio = 'produtos/';
                 $prefixo = '.png';
+                $info_category = $category_description->find($id)->toArray();
                 $extra='';
                 break;
         }
         $perfil = [];
-        $info_category = $category_description->find($id)->toArray();
+        $new_image = [];
+        
         $newimg = \URLAmigaveis::Slug($info_category['categories_name'].$extra, '-', true);
         $CP = $category->CategoryProduct()->lists('product_id');
         $SQL = '';
@@ -243,8 +257,9 @@ class AdminCategoriesController extends Controller {
 
             }
         }
+        //exit;
         echo $SQL; exit;
-        //dd($new_image);
+        dd($new_image);
     }
 
     /****geração dos formatos *****/
@@ -413,15 +428,7 @@ class AdminCategoriesController extends Controller {
      */
     public function CheckPapel($id, Pacpapel $pacpapel, $cat, $list_pacotes, $autoriza_p, $cat_p, $papel)
     {
-        //$check_categoryPapel = $cat->categoryPapel()->where('category_id', $id)->first()->PacPapeis()->get()->toArray();
-
-        //if (count($check_categoryPapel) == 0) {
-            //chama função
-       //     $array_p = $this->ArrayPapelCreate($cat, $list_pacotes, $pacpapel, $autoriza_p[0]);
-       // } else {
-            $array_p = $this->ArrayPapel($cat, $cat_p, $pacpapel);
-       // }
-
+        $array_p = $this->ArrayPapel($cat, $cat_p, $pacpapel);
         foreach ($array_p as $formato_id=>$items) {
             foreach ($cat_p as $key => $item_p) {
                 //dd($items);
@@ -438,10 +445,12 @@ class AdminCategoriesController extends Controller {
     }
     public function ArrayPapel($category,$cat_p,$pacPapel)
     {
+        $pacPapeis = '';
         $cat = $this->categoryModel->find($category->id);
         $pacotes = $cat->Pacotes->lists('quantity','id');
         /*****PacFormatos*********/
         $r_CatFormato = $cat->categoryFormato()->get()->groupby('category_formato_id');
+
         foreach ($r_CatFormato as $CatF => $item_CatFormato) {
             foreach ($item_CatFormato as $items) {
                 $formato_id =  $items->formato_id;
@@ -454,27 +463,32 @@ class AdminCategoriesController extends Controller {
                 }
             }
         }
-        $cat_papeis =  $cat_p->lists('papel_id','id');
-
-        foreach ($PacPapeis as $formato_id => $PacP) {
-            foreach ($PacP as $k =>$PacPapel) {
-                foreach ($PacPapel as $category_papel_id => $Pac) {
-                    $papeis[$formato_id][$cat_papeis[$category_papel_id]]['category_id'] = $category->id;
-                    $papeis[$formato_id][$cat_papeis[$category_papel_id]]['category_papel_id'] = $category_papel_id;
-                    foreach ($Pac as $key => $item) {
-                        $papeis[$formato_id][$cat_papeis[$category_papel_id]]['weight'][$item->id] = $item->weight;
-                        $papeis[$formato_id][$cat_papeis[$category_papel_id]]['pacote_id'][$item->pacote_id] = $pacotes[$item->pacote_id];
+        if(is_Array($pacPapeis)){
+            $cat_papeis =  $cat_p->lists('papel_id','id');
+            foreach ($PacPapeis as $formato_id => $PacP) {
+                foreach ($PacP as $k =>$PacPapel) {
+                    foreach ($PacPapel as $category_papel_id => $Pac) {
+                        $papeis[$formato_id][$cat_papeis[$category_papel_id]]['category_id'] = $category->id;
+                        $papeis[$formato_id][$cat_papeis[$category_papel_id]]['category_papel_id'] = $category_papel_id;
+                        foreach ($Pac as $key => $item) {
+                            $papeis[$formato_id][$cat_papeis[$category_papel_id]]['weight'][$item->id] = $item->weight;
+                            $papeis[$formato_id][$cat_papeis[$category_papel_id]]['pacote_id'][$item->pacote_id] = $pacotes[$item->pacote_id];
+                        }
                     }
                 }
             }
+
+        } else {
+            $papeis = $this->ArrayPapelCreate($category,$pacotes);
         }
         return $papeis;
     }
-   /* public function ArrayPapelCreate($category,$pacote,$pacPapel,$autoriza)
+   public function ArrayPapelCreate($category,$pacote)
     {
         $cat_f = $category->CategoryFormato;
         $cat_p = $category->CategoryPapel;
-
+        $autoriza_p = $this->AutorizaAtributos($category->id, $cat_p,'papel');
+        $autoriza = $autoriza_p[0];
         foreach ($cat_p->toArray() as $papel) {
             foreach ($cat_f->toArray() as $key => $formato) {
                 if (in_array($formato['formato_id'], $autoriza[$papel['papel_id']])) {
@@ -486,21 +500,18 @@ class AdminCategoriesController extends Controller {
                             'category_papel_id' => $papel['id']
                         ];
                         $item[$pacote_id] = $quantity;
-                        /*$array[] = [
-                            'category_id' => $category->id,
-                            'pacformato_id' => $pacF_id,
-                            'category_papel_id' => $papel['id'],
-                            'pacote_id' => $pacote_id,
-                            'weight' => 0
-                            ];*
-                        $pacPapel->firstOrCreate([
-                            'category_id' => $category->id,
-                            'pacformato_id' => $pacF_id,
-                            'category_papel_id' => $papel['id'],
-                            'pacote_id' => $pacote_id,
-                            'weight' => 0
-                        ]);
                         $weights[$pacote_id] = 0;
+                        $row_pac = [
+                            'category_id' => $category->id,
+                            'pacformato_id' => $pacF_id,
+                            'category_papel_id' => $papel['id'],
+                            'pacote_id' => $pacote_id,
+                            'weight' => 0
+                            ];
+                        $CategoryPapel = $this->categoryPapel->find($papel['id']);
+                        $CategoryPapel->PacPapeis()->firstOrCreate($row_pac);
+
+
                     }
                     $papeis[$formato['formato_id']][$papel['papel_id']]['pacote_id'] = $item;
                     $papeis[$formato['formato_id']][$papel['papel_id']]['weight'] = $weights;
@@ -519,7 +530,7 @@ class AdminCategoriesController extends Controller {
         }
 
         return $papeis;
-    }*/
+    }
     /*
      * *****geração das cores ****
      */
@@ -683,15 +694,13 @@ class AdminCategoriesController extends Controller {
 
         $cores = [];
         $cores = $this->CheckCor($id, $paccor, $cat, $cat_f, $cat_p, $cat_c, $list_pacotes, $autoriza_p, $cores);
-
         /*****acabamentos****/
         //caso não tenha sido criado a categoria acabamento redireciona para a função que cria
+
         if(!$cat->categoryAcabamento->toArray()){
             return redirect()->route('categories.atributos',['id' =>$id]);
         }
-
         $acabamentos = $this->ArrayAcabamento($cat,$pacacabamento);
-
         $list_acabamentos = $this->acabamentoModel->all();
         $catformatos  = $cat->categoryFormato->lists('id','formato_id');
         $catpapeis = $cat->categoryPapel->lists('id','papel_id');
@@ -711,46 +720,108 @@ class AdminCategoriesController extends Controller {
             ->with('cat_id',$id)
             ->with('page','atributos');
     }
+
     public function ArrayAcabamento($category,$pacAcabamento){
+
         $cat_a = $category->CategoryAcabamento;
-        $Pac_Acabamento = $pacAcabamento->where('category_id',$category->id)->get()->groupby('category_acabamento_id')->toArray();
-        //dd($Pac_Acabamento);
-        foreach($Pac_Acabamento as $category_acabamento_id => $collection){
-            foreach($collection as $items) {
+        $Pac_Acabamento = $pacAcabamento
+            ->where('category_id',$category->id)
+            ->get()->groupby('category_acabamento_id')->toArray();
+        if(count($Pac_Acabamento)>0){
+            foreach($Pac_Acabamento as $category_acabamento_id => $collection){
+                foreach($collection as $items) {
+                    //cor
+                    $paccor_id = $items->paccor_id;
+                    $Paccor = Paccor::find($paccor_id);
+                    $pacpapel_id = $Paccor->pacpapel_id;
+                    $CategoryCor = $Paccor->CategoryCor;
+                    $cor_id = $CategoryCor->cor_id;
+                    //papel
+                    $category_papel_id = Pacpapel::find($pacpapel_id)->category_papel_id;
+                    $papel_id = $this->categoryPapel->find($category_papel_id)->papel_id;
+                    //formato
+                    $pacformato_id = Pacpapel::find($pacpapel_id)->pacformato_id;
+                    $category_formato_id = Pacformato::find($pacformato_id)->category_formato_id;
+                    $formato_id = $this->categoryFormato->find($category_formato_id)->formato_id;
+                    //acabamento
+                    $acabamento_id = $cat_a->find($category_acabamento_id)->acabamento_id;
+                    $enobrecimento = $this->acabamentoModel->find($acabamento_id)->enoblecimento;
+                    $acabamento_nome = $this->acabamentoModel->find($acabamento_id)->valor;
+                    $acabamentos[$formato_id][$papel_id][$cor_id][$acabamento_id][$enobrecimento][$acabamento_nome][] = [
+                        'pacacabamento_id' => $items->id,
+                        'price' => $items->price,
+                        'pacote_id' => $items->pacote_id
+                    ];
+                }
+            }
+            ksort($acabamentos);
+            return $acabamentos;
+        } else {
+            $ArrayCreateAcabamento = $this->ArrayCreateAcabamento($category,$pacAcabamento);
+            if($ArrayCreateAcabamento){
+                $this->ArrayAcabamento($category,$pacAcabamento);
+            }
+            //
+        }
+    }
+    public function ArrayCreateAcabamento($category,$pacAcabamento){
+        //começa a criar as entradas
 
-                //cor
-                $paccor_id = $items->paccor_id;
-                $Paccor = Paccor::find($paccor_id);
-                $pacpapel_id = $Paccor->pacpapel_id;
-                $CategoryCor = $Paccor->CategoryCor;
-                $cor_id = $CategoryCor->cor_id;
+        $CategoryFormato = $category->CategoryFormato;
+        $CategoryPapel = $category->CategoryPapel;
+        $CategoryCor = $category->CategoryCor;
+        $CategoryAcabamento = $category->CategoryAcabamento;
+        $autoriza = $this->AutorizaAtributos($category->id, $CategoryPapel,  $tipo = 'papel');
+        $autoriza_f = $autoriza[0];
+        $autoriza = $this->AutorizaAtributos($category->id, $CategoryPapel,  $tipo = 'acabamento');
+        $autoriza_a = $autoriza[0];
+        ini_set('max_execution_time', 120);
+        $create = '';
+        foreach ($CategoryPapel->toArray() as $cat_P) {
+            foreach ($CategoryFormato->toArray() as $cat_F) {
+                //verifica se o formato é autorizado para o papel corrente
+                if (in_array($cat_F['formato_id'], $autoriza_f[$cat_P['papel_id']])) {
 
-                //papel
-                $category_papel_id = Pacpapel::find($pacpapel_id)->category_papel_id;
-                $papel_id = $this->categoryPapel->find($category_papel_id)->papel_id;
+                    //levanta dados do formato
+                    $Formatos = $CategoryFormato->find($cat_F['id']);
+                    $PacFormato_ID = $Formatos->PacFormatos()
+                        ->where('category_formato_id', $cat_F['id'])->get()->first()->id;
 
-                //formato
-                $pacformato_id = Pacpapel::find($pacpapel_id)->pacformato_id;
-                $category_formato_id = Pacformato::find($pacformato_id)->category_formato_id;
-                $formato_id = $this->categoryFormato->find($category_formato_id)->formato_id;
-
-                //acabamento
-                $acabamento_id = $cat_a->find($category_acabamento_id)->acabamento_id;
-                $enobrecimento = $this->acabamentoModel->find($acabamento_id)->enoblecimento;
-                $acabamento_nome = $this->acabamentoModel->find($acabamento_id)->valor;
-                $acabamentos[$formato_id][$papel_id][$cor_id][$acabamento_id][$enobrecimento][$acabamento_nome][] = [
-                    'pacacabamento_id' => $items->id,
-                    'price' => $items->price,
-                    'pacote_id' => $items->pacote_id
-                ];
+                    //levanta dodos dos papeis
+                    $Papeis = $CategoryPapel->find($cat_P['id']);
+                    $PacPapel_ID = $Papeis->Pacpapeis()
+                        ->where('category_papel_id', $cat_P['id'])
+                        ->where('pacformato_id', $PacFormato_ID)->get()->first()->id;
+                    foreach ($CategoryCor as $itemsCategoryCor) {
+                        //$category_cor_id = $itemsCategoryCor->id;
+                        $PacCor = $itemsCategoryCor->PacCor;
+                        //dd($PacCor);
+                        //dd($PacCor);
+                        foreach ($PacCor as $itemsPacCor) {
+                            foreach ($CategoryAcabamento as $itemsCategoryAcabamento) {
+                                if (in_array($itemsCategoryAcabamento->acabamento_id, $autoriza_a[$cat_P['papel_id']])) {
+                                    $row_pac = [
+                                        'category_id' => $category->id,
+                                        'paccor_id' => $itemsPacCor->id,
+                                        'category_acabamento_id' => $itemsCategoryAcabamento->id,
+                                        'pacote_id' => $itemsPacCor->pacote_id,
+                                        'price' => 0.0000
+                                    ];
+                                    $create = $pacAcabamento->firstOrCreate($row_pac);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-        ksort($acabamentos);
-        //dd($acabamentos);
-        return $acabamentos;
-    }
+        //dd($create);
+        if($create){
+            return $create;
+        }
 
-    public function AutorizaAtributos($id, $cat_p,  $tipo = 'papel')
+    }
+        public function AutorizaAtributos($id, $cat_p,  $tipo = 'papel')
     {
         if ($id == 5) {
             if($tipo == 'papel') {
