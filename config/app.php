@@ -24,7 +24,7 @@ return [
       | your application so that it is used when running Artisan tasks.
       |
      */
-    'url' => 'http://192.168.56.1/new_ecograph/public/',
+    'url' => 'http://192.168.0.20/new_ecograph/public/',
     /*
       |--------------------------------------------------------------------------
       | Application Timezone
