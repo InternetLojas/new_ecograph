@@ -16,7 +16,7 @@ use Ecograph\Orcamento;
 use Ecograph\OrcamentoProduto;
 use Ecograph\Libs\Layout;
 use Ecograph\Libs\Fichas;
-use Ecograph\Libs\Utilidades;
+use Utilidades;
 use EnvioEmail;
 
 class CustomerController extends Controller {
@@ -142,16 +142,7 @@ class CustomerController extends Controller {
         $erros = array();
         //check if its our form
         $post_inputs = $request->all($request->except('_token'));
-        /*
-         * "customers_firstname" => "Leandro"
-          "customers_lastname" => "Bezerra"
-          "customers_gender" => "m"
-          "customers_dob" => "26/06/1961"
-          "email" => "leanbez@gmail.com"
-          "customers_cpf_cnpj" => "703.346.417/72"
-          "customers_rg_ie" => "9102622611"*/
-        //regras a serem validadas
-        //$rules = $customer->rules;
+
         $customers_cpf_cnpj = $post_inputs['customers_cpf_cnpj'];
         if (!empty($customers_cpf_cnpj)) {
             if (!Utilidades::validate_cpf($customers_cpf_cnpj)) {
@@ -193,21 +184,6 @@ class CustomerController extends Controller {
         $customers = $customer->find($id);
         $address_book = $customers->AddressBook;
         $address = $address_book->toarray();
-// get the customer
-        /*if ($info == 'dados') {
-            $page = 'editarconta';
-            $conta = '';
-        }
-        if ($info == 'endereco') {
-            $page = 'editarendereco';
-            $conta = ' - Meus endereços';
-            $address_book = Addressbook::where('customer_id', $id)->get();
-            $address = $address_book->toarray(); //print_r($address);exit;
-        }
-        if ($info == 'pedido') {
-            $page = 'editarpedido';
-            $conta = ' - Meus pedidos';
-        }*/
 
 // show the view and pass the nerd to it
         return view('clientes.index')
@@ -465,6 +441,82 @@ class CustomerController extends Controller {
                 return json_encode($data);
             }
         }
+    }
+
+    /**
+     * Mosta página orcamento on line.
+     *
+     * @return View
+     */
+    public function OrcamentoOnLine() {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        $produtos = Utilidades::OrcamentoProdutos();
+        $cores = Utilidades::OrcamentoCores();
+        $acabamentos = Utilidades::OrcamentoAcabamentos();
+        $provacor = Utilidades::OrcamentoProvaCor();
+        $entrega = Utilidades::OrcamentoEntrega();
+        return view('clientes.index',compact('customer'))
+            ->with('title', STORE_NAME . ' Crie seu Orçamento OnLine')
+            ->with('page', 'orcamento_online')
+            ->with('ativo', 'Orçamento OnLine')
+            ->with('produtos', $produtos)
+            ->with('produtos', $produtos)
+            ->with('cores', $cores)
+            ->with('acabamentos', $acabamentos)
+            ->with('provacor', $provacor)
+            ->with('entrega', $entrega)
+            ->with('rota', 'orcamento.online');
+    }
+    public function OrcamentoStore(Request $request, Customer $modelCustomer) {
+        if(!Auth::check()){
+            return redirect()->route('clientes.login');
+        }
+        $post_inputs = $request->all();
+        $produtos = $post_inputs['produtos'];
+        $outros_prod = $post_inputs['outros_prod'];
+        $input_qtd = [];        
+        foreach ($post_inputs['qtd'] as $qtd) {
+            if(!empty($qtd)){
+               $input_qtd[] = $qtd;
+            }
+        }
+        $input_formato_aberto = [];       
+        foreach ($post_inputs['formato_aberto'] as $Ab => $formato_aberto) {
+            if(!empty($formato_aberto)){
+                $input_formato_aberto[$Ab] = $formato_aberto;
+            }
+        }
+         $input_formato_fechado = [];
+        foreach ($post_inputs['formato_fechado'] as $Fec => $formato_fechado) {
+            if(!empty($formato_fechado)){
+                $input_formato_fechado[$Fec] = $formato_fechado;
+            }
+        }
+        $cores = $post_inputs['cores'];
+        $input_cor= $post_inputs['outra_cor'];
+        $acabamentos = $post_inputs['acabamentos'];
+        $input_acabamento = $post_inputs['outro_acabamento'];
+        $provacor = $post_inputs['provacor'];
+        $entrega = $post_inputs['entrega'];
+        $customer = $modelCustomer->find(\Auth::user()->id);
+        return view('clientes.index',compact('customer'))
+            ->with('title', STORE_NAME . ' Imprima seu orçamento')
+            ->with('page', 'orc_imprimir')
+            ->with('ativo', 'Imprimir')
+            ->with('produtos', $produtos)
+            ->with('input_outros_prod', $outros_prod)
+            ->with('input_qtd', $input_qtd)
+            ->with('input_formato_aberto', $input_formato_aberto)
+            ->with('input_formato_fechado', $input_formato_fechado)
+            ->with('cores', $cores)
+            ->with('input_cor', $input_cor)
+            ->with('acabamentos', $acabamentos)
+            ->with('input_acabamento', $input_acabamento)
+            ->with('provacor', $provacor)
+            ->with('entrega', $entrega)
+            ->with('rota', 'orcamento.online.imprimir');
     }
     /**
      * Mosta página orcamento.

@@ -7,14 +7,17 @@ use Ecograph\Basket;
 use Auth;
 use Ecograph\Ordersituacao;
 
-Class Utilidades {
+Class Utilidades
+{
 
-    public static function Message($string) {
+    public static function Message($string)
+    {
         $json = json_decode((file_get_contents(public_path() . '/message.json')));
         return $json->$string;
     }
 
-    public static function Estoque($qtd) {
+    public static function Estoque($qtd)
+    {
         if ($qtd > 0) {
             echo "<b>Disponível</b> - total em estoque: " . $qtd;
         } else {
@@ -22,22 +25,26 @@ Class Utilidades {
         }
     }
 
-    public static function Classe($img) {
+    public static function Classe($img)
+    {
         $limpa = str_replace('categorias/', '', $img);
         $classe = str_replace('.jpg', '', $limpa);
         return $classe;
     }
 
-    public static function toView($value) {
+    public static function toView($value)
+    {
         return date('d/m/Y', strtotime($value));
     }
 
-    public static function toMysql($value) {
+    public static function toMysql($value)
+    {
         $date = explode('/', $value);
         return $date[2] . '-' . $date[1] . '-' . $date[0];
     }
 
-    public static function SubstituiImg($img) {
+    public static function SubstituiImg($img)
+    {
         if (!file_exists('images/categorias/' . $img)) {
             $img = '/theme/naodisponivel.gif';
         } else {
@@ -46,7 +53,8 @@ Class Utilidades {
         return $img;
     }
 
-    public static function SubstituiImgProd($img) {
+    public static function SubstituiImgProd($img)
+    {
         //echo $img;exit;
         if (!file_exists('images/' . $img)) {
             $img = 'theme/naoencontrado.png';
@@ -55,7 +63,8 @@ Class Utilidades {
         return $img;
     }
 
-    public static function modal_cupom($vl_frete) {
+    public static function modal_cupom($vl_frete)
+    {
         $discount = new Discount();
         //$config_discount_cupon = Confdesconto::all();
         $config_discount_cupon = Descontoacrescimo::where('title', 'Desconto promocional')->get();
@@ -87,15 +96,17 @@ Class Utilidades {
         return false;
     }
 
-    public static function SituacaoPedido($orders_status) {
-        if($orders_status>62){
+    public static function SituacaoPedido($orders_status)
+    {
+        if ($orders_status > 62) {
             $orders_status = 54;
         }
         $orders_status = Ordersituacao::find($orders_status)->status_name;
         return $orders_status;
     }
 
-    public static function ItensPedido($order) {
+    public static function ItensPedido($order)
+    {
         $orders_item = OrderItem::where('order_id', $order)->get();
         $items = $orders_item->toarray();
         if (is_array($items) && count($items) > 0) {
@@ -106,7 +117,8 @@ Class Utilidades {
         }
     }
 
-    public static function setupResolucao() {
+    public static function setupResolucao()
+    {
         if (!is_null(Cookie::get('resolucao'))) {
             if ($_COOKIE['resolucao'] <= 320) {
                 $max_width = '320';
@@ -136,7 +148,8 @@ Class Utilidades {
         }
     }
 
-    public static function geoLocal($lat = null, $long = null) {
+    public static function geoLocal($lat = null, $long = null)
+    {
         /* Geo Localização.... */
         /* $ip_visitante = $_SERVER['REMOTE_ADDR'];
           $ip_visitante = '177.15.128.130';
@@ -166,7 +179,8 @@ Class Utilidades {
         return false;
     }
 
-    public static function perfilFace($facebook_id) {
+    public static function perfilFace($facebook_id)
+    {
         $perfil = Acesso::Uid($facebook_id)->get();
         foreach ($perfil as $itens) {
             $foto = $itens->photo;
@@ -174,7 +188,8 @@ Class Utilidades {
         return $foto . '?type=small';
     }
 
-    public static function toReal($price, $precision = 2, $frete = false) {
+    public static function toReal($price, $precision = 2, $frete = false)
+    {
         $price = round($price, $precision);
         if (strpos(round($price, 2), '.') && (strlen(substr(round($price, 2), strpos(round($price, 2), '.') + 1)) < 2)) {
             $price = round($price, 2) . '0';
@@ -193,7 +208,8 @@ Class Utilidades {
         }
     }
 
-    public static function RealBusca($price, $precision = 2, $real = False) {
+    public static function RealBusca($price, $precision = 2, $real = False)
+    {
         $price = round($price, $precision);
         if (strpos(round($price, 2), '.') && (strlen(substr(round($price, 2), strpos(round($price, 2), '.') + 1)) < 2)) {
             $price = round($price, 2) . '0';
@@ -211,11 +227,12 @@ Class Utilidades {
         }
     }
 
-    public static function testemunhos($max) {
+    public static function testemunhos($max)
+    {
         $linha = '';
         $testemunhos = Testemunho::all()->take($max);
         foreach ($testemunhos as $comentarios) {
-            $linha .="<li>
+            $linha .= "<li>
         $comentarios->testemunho_text<br>
         $comentarios->testemunho_nome<br>
         <b>$comentarios->testemunho_local</b><hr class=\"soften\"></li>";
@@ -223,7 +240,8 @@ Class Utilidades {
         return $linha;
     }
 
-    public static function tagsclouds($max = 5) {
+    public static function tagsclouds($max = 5)
+    {
         $linha = '';
         $product = Productdescription::popular()->take($max)->orderBy('products_viewed', 'DESC')->get();
         foreach ($product as $itens) {
@@ -247,20 +265,23 @@ Class Utilidades {
         return $linha;
     }
 
-    public static function truncate($string, $nr_string = 70) {
+    public static function truncate($string, $nr_string = 70)
+    {
         $string = addslashes($string);
         //$string = stripslashes ($string);
         return current(explode('\n', wordwrap($string, $nr_string, ' ...\n')));
     }
 
-    public static function trataFeeds($string, $nr_string = 150) {
+    public static function trataFeeds($string, $nr_string = 150)
+    {
         //$string = html_entity_decode(strip_tags($string));
         $string = str_replace('&', '&amp;amp;', $string);
         return current(explode('\n', wordwrap($string, $nr_string, ' ...\n')));
         //return $string;
     }
 
-    public static function Estados() {
+    public static function Estados()
+    {
         return array('AC' => 'AC',
             'AL' => 'AL',
             'AM' => 'AM',
@@ -291,13 +312,15 @@ Class Utilidades {
         );
     }
 
-    public static function geraDesconto($price, $desconto) {
+    public static function geraDesconto($price, $desconto)
+    {
 
         $preco_promocional = $price - ($price * (str_replace('%', '', $desconto) / 100));
         return $preco_promocional;
     }
 
-    public static function TempBasket() {
+    public static function TempBasket()
+    {
         if (!Auth::check()) {
             return false;
         }
@@ -338,7 +361,8 @@ Class Utilidades {
         return true;
     }
 
-    public static function VerificaItensCarrinho() {
+    public static function VerificaItensCarrinho()
+    {
         $produtosnacesta = Basket::where('customer_id', Auth::user()->id)->get();
         if (count($produtosnacesta) > 0) {
             return true;
@@ -346,7 +370,8 @@ Class Utilidades {
         return false;
     }
 
-    public static function VarreArray($cat, $prole, $galho = array()) {
+    public static function VarreArray($cat, $prole, $galho = array())
+    {
 
         $chaves = array_keys($prole);
 
@@ -366,19 +391,22 @@ Class Utilidades {
         }
     }
 
-    public static function FormataCep($postcode) {
+    public static function FormataCep($postcode)
+    {
         $cep = str_replace(".", "", $postcode);
         $cep = str_replace("-", "", $cep);
         echo $cep;
     }
 
-    public static function XML($string) {
+    public static function XML($string)
+    {
         $xml = simplexml_load_string($string);
         var_dump($xml[filmes]);
         exit;
     }
 
-    public static function modulo11($banco) {
+    public static function modulo11($banco)
+    {
         $soma = 0;
         $fator = 2;
         $base = 9;
@@ -446,7 +474,8 @@ Class Utilidades {
      * @see Documentação em http://www.febraban.org.br/Acervo1.asp?id_texto=195&id_pagina=173&palavra=
      * @return int
      */
-    public static function modulo10($num) {
+    public static function modulo10($num)
+    {
         $numtotal10 = 0;
         $fator = 2;
 
@@ -458,7 +487,7 @@ Class Utilidades {
             $temp = $numeros[$i] * $fator;
             $temp0 = 0;
             foreach (preg_split('// ', $temp, -1, PREG_SPLIT_NO_EMPTY) as $v) {
-                $temp0+=$v;
+                $temp0 += $v;
             }
             $parcial10[$i] = $temp0; // $numeros[$i] * $fator;
             //  Monta sequencia para soma dos digitos no (modulo 10).
@@ -480,7 +509,8 @@ Class Utilidades {
         return $digito;
     }
 
-    public static function FormataData($data) {
+    public static function FormataData($data)
+    {
         $data = explode("-", $data);
         $ano = $data[2];
         $mes = $data[1];
@@ -488,7 +518,8 @@ Class Utilidades {
         return array($ano, $mes, $dia);
     }
 
-    public static function dateToDays($year, $month, $day) {
+    public static function dateToDays($year, $month, $day)
+    {
         $century = substr($year, 0, 2);
         $year = substr($year, 2, 2);
         if ($month > 2) {
@@ -499,17 +530,18 @@ Class Utilidades {
                 $year--;
             } else {
                 $year = 99;
-                $century --;
+                $century--;
             }
         }
 
-        return ( floor(( 146097 * $century) / 4) +
-                floor(( 1461 * $year) / 4) +
-                floor(( 153 * $month + 2) / 5) +
-                $day + 1721119);
+        return (floor((146097 * $century) / 4) +
+            floor((1461 * $year) / 4) +
+            floor((153 * $month + 2) / 5) +
+            $day + 1721119);
     }
 
-    public static function formata_numero($numero, $loop, $insert, $tipo = "geral") {
+    public static function formata_numero($numero, $loop, $insert, $tipo = "geral")
+    {
         if ($tipo == "geral") {
             $numero = str_replace(",", "", $numero);
             while (strlen($numero) < $loop) {
@@ -535,7 +567,8 @@ Class Utilidades {
         return $numero;
     }
 
-    public static function zeroFill($valor, $digitos) {
+    public static function zeroFill($valor, $digitos)
+    {
         // TODO: Retirar isso daqui, e criar um método para validar os dados
         //$teste = '';
         if (strlen($valor) > $digitos) {
@@ -547,7 +580,8 @@ Class Utilidades {
         return str_pad($valor, $digitos, '0', STR_PAD_LEFT);
     }
 
-    public static function Agrupa($array, $grupo, $from = '') {
+    public static function Agrupa($array, $grupo, $from = '')
+    {
         if ($from != 'busca') {
             $new_array = array_chunk($array->toArray(), $grupo);
         } else {
@@ -556,7 +590,8 @@ Class Utilidades {
         return $new_array;
     }
 
-    public static function BuscaEndereco($CepDestino) {
+    public static function BuscaEndereco($CepDestino)
+    {
         $url_end = "http://www.buscacep.correios.com.br/servicos/dnec/consultaEnderecoAction.do?";
 
         $content = http_build_query(array(
@@ -571,12 +606,12 @@ Class Utilidades {
 
         $aHTTP = array(
             'http' => // The wrapper to be used
-            array(
-                'method' => 'POST', // Request Method
-                // Request Headers Below
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $content
-            )
+                array(
+                    'method' => 'POST', // Request Method
+                    // Request Headers Below
+                    'header' => 'Content-type: application/x-www-form-urlencoded',
+                    'content' => $content
+                )
         );
         $context = "";
         $context = stream_context_create($aHTTP);
@@ -587,7 +622,7 @@ Class Utilidades {
         preg_match_all('/2px\">(.*?)<\/td>/', $result, $matches); //
         //<td width="140" style="padding: 2px">Vilhena</td>
         //preg_match_all('/style=\"padding: 2px\">[^=]+?<\/td>/', $result, $matches);
-        return($matches[1]);
+        return ($matches[1]);
 
         foreach ($matches as $key => $array) {
             if ($key == 1) {
@@ -629,13 +664,15 @@ Class Utilidades {
         }
     }
 
-    public static function Paginador($products, $total, $mostra = '21') {
+    public static function Paginador($products, $total, $mostra = '21')
+    {
         $paginator = Paginator::make($products, $total, $mostra);
         print_r($paginator);
         exit;
     }
 
-    public static function Descontos() {
+    public static function Descontos()
+    {
         //if (Cart::count() > 0) {
         $classes_descontos_autorizados = Confdesconto::where('desconto_key', 'classe_autorizada')->get();
         $classes_autorizadas_desconto_cupom = $classes_descontos_autorizados->toarray();
@@ -662,7 +699,8 @@ Class Utilidades {
         //}
     }
 
-    public static function validate_email($email) {
+    public static function validate_email($email)
+    {
 
 //verifica se e-mail esta no formato correto de escrita
         // Substituindo a função ereg (case sensitive)
@@ -680,7 +718,8 @@ Class Utilidades {
         }
     }
 
-    public static function validate_cpf($cpf) {
+    public static function validate_cpf($cpf)
+    {
         $cpf = preg_replace("@[.-]@", "", $cpf);
         $cpf = str_replace(".", "", $cpf);
         $cpf = str_replace("/", "", $cpf);
@@ -688,10 +727,11 @@ Class Utilidades {
             $status = false;
         } else {
             if (($cpf == '11111111111') || ($cpf == '22222222222') ||
-                    ($cpf == '33333333333') || ($cpf == '44444444444') ||
-                    ($cpf == '55555555555') || ($cpf == '66666666666') ||
-                    ($cpf == '77777777777') || ($cpf == '88888888888') ||
-                    ($cpf == '99999999999') || ($cpf == '00000000000')) {
+                ($cpf == '33333333333') || ($cpf == '44444444444') ||
+                ($cpf == '55555555555') || ($cpf == '66666666666') ||
+                ($cpf == '77777777777') || ($cpf == '88888888888') ||
+                ($cpf == '99999999999') || ($cpf == '00000000000')
+            ) {
                 $status = false;
             } else {
                 //PEGA O DIGITO VERIFIACADOR
@@ -733,7 +773,8 @@ Class Utilidades {
         return $status;
     }
 
-    public static function validate_cnpj($cnpj) {
+    public static function validate_cnpj($cnpj)
+    {
         $cnpj = preg_replace("@[./'-]@", "", $cnpj);
         $cnpj = str_replace(".", "", $cnpj);
         $cnpj = str_replace("/", "", $cnpj);
@@ -749,15 +790,15 @@ Class Utilidades {
         $soma2 = "";
         for ($i = 0; $i < 13; $i++) {
             $k = $k == 1 ? 9 : $k;
-            $soma2 += ( $cnpj{$i} * $k );
+            $soma2 += ($cnpj{$i} * $k);
             $k--;
             if ($i < 12) {
                 if ($k == 1) {
                     $k = 9;
-                    $soma1 += ( $cnpj{$i} * $k );
+                    $soma1 += ($cnpj{$i} * $k);
                     $k = 1;
                 } else {
-                    $soma1 += ( $cnpj{$i} * $k );
+                    $soma1 += ($cnpj{$i} * $k);
                 }
             }
         }
@@ -768,4 +809,111 @@ Class Utilidades {
         return ($cnpj{12} == $digito1 and $cnpj{13} == $digito2);
     }
 
+
+    public static function OrcamentoProdutos()
+    {
+        $produtos = [
+            'Cartão de Visita',
+            'Envelope Ofício',
+            'Envelope Saco',
+            'Papel Timbrado',
+            'Receituário',
+            'Pasta',
+            'Adesivos',
+            'Banners',
+            'Woobler',
+            'Folder',
+            'Catálogo',
+            'Flyers',
+            'Revista',
+            'Livros',
+            'Display',
+            'Totem',
+            'Cadernos',
+            'Agendas',
+            'Calendários de Bolso',
+            'Calendários de Mesa',
+            'Capa de Celular',
+            'Canecas Personalizadas',
+            'Blocos',
+            'Cartão Postal',
+            'Cartaz',
+            'Poster',
+            'Photo Book',
+            'Papel Bandeja',
+            'Cardápios',
+            'Apostilas',
+            'Caixas',
+            'Embalagens',
+            'Capa de CD',
+            'Capa de DVD',
+            'Rótulos',
+            'Sacolas'
+        ];
+        return $produtos;
+    }
+    public static function OrcamentoCores()
+    {
+        $cores = [
+            '1x0 cores (preto e branco)',
+            '1x1 cor (preto)',
+            '4x0 cores (CMYK)',
+            '4x4 cores (CMYK)',
+
+        ];
+        return $cores;
+    }
+
+    public static function OrcamentoAcabamentos(){
+        $acabamentos = [
+            'Refile',
+            'Corte e Vinco',
+            'Vinco',
+            'Faca Especial',
+            'Dobra Automática',
+            'Dobra Manual',
+            'Verniz e Máquina Brilho',
+            'Verniz e Máquina Fosco',
+            'Verniz UV Total 1 lado',
+            'Verniz UV Total 2 lados',
+            'Verniz Localizado 1 lado',
+            'Verniz Localizado 2 lados',
+            'Verniz Localizado Textura',
+            'Verniz Localizado Glitter',
+            'Laminação Fosca 1 lado',
+            'Laminação Fosca 2 lados',
+            'Laminação Brilho 1 lado',
+            'Laminação Brilho 2 lados',
+            'Relevo Americano',
+            'Relevo Seco',
+            'Hot Stamping',
+            'Capa Dura',
+            'Wire-o',
+            'Espiral',
+            'Grampo',
+            'Dobra e Grampo',
+            'Lombada Quebrada',
+            'Furo',
+            'Fita Dupla Face',
+            'Colagem'
+        ];
+        return $acabamentos;
+    }
+    public static function OrcamentoProvaCor(){
+        $prova_cor = [
+            'Digital',
+            'Virtual (email)',
+            'Digital + Mock-up'
+        ];
+        return $prova_cor;
+    }
+    public static function OrcamentoEntrega(){
+        $entrega = [
+            'Retira na Ecograph',
+            'SEDEX',
+            'Transportadora retira na Ecograph. O cliente escolhe a transportadora',
+            'Motoboy (Somente para o ABC e Capital SP, demais localidades: Transportadora ou SEDEX)'
+        ];
+        return $entrega;
+    }
 }

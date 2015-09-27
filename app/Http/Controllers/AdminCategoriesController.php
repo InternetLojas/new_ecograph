@@ -204,6 +204,12 @@ class AdminCategoriesController extends Controller {
                 $info_category['categories_name'] = 'papelcarta';
                 $extra='';
                 break;
+            case 21 :
+                $prefixo = '-frente.png';
+                $diretorio = 'produtos/';
+                $info_category = $category_description->find($id)->toArray();
+                $extra='';
+                break;
             case 29 :
                 $diretorio = 'produtos/cv-gratis/';
                 $prefixo = '-gratis.png';

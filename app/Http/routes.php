@@ -64,6 +64,15 @@ Route::group(['prefix' => '/'], function() {
         'as' => 'orcamento',
         'uses' => 'CustomerController@Orcamento'
     ]);
+    /****controllers para Orçamentos *****/
+    Route::get('orcamento-online.html', [
+        'as' => 'orcamento.online',
+        'uses' => 'CustomerController@OrcamentoOnLine'
+    ]);
+    Route::post('orcamento-online.html', [
+        'as' => 'orcamento.online',
+        'uses' => 'CustomerController@OrcamentoStore'
+    ]);
     //retorna a view de informações de omo comprar
     Route::get('como-comprar.html', [
         'as' => 'comocomprar',
