@@ -8,6 +8,18 @@
     'id'=>'orc_online',
     'class' => 'form-horizontal',
     'role' => 'Form')) !!}
+
+    @if (is_array($erros) && count($erros) > 0)
+        <div class="alert alert-danger">
+            <strong>Opa!</strong> Existem erros no envio da informação.<br><br>
+            <ul>
+                @foreach ($erros as $key=> $erro)
+                    {{dd($erro)}}
+                    <li>{{ $erro }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <p class="bg-gray fg-white text-center" >
         Selecione o produto abaixo.
     </p>
@@ -19,7 +31,7 @@
                         <li class="col-md-2 pd-5">
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="produtos"   value="{{$items}}" >
+                                    <input type="radio" name="produtos" value="{{$items}}" >
                                     {{$items}}
                                 </label>
                             </div>
@@ -146,7 +158,7 @@
             <p class="text-center text-medio">
                 Demais cores (Pantones). Digite o código abaixo.
             </p>
-           <input type="text" name="outra_cor" class="form-control" value=""  placeholder="ex: 5x5 cores,cmyk + pantone:877 C">
+            <input type="text" name="outra_cor" class="form-control" value=""  placeholder="ex: 5x5 cores,cmyk + pantone:877 C">
 
         </div>
     </div>
@@ -159,9 +171,9 @@
                 <ul class="list-unstyled list-inline text-left text-smallmedio">
                     @foreach ($row as $key => $items)
                         <li class="col-md-2 pd-5">
-                            <div class="radio">
+                            <div class="checkbox">
                                 <label>
-                                    <input type="radio" name="acabamentos"  value="{{$items}}" >
+                                    <input type="checkbox" name="acabamentos[]" value="{{$items}}" >
                                     {{$items}}
                                 </label>
                             </div>

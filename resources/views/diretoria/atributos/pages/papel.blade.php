@@ -9,12 +9,12 @@
         </ul>
     @endif
     <div class="col-md-10 col-md-offset-1">
-        <h2>Formatos pré-existentes</h2>
+        <h2>Papéis pré-existentes</h2>
         <div class="row">
-            @forelse($formatos as $formato)
-                <div class="col-sm-2">
+            @forelse($papeis as $papel)
+                <div class="col-sm-3">
                     <label class="">
-                        {{$formato->valor}}
+                        {{$papel->valor}}
                     </label>
                 </div>
             @empty
@@ -22,14 +22,14 @@
         </div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Criar novos Formatos</h3>
+                <h3 class="box-title">Criar novos Papeis</h3>
                 <div class="box-tools pull-right">
                     <!-- Buttons, labels, and many other things can be placed here! -->
                     <!-- Here is a label for example -->
                 </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
             <!-- form start -->
-            {!! Form::open(['url'=>route('formatos.store'), 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['url'=>route('papeis.store'), 'class' => 'form-horizontal']) !!}
             <div class="box-body">
                 <div class="col-lg-12 col-md-12">
                     <div class="row">
@@ -44,7 +44,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            {!! Form::submit('Adicionar o Formato para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
+                            {!! Form::submit('Adicionar o Papel para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
                         </div>
                     </div>
                 </div>

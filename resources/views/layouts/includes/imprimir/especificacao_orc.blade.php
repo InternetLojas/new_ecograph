@@ -44,7 +44,10 @@
                             {{$cores}}     
                         </td>
                         <td class="text-smallmedio">
-                            {{$acabamentos}}                           
+                             @forelse($acabamentos as $acabamento)
+                                {{$acabamento}} <br>
+                            @empty
+                            @endforelse                         
                         </td>
                         <td class="text-smallmedio">
                             {{$provacor}}

@@ -9,12 +9,12 @@
         </ul>
     @endif
     <div class="col-md-10 col-md-offset-1">
-        <h2>Papéis pré-existentes</h2>
+        <h2>Cores pré-existentes</h2>
         <div class="row">
-            @forelse($papeis as $papel)
+            @forelse($cores as $cor)
                 <div class="col-sm-3">
                     <label class="">
-                        {{$papel->valor}}
+                        {{$cor->valor}}
                     </label>
                 </div>
             @empty
@@ -22,14 +22,14 @@
         </div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Criar novos Papeis</h3>
+                <h3 class="box-title">Criar novas Cor</h3>
                 <div class="box-tools pull-right">
                     <!-- Buttons, labels, and many other things can be placed here! -->
                     <!-- Here is a label for example -->
                 </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
             <!-- form start -->
-            {!! Form::open(['url'=>route('papeis.store'), 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['url'=>route('cores.store'), 'class' => 'form-horizontal']) !!}
             <div class="box-body">
                 <div class="col-lg-12 col-md-12">
                     <div class="row">
@@ -38,13 +38,13 @@
                         </div>
                         @for($i=0;$i<$qtd_inputs;$i++)
                             <div class="form-group col-lg-1 col-md-1">
-                                {!! Form::text('quantity[]', null, ['class' => 'form-control','placeholder'=>'qtd']) !!}
+                                {!! Form::text('quantity[]', null, ['class' => 'form-control','placeholder'=>'cor']) !!}
                             </div>
                         @endfor
                     </div>
                     <div class="row">
                         <div class="form-group">
-                            {!! Form::submit('Adicionar o Papel para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
+                            {!! Form::submit('Adicionar a Cor para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
                         </div>
                     </div>
                 </div>

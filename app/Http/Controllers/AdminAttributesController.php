@@ -79,11 +79,13 @@ class AdminAttributesController extends Controller {
             ->with('page','atributos');
     }
 
-    public function pacotes() {
-        $pacotes = $this->pacoteModel->paginate(30);
-        return view('diretoria.atributos.pacote')
-            ->with(compact('pacotes'))
-            ->with('page', 'atributos');
+    public function pacotes(CategoryDescription $category_description) {
+        $categories = $category_description->all();
+
+        $pacotes = $this->pacoteModel->paginate(30)->groupby('category_id');
+        return view('diretoria.atributos.index')
+            ->with(compact('pacotes','categories'))
+            ->with('page', 'list_pacotes');
     }
     public function formatos() {
         $formatos = $this->formatoModel->paginate(30);
@@ -119,10 +121,10 @@ class AdminAttributesController extends Controller {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
         $qtd_inputs = 10;
-        return view('diretoria.pacotes.create')
+        return view('diretoria.atributos.index')
             ->with(compact('category'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'pacotes');
+            ->with('page', 'pacote');
     }
     public function PacotesStore(Request $request) {
         $input = $request->all();
@@ -139,14 +141,26 @@ class AdminAttributesController extends Controller {
     }
 
     /***formatos***/
+    public function CategoryFormatosCreate($category_id,CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->find($category_id);
+
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'formatos_create');
+    }
     public function FormatosCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
+        $formatos = $this->formatoModel->all();
         $qtd_inputs = 10;
-        return view('diretoria.atributos.formatos_create')
+        return view('diretoria.atributos.index')
             ->with(compact('category'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
+            ->with('formatos',$formatos)
+            ->with('page', 'formato');
     }
     public function FormatosStore(Request $request) {
         $input = $request->except('_token');
@@ -156,8 +170,8 @@ class AdminAttributesController extends Controller {
             if (!empty($valor)) {
                 $formato = $this->formatoModel->firstOrCreate(array('valor' => $valor));
                 $collection = $cat->categoryFormato()
-                ->where('formato_id',$formato->id)->get()->first();
-              } 
+                    ->where('formato_id',$formato->id)->get()->first();
+            }
         }
         if(is_null($collection)){
             return redirect()->route('categories.atributos',['id'=>$category_id]);
@@ -167,15 +181,26 @@ class AdminAttributesController extends Controller {
     }
 
     /***papeis***/
+    public function CategoryPapeisCreate($category_id,CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->find($category_id);
+
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'papeis_create');
+    }
     public function PapeisCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
-        $papel = $this->papelModel->all()->lists('valor','id');
+        $papeis = $this->papelModel->all();
         $qtd_inputs = 10;
-        return view('diretoria.atributos.papeis_create')
-            ->with(compact('category','papel'))
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
+            ->with('papeis',$papeis)
+            ->with('page', 'papel');
     }
     public function PapeisStore(Request $request) {
         $input = $request->except('_token');
@@ -194,14 +219,25 @@ class AdminAttributesController extends Controller {
     }
 
     /***cores***/
+    public function CategoryCoresCreate($category_id,CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->find($category_id);
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'cores_create');
+    }
     public function CoresCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
+        $cores = $this->corModel->all();
         $qtd_inputs = 10;
-        return view('diretoria.atributos.cores_create')
+        return view('diretoria.atributos.index')
             ->with(compact('category'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
+            ->with('cores',$cores)
+            ->with('page', 'cor');
     }
     public function CoresStore(Request $request) {
         $input = $request->except('_token');
@@ -223,14 +259,25 @@ class AdminAttributesController extends Controller {
     /*
      * Enobrecimento
      */
+    public function CategoryEnobrecimentosCreate($category_id,CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->find($category_id);
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'enobrecimentos_create');
+    }
     public function EnobrecimentosCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
+        $enobrecimentos = $this->enobrecimentoModel->all();
         $qtd_inputs = 10;
-        return view('diretoria.atributos.enobrecimentos_create')
+        return view('diretoria.atributos.index')
             ->with(compact('category'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
+            ->with('enobrecimentos',$enobrecimentos)
+            ->with('page', 'enobrecimento');
     }
     public function EnobrecimentosStore(Request $request) {
         $input = $request->except('_token');
@@ -246,15 +293,28 @@ class AdminAttributesController extends Controller {
     }
 
     /***acabamento***/
+    public function CategoryAcabamentosCreate($category_id,CategoryDescription $categoryDescription) {
+        //para popular o select
+        $category = $categoryDescription->find($category_id);
+
+        $qtd_inputs = 10;
+        return view('diretoria.atributos.index')
+            ->with(compact('category'))
+            ->with('qtd_inputs', $qtd_inputs)
+            ->with('page', 'acabamentos_create');
+    }
     public function AcabamentosCreate(CategoryDescription $categoryDescription) {
         //para popular o select
         $category = $categoryDescription->all()->lists('categories_name','id');
-        $enobrecimentos = $this->enobrecimentoModel->lists('valor','id');
+        $enobrecimentos = $this->enobrecimentoModel->all();
+
+        $acabamentos = $this->acabamentoModel->all();
         $qtd_inputs = 10;
-        return view('diretoria.atributos.acabamentos_create')
+        return view('diretoria.atributos.index')
             ->with(compact('category','enobrecimentos'))
             ->with('qtd_inputs', $qtd_inputs)
-            ->with('page', 'atributos');
+            ->with('acabamentos',$acabamentos)
+            ->with('page', 'acabamento');
     }
     public function AcabamentosStore(Request $request, CategoryAcabamento $categoryAcabamento) {
         $input = $request->except('_token');
@@ -319,7 +379,6 @@ class AdminAttributesController extends Controller {
         //dd($request->input());
         $input = $request->except('_token');
         $erros = [];
-
         if(count($erros)== 0) {
             foreach ($input['price'] as $pac_acabamento_id => $price) {
                 $pacacabamento->find($pac_acabamento_id)->update(['price' => $price]);
@@ -328,7 +387,22 @@ class AdminAttributesController extends Controller {
 
         return redirect()->route('categorie.acabamentos.edit', ['id'=> $id ]);
     }
-
+    /**atualizacação de quantidade**/
+    public function QuantityUpdate(Request $request){
+        $input = $request->except('_token');
+        $erros = [];
+        foreach ($input['quantity'] as $id=>$qtd) {
+            if(!empty($qtd)){
+                $this->pacoteModel->find($id)->update(['quantity' => $qtd]);
+            } else {
+                $erros[] = 'Informe um valor maios que zero para a quantidade';
+            }
+        }
+        if(count($erros)> 0) {
+            return redirect()->route('atributos.pacotes',['erros'=>$erros]);
+        }
+        return redirect()->route('atributos.pacotes',['erros'=>[]]);
+    }
     public function updateAtributos($id, $atributo,Request $request) {
         $input = $request->except('_token');
         $cat = $this->categoryModel->find($id);
@@ -677,5 +751,5 @@ class AdminAttributesController extends Controller {
         }
 
     }
-   
+
 }

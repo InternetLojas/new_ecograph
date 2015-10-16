@@ -1,9 +1,8 @@
 <!-- ENTREGA-->
 
-        <div class="page-region-content">
-            <div class="grid padding5">
-                <div class=""> 
-                    @include('layouts.contents.entrega')
-                </div>
-            </div>
-        </div>
+<div class="section">
+    <div class="destaque_home">
+        <h1 class="text-center text-muted">Institucional</h1>
+        @include('layouts.contents.institucional')
+    </div>
+</div>

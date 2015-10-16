@@ -77,8 +77,8 @@ class AdminCategoriesController extends Controller {
      */
     public function index(CategoryDescription $category_description) {
         $description = $category_description->all();
-        $categories = $this->categoryModel->paginate(45);
-        return view('diretoria.category.category')
+        $categories = $this->categoryModel->where('parent_id','<>',0)->paginate(15);
+        return view('diretoria.categoria.index')
             ->with(compact('categories'))
             ->with('description',$description)
             ->with('page','category');
@@ -88,18 +88,21 @@ class AdminCategoriesController extends Controller {
      */
     public function Detalhes($id, CategoryDescription $category_description, Product $product) {
         $category = $this->categoryModel->find($id);
-        $CategoryProduct = $category->CategoryProduct()->paginate(45);
-        $this->MudaImage($id, $category_description, $product, $category);
-        return view('diretoria.category.listprodutos')
+        $description = $category_description->find($id);
+        $CategoryProduct = $category->CategoryProduct()->paginate(24);
+        //$this->MudaImage($id, $category_description, $product, $category);
+        return view('diretoria.categoria.index')
             ->with('category',$category)
+            ->with('description',$description)
             ->with('CategoryProduct',$CategoryProduct)
-            ->with('page','category');
+            ->with('page','listprodutos');
     }
     /*
      * mostra os atributos de uma categoria
      */
-    public function Atributos($id){
+    public function Atributos($id, CategoryDescription $category_description){
         $cat = $this->categoryModel->find($id);
+        $description = $category_description->find($id);
         //formatos
         $catformatos = $cat->CategoryFormato()->where('category_id',$id)->lists('formato_id');
         //dd($catformatos);
@@ -125,7 +128,7 @@ class AdminCategoriesController extends Controller {
         $catpacotes = $cat->Pacotes->lists('id');
         $pacotes = $this->pacoteModel->where('category_id',$id)->get();
 
-        return view('diretoria.atributos.category_atributos')
+        return view('diretoria.atributos.index')
             ->with(compact('formatos', 'papeis', 'cores', 'enobrecimentos','acabamentos','pacotes'))
             ->with('catformatos',$catformatos)
             ->with('catpapeis',$catpapeis)
@@ -134,47 +137,45 @@ class AdminCategoriesController extends Controller {
             ->with('catacabamentos',$catacabamentos)
             ->with('catpacotes',$catpacotes)
             ->with('cat',$cat)
-            ->with('page','atributos');
+            ->with('description',$description)
+            ->with('page','category_atributos');
     }
 
     public function Edit($id, CategoryDescription $category_description) {
-        $category = $this->categoryModel->find($id);
+        $cat = $this->categoryModel->find($id);
         $description = $category_description->find($id)->toArray();
 
-        $category_formato = $category->formato;
-        $list_formatos = [];
-        $list_f = '';
-        $formatos = [];
-        if($category_formato->toArray()){
-            foreach($category_formato as $lista){
-                $list_formatos[] = $lista->valor;
-            }
-            $list_f = implode(',',$list_formatos);
-        } else {
-            $formatos = $this->formatoModel->lists('valor','id');
-        }
-        //dd($list_f);
-        $category_papel = $category->papel;
-        $list_papeis = [];
-        $list_p = '';
-        $papeis = [];
-        if($category_papel->toArray()){
-            foreach($category_papel as $lista){
-                $list_papeis[] = $lista->valor;
-            }
-            $list_p = implode(',',$list_papeis);
-        }else {
-            $papeis = $this->papelModel->lists('valor','id');
-        }
+        //formatos
+        $catformatos = $cat->CategoryFormato()->where('category_id',$id)->lists('formato_id');
+        //dd($catformatos);
+        $formatos = $this->formatoModel->all();
 
-        return view('diretoria.category.category_edit')
-            ->with(compact('category'))
-            ->with('page','category')
+        //papeis
+        $catpapeis = $cat->CategoryPapel->lists('papel_id');
+        $papeis = $this->papelModel->all();
+
+        //cores
+        $catcores = $cat->CategoryCor->lists('cor_id');
+        $cores = $this->corModel->all();
+
+        //enobrecimentos
+        $catenobrecimentos = $cat->CategoryEnoblecimento->lists('enoblecimento_id');
+        $enobrecimentos = $this->enoblecimentoModel->where('category_id',$id)->get();
+        // echo '<pre>'; print_r($catenobrecimentos);exit;
+        //acabamentos
+        $catacabamentos = $cat->CategoryAcabamento->lists('acabamento_id');
+        $acabamentos = $this->acabamentoModel->all();
+
+        return view('diretoria.categoria.index')
+            ->with(compact('formatos', 'papeis', 'cores', 'enobrecimentos','acabamentos','pacotes'))
             ->with('description',$description)
-            ->with('formatos',$formatos)
-            ->with('papeis',$papeis)
-            ->with('list_f',$list_f)
-            ->with('list_p',$list_p);
+            ->with('category',$cat)
+            ->with('catformatos',$catformatos)
+            ->with('catpapeis',$catpapeis)
+            ->with('catcores',$catcores)
+            ->with('catenobrecimentos',$catenobrecimentos)
+            ->with('catacabamentos',$catacabamentos)
+            ->with('page','category_edit');
     }
 
     /**
@@ -288,12 +289,12 @@ class AdminCategoriesController extends Controller {
         $formato = [];
         $formato = $this->CheckFormato($id, $pacformato, $cat, $cat_f, $list_pacotes, $formato);
         /*****formatos*********/
-        return view('diretoria.atributos.category_formato',compact('formato','list_formatos'))
+        return view('diretoria.atributos.index',compact('formato','list_formatos'))
             ->with('catformatos',$catformatos)
             ->with('pacotes',$list_pacotes)
             ->with('cat_name',$cat_name)
             ->with('cat_id',$id)
-            ->with('page','atributos');
+            ->with('page','category_formato');
     }
     /**
      * @param $id
@@ -414,12 +415,12 @@ class AdminCategoriesController extends Controller {
         $formato_autorizado = $this->AutorizaAtributos($id, $cat_p, 'papel');
         /*****papeis*********/
 
-        return view('diretoria.atributos.category_papel',compact('formato', 'papel','list_papeis'))
+        return view('diretoria.atributos.index',compact('formato', 'papel','list_papeis'))
             ->with('catpapeis',$catpapeis)
             ->with('formato_autorizado',$formato_autorizado)
             ->with('cat_name',$cat_name)
             ->with('cat_id',$id)
-            ->with('page','atributos');
+            ->with('page','category_papel');
     }
     /**
      * @param $id
@@ -593,11 +594,11 @@ class AdminCategoriesController extends Controller {
         $catcores = $cat->categoryCor->lists('id','cor_id');
         $list_cores = $this->corModel->all();
 
-        return view('diretoria.atributos.category_cor',compact('formato','papel','cores','list_cores'))
+        return view('diretoria.atributos.index',compact('formato','papel','cores','list_cores'))
             ->with('catcores',$catcores)
             ->with('cat_name',$cat_name)
             ->with('cat_id',$id)
-            ->with('page','atributos');
+            ->with('page','category_cor');
     }
 
     /**
@@ -715,7 +716,7 @@ class AdminCategoriesController extends Controller {
         $catacabamentos = $cat->categoryAcabamento->lists('id','acabamento_id');
         $formato_autorizado = $this->AutorizaAtributos($id, $cat_p, 'papel');
         $acabamento_autorizado = $this->AutorizaAtributos($id, $cat_p, 'acabamento');
-        return view('diretoria.atributos.category_acabamento',compact('formato','papel','cores','acabamentos','list_acabamentos'))
+        return view('diretoria.atributos.index',compact('formato','papel','cores','acabamentos','list_acabamentos'))
             ->with('catformatos',$catformatos)
             ->with('catpapeis',$catpapeis)
             ->with('catcores',$catcores)
@@ -724,7 +725,7 @@ class AdminCategoriesController extends Controller {
             ->with('acabamento_autorizado',$acabamento_autorizado)
             ->with('cat_name',$cat_name)
             ->with('cat_id',$id)
-            ->with('page','atributos');
+            ->with('page','category_acabamento');
     }
 
     public function ArrayAcabamento($category,$pacAcabamento){

@@ -4,6 +4,7 @@ namespace Ecograph\Http\Controllers;
 
 use Auth;
 use Ecograph\Acesso;
+use Ecograph\Customer;
 use Ecograph\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ecograph\Libs\Layout;
@@ -56,7 +57,7 @@ class ProductController extends Controller {
      * @return view
      */
     public function index() {
-    
+
         $lista = Fichas::CategoriasPais();
         foreach ($lista as $categorias) {
             foreach ($categorias['prole']['filhos'] as $key => $item) {
@@ -77,7 +78,7 @@ class ProductController extends Controller {
      * @return view
      */
     public function Detalhes($pai, $filho, $nome_html) {
-        
+
         $lista = Fichas::CategoriasPais();
         $listagem = '';
         foreach ($lista as $categorias) {
@@ -139,7 +140,7 @@ class ProductController extends Controller {
         $post_inputs = $request->all();
         //envia o email de com os dados para o orçamento
         \EnvioEmail::EnviarOrcamento();
-            return view('produtos.index')
+        return view('produtos.index')
             ->with('title', STORE_NAME)
             ->with('page', 'imprimir')
             ->with('post_inputs', $post_inputs)
@@ -151,15 +152,55 @@ class ProductController extends Controller {
      * apresenta a página prodtuos
      * @return view
      */
-    public function EnviarPDF(Request $request) {
+    public function EnviarPDF(Request $request, Customer $modelCustomer) {
         $post_inputs = $request->all();
-    
-        return view('produtos.index')
+        $img_categoria = Category::find($post_inputs['orc_subcategoria_id'])->categories_image;
+        $userId = \Auth::user()->id;
+        $customers = $modelCustomer->find($userId);
+        $default_address = $customers->customers_default_address_id;
+        $address = $customers->AddressBook()->where('id',$default_address)->first();
+
+        //levanta o endereço do cliente
+        //$default_address = AddressBook::find($customers->customers_default_address_id);
+        $pacote_valor = str_replace('R$ ','',$post_inputs['orc_pacote_valor']);
+        $valor = str_replace(',','.',$pacote_valor);
+        $vl = $post_inputs['orc_vl_frete']+$valor-$post_inputs['orc_desconto_valor'];
+
+        $total = number_format($vl,2,".","");
+        return view('produtos.index',compact('customers'))
             ->with('title', STORE_NAME . ' Envie seu arquivo PDF')
             ->with('page', 'enviarpdf')
             ->with('ativo', 'Enviar PDF')
             ->with('post_inputs', $post_inputs)
+            ->with('default_address', $address)
+            ->with('img_categoria', $img_categoria)
+            ->with('total',$total)
             ->with('rota', 'produtos/enviarpdf.html');
+    }
+
+    /* função e chamada pela função carregar() do javascript */
+
+    public function Validar(Request $request) {
+        //dd($request->all());
+        $file1 = $request->file('logo1');
+        $file2 = $request->file('logo1');
+        if($file1 || $file2){
+            //dd($request->input());
+            $inputs = $request->all();
+            $data = [
+                'status' => 'success',
+                'inputs' => $inputs,
+                'loadurl'=>route('files.upload')
+            ];
+        } else {
+            $inputs = [];
+            $data = [
+                'status' => 'fail',
+                'erro' => 'Por favor! Escolha pelo menos uma imagem para enviar.',
+                'loadurl'=>''
+            ];
+        }
+        return json_encode($data);
     }
     /**
      * mostra a página de modelos dos produtos
@@ -259,16 +300,16 @@ class ProductController extends Controller {
         }
 
         foreach ($acabamento_id as $k => $valor) {
-              $enoblec_id = $this->enoblecimentoModel
-                  ->where('valor', Acabamento::find($valor)->enoblecimento)->get()->first()->id;
+            $enoblec_id = $this->enoblecimentoModel
+                ->where('valor', Acabamento::find($valor)->enoblecimento)->get()->first()->id;
 
-              $acabamento[$enoblec_id][] = [
-                    'valores' => [
-                        'id' => $valor,
-                        'nome' => Acabamento::find($valor)->valor,
-                        'enobrecimento' => Acabamento::find($valor)->enoblecimento
-                    ]
-              ];
+            $acabamento[$enoblec_id][] = [
+                'valores' => [
+                    'id' => $valor,
+                    'nome' => Acabamento::find($valor)->valor,
+                    'enobrecimento' => Acabamento::find($valor)->enoblecimento
+                ]
+            ];
         }
 
         $pacote = Pacote::where('category_id', $post_inputs['escolhido'])->get();
@@ -322,7 +363,7 @@ class ProductController extends Controller {
         }
         $check = Pacformato::where('category_id', $post_inputs['escolhido']);
         if ($check) {
-           // dd($tabela);
+            // dd($tabela);
             $data = array();
             $data['back_menu'] = array('background' => $back_menu);
             $data['active_a'] = array('style_a' => '');
@@ -386,13 +427,14 @@ class ProductController extends Controller {
         $categorias = Category::all();
         $categ = $categorias->toArray();
         foreach ($categ as $categoria) {
-            if ($categoria['parent_id'] != 0 && $categoria['id'] <> 28) {
-
+            //if ($categoria['parent_id'] != 0 && $categoria['id'] <> 19 && $categoria['id'] <> 27 && $categoria['id'] <> 28 && $categoria['id'] <> 31) {
+            if ($categoria['parent_id'] != 0 && $categoria['id'] <> 18 && $categoria['id'] <> 29 && $categoria['id'] <> 32 && $categoria['id'] <> 35) {
                 $cat[] = $categoria;
             }
+            //}
         }
         $array_categ = Utilidades::agrupa($cat, 4, 'busca');
-    
+
         return view('produtos.index')
             ->with('title', STORE_NAME)
             ->with('page', 'produtos')

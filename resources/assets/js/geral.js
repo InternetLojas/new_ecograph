@@ -33,15 +33,15 @@ function EnderecoCEP() {
         $.get('http://viacep.com.br/ws/'+CEP+'/json/',function(result){
             console.log(result.logradouro);
             /*
-            *
-            * "cep": "90810-150",
+             *
+             * "cep": "90810-150",
              "logradouro": "Avenida Jacuí",
              "complemento": "",
              "bairro": "Cristal",
              "localidade": "Porto Alegre",
              "uf": "RS",
              "ibge": "4314902"
-            * */
+             * */
             if (result.erro) {
                 alert("Endereço não encontrado para o cep: " + CEP);
                 $("#postcode").focus();
@@ -351,7 +351,7 @@ function GeraLista(parametros, category_id) {
                     on_click_calcula = 'CalculaPreco(\'' + category_id + '\',' +k+e + ');';
                     valores = item_a.valores;
                     radio += '<li>\n<input type=\"radio\" name=\"' + tipo + '\" id=\"' + tipo + '_'+k + e + '\" onclick=\"' + on_click_calcula + '" value=\"' + valores.id + '\"  />\n\n\
-                                <span class=\"afasta\" id=\"param_' + tipo + '_' + e+ '\">' + valores.nome + '</span>\n</li>\n';
+                                <span class=\"afasta\" id=\"param_' + tipo + '_'+k + e + '\">' + valores.nome + '</span>\n</li>\n';
                 });
                 ul += '<ul id="list_' + tipo + k + '" class=\"list-unstyled hide\">\n' + radio + '\n</ul>';
                 radio = '';
@@ -359,7 +359,7 @@ function GeraLista(parametros, category_id) {
             }
             last = k;
         });
-       if (tipo === 'acabamento') {
+        if (tipo === 'acabamento') {
             $('#list_acabamento'+last).removeClass('hide');
         }
 
@@ -517,8 +517,8 @@ function TrocaCheked(whoo, localizador, categoria) {
     }
 
     /*$('#list_preco').each(function(i) {
-        $('#preco_' + i).text();
-    });*/
+     $('#preco_' + i).text();
+     });*/
     $('#orc_' + whoo + '_id').val(valor);
     $('#orc_' + whoo + '_nome').val(param);
     $('#especificacoes').slideUp('slow');
@@ -829,6 +829,7 @@ function EditarSubmeter() {
  /*-----------------------------------------------------------------------------------*/
 function UploadValidar(url) {
     var formulario = $('#upload').serializeArray();
+
     $.post(url, formulario, function(data) {
         var obj = JSON.parse(data);
         if (obj.status === 'success') {
@@ -859,12 +860,69 @@ function UploadValidar(url) {
     });
 }
 /*-----------------------------------------------------------------------------------*/
+/*  UploadValidar
+ /*-----------------------------------------------------------------------------------*/
+function PDFValidar(url) {
+    alert('aqui');
+
+    /*$('#upload').ajaxForm({
+     uploadProgress: function(event, position, total, percentComplete) {
+     $('progress').attr('value',percentComplete);
+     $('#porcentagem').html(percentComplete+'%');
+     },
+     success: function(data) {
+     $('progress').attr('value','100');
+     $('#porcentagem').html('100%');
+     if(data.sucesso == true){
+     $('#resposta').html('<img src="'+ data.msg +'" />');
+     $('#info_upload').removeClass('alert alert-danger');
+     $('#info_upload').addClass('alert alert-success');
+     $('#info_upload').html('<p class="text-muted"><i class="icon-smiley on-left"></i> Verificando dados para enviar para o seu carrinho. Por favor aguarde...</p>');
+
+     //$('#info_upload').delay(3000).fadeOut(800, function() {
+     //    return UploadSubmeter(obj.loadurl);
+     //});
+     }
+     else{
+     $('#resposta').html(data.msg);
+     console.log(obj);
+
+     $('#info_upload').removeClass('alert alert-success');
+     $('#info_upload').addClass('alert alert-danger');
+     $('#info_upload').html('<p class="text-muted"><i class="fa fa-lg fa-user-md on-left"></i> ' + obj.erro + '</p>');
+     $('#info_upload').delay(6000).fadeOut(800);
+     }
+     },
+     error : function(){
+     $('#resposta').html('Erro ao enviar requisição!!!');
+     },
+     dataType: 'json',
+     url: 'enviar_arquivo.php',
+     resetForm: true
+     }).UploadSubmeter(url);
+     // var formulario = $('#upload').serializeArray();
+     //alert(formulario);
+     /*$.post(url, formulario, function(data) {
+     var obj = JSON.parse(data);
+     if (obj.status === 'success') {
+
+     } else {
+
+
+     }
+     });*/
+
+    // Change this to the location of your server-side upload handler:
+    alert(url);
+}
+/*-----------------------------------------------------------------------------------*/
 /*  UploadSubmeter
  /*-----------------------------------------------------------------------------------*/
 function UploadSubmeter(url) {
     $('#upload').attr('action', url);
     $('#upload').attr('method', 'post');
-    $('#upload').submit();
+    alert(url);
+    //$('#upload').submit();
 }
 /*-----------------------------------------------------------------------------------*/
 /*  FreteOrcamento
@@ -1022,7 +1080,7 @@ function ImprimirOrcamento(guest) {
 /*-----------------------------------------------------------------------------------*/
 /*  PDF
  /*-----------------------------------------------------------------------------------*/
-function PDF(guest) {
+function PDF(guest,route) {
     $('#cupom_frete').css('display', 'none');
     $('#resultado').css('display', 'none');
     $('#btn-opcoes').css('display', 'none');
@@ -1031,9 +1089,10 @@ function PDF(guest) {
     $('#btn-personalizar').css('display', 'none');
     $('#btn-enviar').css('display', 'none');
     $('#cupom_frete').attr('data-acao', 'pdf');
+    var produto = $('#orc_subcategoria_id').val();
     if (guest === '1') {
         $('#logar').slideUp('fast');
-        var action = 'editor/personalizar.html';
+        var action = route;
         //var action = 'produtos/enviarpdf.html';
         $('#form_orcamento').attr('action', action);
         $('#form_orcamento').attr('method', 'post');

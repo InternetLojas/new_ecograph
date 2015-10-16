@@ -1,97 +1,52 @@
-@extends('diretoria.main_admin')
-
-@section('content')
-    <div class="row-fluid">
-        <div class="col-lg-12">
-            <h1 class="page-header">Área de Pedidos</h1>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-    <!-- /.row -->
-    <div class="row-fluid">
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Total de Pedidos
-                </div>
-                <div class="panel-body">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                </div>
-                <div class="panel-footer">
-                    Panel Footer
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Total de Pedidos
-                </div>
-                <div class="panel-body">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                </div>
-                <div class="panel-footer">
-                    Panel Footer
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row-fluid">
-
-        <div class="col-lg-12">
-            <h1 class="page-header">{{ $page }}</h1>
-        </div>
-        <!-- /.col-lg-12 -->
-        <!-- will be used to show any messages -->
-        @if (Session::has('message'))
-            <div class="alert alert-info">{{ Session::get('message') }}</div>
-            @endif
+<section class="content">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Pedidos</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
                     <!-- /.row -->
-            <div class="row-fluid">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Detalhes dos pedidos
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                <tr>
+                                    <th class="head text-center">Pedido nr</th>
+                                    <th class="head text-center">Nome</th>
+                                    <th class="head text-center">Email</th>
+                                    <th class="head text-center">Telefone</th>
+                                    <th class="head text-center">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($orders as $key => $value)
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nome</th>
-                                        <th>Email</th>
-                                        <th>Telefone</th>
-                                        <th>Ações</th>
+                                        <td class="text-center">{{ $value->id }}</td>
+                                        <td class="text-center">{{ $value->customers_name }}</td>
+                                        <td class="text-center">{{ $value->customers_email_address }}</td>
+                                        <td class="text-center">{{ $value->customers_ddd }} {{ $value->customers_telephone }}</td>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <a class="btn btn-default" href="{{ route('diretoria.pedido.items',['id'=> $value->id ] ) }}" title="Ver items desse pedido">
+                                                    <i class="fa fa-align-left"></i> Detalhes</a>
+                                                <a class="btn btn-default" href="#" title="Eliminar o pedido">
+                                                    <i class="fa fa-align-right"></i> Eliminar o pedido</a>
+                                            </div>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($orders as $key => $value)
-                                        <tr class="odd gradeX">
-                                            <td>{{ $value->id }}</td>
-                                            <td>{{ $value->customers_name }}</td>
-                                            <td>{{ $value->eustomers_email_address }}</td>
-                                            <td class="center">{{ $value->customers_ddd }} {{ $value->customers_telephone }}</td>
-                                            <td class="center">
-                                                outras informações
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.table-responsive -->
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="panel-footer">
-                            <p></p>
-                        </div>
-                        <!-- /.panel-body -->
+                        <!-- /.table-responsive -->
                     </div>
-                    <!-- /.panel -->
                 </div>
-                <!-- /.col-lg-12 -->
-                {!! $orders->render() !!}
+                <div class="box-footer">
+                    footer
+                </div>
             </div>
-            <!-- /.row -->
-@endsection
+        </div>
+        {!! $orders->render() !!}
+    </div>
+</section>

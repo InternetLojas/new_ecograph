@@ -47,7 +47,7 @@
             </a>
         </div>
         <div class="col-md-6">
-            <a class="btn bg-green fg-white no-radius " title="Clique encaminhar o orçamento por email para a loja" href="javascript:void(0)" id="data_orcamento" data-orcamento="{{$html}}">Imprimir</a>
+            <a class="btn bg-green fg-white no-radius " title="Clique para encaminhar o orçamento por email para a loja" href="javascript:void(0)" id="data_orcamento" data-orcamento="{{$html}}">Imprimir</a>
         </div>
     </div>
 </div>

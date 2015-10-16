@@ -22,10 +22,36 @@
 <script src="{{ asset('//code.jquery.com/jquery.js')}}"></script>
 <script src="{{ asset('//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')}}"></script>
 
+<!--<script src="{asset('build/js/custom-867badf1.js')}"></script>-->
+{!! HTML::script(asset(elixir('js/custom.js')))!!}
+@if($page ==='enviarpdf')
 
-
-<script src="{{asset('build/js/custom-8576a5bb.js')}}"></script>
-{!! HTML::script(asset(elixir('js/custom.js'))) !!}
+    <script>
+    //*uploads*//
+    $("#logo0").change(function() {
+        $(this).prev().html($(this).val());
+    });
+    $("#logo1").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    $("#logo2").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    $("#logo3").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    $("#img1").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    $("#img2").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    $("#img3").change(function() {
+    $(this).prev().html($(this).val());
+    });
+    </script>
+    <!--//****fim do upolads***//-->
+@else
 <script src="{{asset('js/jquery.maskedinput.js')}}"></script>
 @if($page=='contato')
     <!--<script src="{asset('build/js/alljs-8005f53c.js')}"></script>-->
@@ -37,4 +63,5 @@
 <!-- Javascript para abrir o gateway de pagamento ============================================= -->
 {!! HTML::html_gateway($html) !!}
 <!-- Fim Javascript para o gateway de pagamento =============================================== -->
+@endif
 @endif

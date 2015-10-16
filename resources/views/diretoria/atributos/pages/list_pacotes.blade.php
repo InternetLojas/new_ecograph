@@ -1,140 +1,55 @@
-<section class="content">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Configuração de acabamento para categoria {!!$cat_name!!}</h3>
-                </div><!-- /.box-header -->
-                <div class="box-body">
-                    <table class="table table-bordered table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Formato</th>
-                            <th>#</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @forelse($formato as $formato_id => $items)
-                            <tr>
-                                <td>
-                                    {{$items['formato_nome']}}
-                                </td>
-                                <td>
-                                    <table class="table table-bordered table-condensed">
-                                        <thead>
-                                        <tr>
-                                            <th>Papel</th>
-                                            <th>
-                                                #
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @forelse($papel[$formato_id] as $papel_id => $items_p)
-                                            @if(is_array($items_p['pacotes']))
-                                                <tr>
-                                                    <td>
-                                                        {{$items_p['papel_nome']}}
-                                                    </td>
-                                                    <td>
+<div class="row">
 
-                                                        <table class="table table-bordered  table-condensed">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>Cores</th>
-                                                                <th>
-                                                                    #
-                                                                </th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            @forelse($cores as $cor_id => $items_c)
-                                                                <tr>
-                                                                    <td>
-                                                                        {{$items_c['cor_nome']}}
-                                                                    </td>
-                                                                    <td>
-                                                                        {!! Form::open(['url'=>route('prices.update',['id'=>$cat_id]),'method'=>'put', 'class' => 'form-horizontal']) !!}
-                                                                        <table class="table table-bordered table-condensed">
-                                                                            <thead>
-                                                                            <tr>
-                                                                                <th>Enobrecimento</th>
-                                                                                <th>Acabamento</th>
-                                                                                @forelse($items_p['pacotes']['pacote_id'] as $id =>$quantity)
-                                                                                    <th>{{$quantity}}</th>
-                                                                                @empty
-                                                                                    <th></th>
-                                                                                @endforelse
-                                                                            </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                            @if(in_array($formato_id,$formato_autorizado[0][$papel_id]))
+    <div class="col-md-10 col-md-offset-1">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Pacotes</h3>
+                <div class="box-tools pull-right">
+                    <!-- Buttons, labels, and many other things can be placed here! -->
+                    <!-- Here is a label for example -->
+                    <span class="label label-primary">Label</span>
+                </div><!-- /.box-tools -->
+            </div><!-- /.box-header -->
+            <!-- form start -->
+            @forelse($pacotes as $category_id=>$group_pacotes)
+                {!!
+                Form::open(['url'=>route('quantity.update',['id'=>$category_id]),
+                'method'=>'put',
+                'class' => 'form-horizontal'])
+                !!}
 
-                                                                                @forelse($acabamentos[$formato_id][$papel_id][$cor_id] as $acabamento_id => $acabamento)
+                    <div class="box-body">
 
-                                                                                    @forelse($acabamento as $nome_acabamento => $configuracao)
-                                                                                        <tr>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-1">
+                                <label>
+                                    {{$categories->find($category_id)->categories_name}}
+                                </label>
+                            </div>
 
-                                                                                            <td>{{$nome_acabamento}}</td>
-                                                                                            @forelse($configuracao as $nome => $conf)
-                                                                                                <td>{{$nome}}</td>
-                                                                                                @forelse($conf as $chave => $value)
-                                                                                                    <td>
-                                                                                                        {!! Form::text('price['.$value['pacacabamento_id'].']', $value['price'], ['class' => 'form-control']) !!}
+                            @forelse($group_pacotes as $pacote)
+                                <div class="form-group col-md-1">
+                                    <input type="text" class="form-control" name="quantity[{{$pacote->id}}]" value="{{$pacote->quantity}}" >
+                                </div>
+                            @empty
+                            @endforelse
 
-                                                                                                    </td>
-                                                                                                @empty
-                                                                                                @endforelse
-                                                                                            @empty
-                                                                                            @endforelse
-                                                                                        </tr>
-                                                                                    @empty
-                                                                                        <tr>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                            <td></td>
-                                                                                        </tr>
-                                                                                    @endforelse
-                                                                                @empty
-                                                                                @endforelse
-                                                                            @else
-                                                                            @endif
+                        </div>
+                    </div><!-- /.box-body -->
 
-                                                                            </tbody>
-                                                                            </table>
-                                                                        {!! Form::submit('Atualizar preco', ['class'=>'btn btn-success pull-right']) !!}
-                                                                        {!! Form::close() !!}
-                                                                    </td>
-                                                                </tr>
-                                                            @empty
-                                                            @endforelse
-                                                            </tbody>
-                                                        </table>
+                    <div class="box-footer">
+                       <button type="submit" class="btn bg-maroon btn-flat margin pull-right" >Atualizar</button>
 
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @empty
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        @empty
-                        @endforelse
-                        </tbody>
-                    </table>
+                    </div>
+                {!!Form::close()!!}
+            @empty
+                <div class="alert alert-info">
+                    <h2>Ainda não existem pacotes cadastrado</h2>
+                    <p>Clique no botão "Novo Pacote" para criar uma nova entrada.</p>
                 </div>
-            </div>
-        </div>
+            @endforelse
+
+        </div><!-- /.box -->
+
     </div>
-</section>
+</div>

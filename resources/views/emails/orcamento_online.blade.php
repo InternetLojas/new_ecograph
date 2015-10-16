@@ -69,10 +69,11 @@
                                         @include('emails.header.header')
                                         <!--fim do header-->
                                         <!--contente-->
-                                        @include('emails.contents.orcamento')
+                                        @include('emails.contents.orcamento_online')
                                         <!--fim do content-->
                                         <!--footer-->
                                         @include('emails.footer')
+
                                         <!--fim do footer-->
                                     </td>
                                 </tr>

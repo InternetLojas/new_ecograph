@@ -21,9 +21,9 @@ class AdminOrcamentosController extends Controller {
 
         $orcamentos = $this->pacoteOrcamento->paginate(25);
         $customers = $this->pacoteCustomer;
-        return view('diretoria.orcamentos.listorcamentos')
+        return view('diretoria.orcamentos.index')
             ->with(compact('orcamentos', 'customers'))
-            ->with('page','listorcamentos');
+            ->with('page','listarorcamentos');
     }
 
 }

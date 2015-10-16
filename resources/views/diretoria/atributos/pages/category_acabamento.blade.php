@@ -1,11 +1,11 @@
-@extends('diretoria.main_admin')
-@section('content')
-    <div class="section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Configuração de acabamento para categoria {!!$cat_name!!}</h1>
-
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Configuração de acabamentos para categoria {!!$cat_name!!}</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
                     <table class="table table-bordered table-condensed">
                         <thead>
                         <tr>
@@ -110,7 +110,7 @@
                                                                             @endif
 
                                                                             </tbody>
-                                                                            </table>
+                                                                        </table>
                                                                         {!! Form::submit('Atualizar preco', ['class'=>'btn btn-success pull-right']) !!}
                                                                         {!! Form::close() !!}
                                                                     </td>
@@ -133,38 +133,8 @@
                         @endforelse
                         </tbody>
                     </table>
-
-                    <h2>Editar atributo do acabamento</h2>
-                    @if($errors->any())
-                        <ul class="alert alert-warning">
-                            @foreach($errors->all() as $erro)
-                                <li>
-                                    {!! $erro !!}
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                    {!! Form::open(['route' =>['categories.atributo.update',$cat_id,'acabamento'],'method'=>'put', 'class' => 'form-horizontal']) !!}
-                    <div class="form-group">
-                        @forelse($list_acabamentos as $acabamento)
-                            <div class="col-sm-3">
-                                <div class="checkbox">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" name="papel[{{$acabamento->id}}]" value="{{$acabamento->id}}" @if(in_array($acabamento->id,array_keys($catacabamentos))) checked @endif >{{$acabamento->valor}}</label>
-                                </div>
-                            </div>
-                        @empty
-                            <p>Sem atributo papel</p>
-                        @endforelse
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            {!! Form::submit('Edit Category', ['class'=>'btn btn-succes pull-right']) !!}
-                        </div>
-                    </div>
-                    {!! Form::close() !!}
                 </div>
             </div>
         </div>
     </div>
-@stop
+</section>

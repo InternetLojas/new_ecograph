@@ -12,16 +12,39 @@
  */
 
 Class Pages {
+/*
+ *
 
+
+
+
+5 – vão estão habilitadas para inserir preço as categorias:Calendário de mesa
+
+Calendário de bolso
+Agenda
+Caderno
+bloco
+photobook médio e grande
+cartão personalizado
+camiseta
+capa de celular
+capa galaxy 2 e 3
+case de ipad
+
+
+
+Bom, foi o que pude verificar até o momento.
+ *
+ * */
     public static function Page($page, $mostrar_array = false) {
         $page_view = array('contato' => 'home.pages.contato',
             'home' => 'home.pages.home',
             'sobre' => 'home.pages.sobre',
-            'entrega' => 'home.pages.entrega',
+            'institucional' => 'home.pages.institucional',
             'testemunhos' => 'home.pages.testemunhos',
             'brindes' => 'home.pages.brindes',
             'politica' => 'home.pages.politica',
-            'missao' => 'home.pages.missao',
+            'termos' => 'home.pages.termos',
             'certificacao' => 'home.pages.certificacao',
             'comocomprar' => 'home.pages.comocomprar',
             'imprimir' => 'produtos.pages.imprimir',

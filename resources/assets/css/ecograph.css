@@ -1652,7 +1652,11 @@ hr {
     font-size:0.99em;
 }
 .text-nav{
-    font-size:0.98em;
+    font-size:0.97em;
+}
+
+ul.nav.top li.divider{
+ width:16%;
 }
 .text-nav li a.active{
     color: #000080 !important;
@@ -2505,7 +2509,10 @@ a.hoverviolet:hover {
  /*-----------------------------------------------------------------------------------*/
 .container_footer{
     background-color:#555555;
-    padding:15px 4px;
+    display:block;
+    float:left;
+    width:100%;
+    padding:10px 0;
 }
 footer.footer {
     padding: 10px 0;

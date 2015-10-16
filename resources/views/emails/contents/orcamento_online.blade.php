@@ -28,6 +28,7 @@
                     <td width="650" align="left" style="font-family:Verdana,Geneva,sans-serif;font-size:12px !important;line-height:16px">
                         <blockquote style="text-align:justify;line-height:20px;border-left: 10px solid #D1D1D6;  padding: 10px; color: #212121;">
                             Recebemos sua solicitação para gerar um orçamento.<br>
+                            Abaixo segue a especificação de suas necessidades.<br>
                             Obrigado por seu interesse.
                         </blockquote>
                     </td>
@@ -109,25 +110,12 @@
                             <tbody>
                             <tr>
                                 <td class="" valign="top" width="100%" align="center">
-                                    <table class="" cellpadding="0" cellspacing="0" width="100%">
-                                        <!--Header-->
-                                        <tbody>
-                                        <tr>
-                                            <td class="" width="650">
-                                                <!--============================== header =================================-->
-                                                @include('emails.orcamentos.top')
-                                                <!--============================== header =================================-->
-                                            </td>
-                                        </tr>
-                                        <!--/Header-->
-                                        </tbody>
-                                    </table>
                                     <!--============================== especificacao =================================-->
-                                    @include('emails.orcamentos.especificacao')
+                                    @include('emails.orcamentos.especificacao_online')
                                     <!--============================== especificacao =================================-->
-                                    <!--============================== frete =================================-->
-                                    @include('emails.orcamentos.frete')
-                                    <!--============================== frete =================================-->
+                                    <!--============================== detalhes =================================-->
+                                    @include('emails.orcamentos.detalhes_online')
+                                    <!--============================== detalhes =================================-->
                                 </td>
                             </tr>
                             <tr>

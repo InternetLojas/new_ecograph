@@ -19,21 +19,24 @@
     </div>
 </div>
 <div class="col-md-5">
-    <div class="col-sm-4">
-        <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg" class="img-responsive" style="margin:0 auto!important"/>
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="images/icons/logo_info_desenho.jpg" alt="printer.jpg" class="img-responsive" style="margin:0 auto!important"/>
+        </div>
+        <div class="col-sm-8">
+            <button type="button" class="btn bg-smallgray btn-lg no-radius text-center" title="Deixe que criamos sua arte" onclick="PersonalizarDesenho(@if (Auth::guest()) '0' @else '1' @endif);"  >
+                <small>Personalizar nossos desenhos</small>
+            </button>
+        </div>
     </div>
-    <div class="col-sm-8">
-        <button type="button" class="btn bg-smallgray btn-lg no-radius text-center" title="Deixe que criamos sua arte" onclick="PersonalizarDesenho(@if (Auth::guest()) '0' @else '1' @endif);"  >
-            <small>Personalizar nossos desenhos</small>
-        </button>
+    <div class="row">
+        <div class="col-sm-4">
+            <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
+        </div>
+        <div class="col-sm-8">
+            <button type="button" class="btn bg-smallgray btn-lg no-radius text-center" tile="Envie seu arquivo PDF" onclick="PDF(@if (Auth::guest()) '0' @else '1' @endif,'{{route('produtos.enviarpdf')}}');"  >
+                <small>Envie seu arquivo PDF.</small>
+            </button>
+        </div>
     </div>
-    <!--<div class="clearfix"></div>
-    <div class="col-sm-4">
-        <img src="images/icons/logo_info_ftp.jpg" alt="logo_info_ftp.jpg"  class="img-responsive" />
-    </div>
-    <div class="col-sm-8">
-        <button type="button" class="btn bg-smallgray btn-lg no-radius text-center" tile="Envie seu arquivo PDF" onclick="PDF(@if (Auth::guest()) '0' @else '1' @endif);"  >
-            <small>Envie seu arquivo PDF.</small>
-        </button>
-    </div>-->
 </div>

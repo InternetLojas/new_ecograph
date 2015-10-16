@@ -9,23 +9,31 @@
         </ul>
     @endif
     <div class="col-md-10 col-md-offset-1">
+        <h2>Formatos pré-existentes</h2>
+        <div class="row">
+            @forelse($formatos as $formato)
+                <div class="col-sm-2">
+                    <label class="">
+                        {{$formato->valor}}
+                    </label>
+                </div>
+            @empty
+            @endforelse
+        </div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Criar Pacotes</h3>
+                <h3 class="box-title">Criar novos Formatos</h3>
                 <div class="box-tools pull-right">
                     <!-- Buttons, labels, and many other things can be placed here! -->
                     <!-- Here is a label for example -->
                 </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
             <!-- form start -->
-
-            {!! Form::open(['url'=>route('pacotes.store'), 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['url'=>route('formatos.store'), 'class' => 'form-horizontal']) !!}
             <div class="box-body">
                 <div class="col-lg-12 col-md-12">
-
                     <div class="row">
                         <div class="form-group col-lg-2 col-md-2">
-
                             {!! Form::select('category_id', $category, null, ['class' => 'form-control']) !!}
                         </div>
                         @for($i=0;$i<$qtd_inputs;$i++)
@@ -33,21 +41,18 @@
                                 {!! Form::text('quantity[]', null, ['class' => 'form-control','placeholder'=>'qtd']) !!}
                             </div>
                         @endfor
-                        </div>
+                    </div>
                     <div class="row">
                         <div class="form-group">
-                            {!! Form::submit('Adicionar o Pacote para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
+                            {!! Form::submit('Adicionar o Formato para a categoria', ['class'=>'btn bg-maroon btn-flat margin']) !!}
                         </div>
                     </div>
-
-
                 </div>
             </div><!-- /.box-body -->
             <div class="box-footer">
-
             </div>
             {!!Form::close()!!}
-
-        </div><!-- /.box -->
-    </div>
+            <!--formatos-->
+        </div>
+    </div><!-- /.box -->
 </div>

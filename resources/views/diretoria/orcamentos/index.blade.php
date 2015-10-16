@@ -1,5 +1,5 @@
 @extends('diretoria.main_admin')
 
 @section('content')
-    @include('diretoria.clientes.pages.'.$page)
+    @include('diretoria.orcamentos.pages.'.$page)
 @endsection

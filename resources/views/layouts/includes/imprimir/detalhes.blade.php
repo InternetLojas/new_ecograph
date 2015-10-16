@@ -28,8 +28,8 @@
            @endif
         </td>
         <td>
-            @if(!empty($input_acabamento))
-              {{$input_acabamento}}
+            @if(!empty($outro_acabamento))
+              {{$outro_acabamento}}
             @endif
         </td>
     </tr>

@@ -457,6 +457,7 @@ class CustomerController extends Controller {
         $acabamentos = Utilidades::OrcamentoAcabamentos();
         $provacor = Utilidades::OrcamentoProvaCor();
         $entrega = Utilidades::OrcamentoEntrega();
+
         return view('clientes.index',compact('customer'))
             ->with('title', STORE_NAME . ' Crie seu Orçamento OnLine')
             ->with('page', 'orcamento_online')
@@ -466,6 +467,7 @@ class CustomerController extends Controller {
             ->with('cores', $cores)
             ->with('acabamentos', $acabamentos)
             ->with('provacor', $provacor)
+            ->with('erros','')
             ->with('entrega', $entrega)
             ->with('rota', 'orcamento.online');
     }
@@ -473,34 +475,74 @@ class CustomerController extends Controller {
         if(!Auth::check()){
             return redirect()->route('clientes.login');
         }
+        $erros = [];
         $post_inputs = $request->all();
-        $produtos = $post_inputs['produtos'];
-        $outros_prod = $post_inputs['outros_prod'];
-        $input_qtd = [];        
-        foreach ($post_inputs['qtd'] as $qtd) {
-            if(!empty($qtd)){
-               $input_qtd[] = $qtd;
-            }
+        if ($request->has('produtos')){
+            $produtos = $post_inputs['produtos'];
+        }else{
+            $erros[] = 'Escolha um produto';
         }
-        $input_formato_aberto = [];       
+        $outros_prod = $post_inputs['outros_prod'];
+        $input_qtd = [];
+        if ($request->has('qtd')){
+            foreach ($post_inputs['qtd'] as $qtd) {
+                if(!empty($qtd)){
+                    $input_qtd[] = $qtd;
+                }
+            }
+        }else{
+            $erros[] = 'Informe a quantidade' ;
+        }
+        $input_formato_aberto = [];
         foreach ($post_inputs['formato_aberto'] as $Ab => $formato_aberto) {
             if(!empty($formato_aberto)){
                 $input_formato_aberto[$Ab] = $formato_aberto;
             }
         }
-         $input_formato_fechado = [];
+        $input_formato_fechado = [];
         foreach ($post_inputs['formato_fechado'] as $Fec => $formato_fechado) {
             if(!empty($formato_fechado)){
                 $input_formato_fechado[$Fec] = $formato_fechado;
             }
         }
-        $cores = $post_inputs['cores'];
+        if(count($input_formato_aberto)==0 || count($input_formato_fechado)==0){
+            $erros[] ='Informe o formato';
+        }
+        if ($request->has('acabamentos')) {
+            foreach ($post_inputs['acabamentos'] as $acabamento) {
+                $input_acabamentos[] = $acabamento;
+            }
+            $acabamentos = $input_acabamentos;
+        } else {
+            $erros[] = 'Informe pelo menos um acabamento';
+        }
+        if ($request->has('cores')) {
+            $cores = $post_inputs['cores'];
+        } else {
+            $erros[] ='Escolha uma cor';
+        }
         $input_cor= $post_inputs['outra_cor'];
-        $acabamentos = $post_inputs['acabamentos'];
-        $input_acabamento = $post_inputs['outro_acabamento'];
-        $provacor = $post_inputs['provacor'];
-        $entrega = $post_inputs['entrega'];
+
+
+        $outro_acabamento = $post_inputs['outro_acabamento'];
+        if ($request->has('provacor')) {
+            $provacor = $post_inputs['provacor'];
+
+        } else {
+            $erros[] ='Informe a prova cor';
+        }
+        if ($request->has('cores')) {
+            $entrega = $post_inputs['entrega'];
+        } else {
+            $erros[] = 'Escolha uma modalidade de envio';
+        }
+
+        if(count($erros)>0){
+            return redirect()->route('orcamento.online')->withErrors(['erros'=>$erros]);
+        }
         $customer = $modelCustomer->find(\Auth::user()->id);
+        $html = \EnvioEmail::EnviarOrcamentoOnLine($produtos,$input_qtd,$cores,$input_formato_aberto,
+            $input_formato_fechado,$acabamentos,$provacor,$entrega,$input_cor,$outros_prod,$outro_acabamento);
         return view('clientes.index',compact('customer'))
             ->with('title', STORE_NAME . ' Imprima seu orçamento')
             ->with('page', 'orc_imprimir')
@@ -513,9 +555,10 @@ class CustomerController extends Controller {
             ->with('cores', $cores)
             ->with('input_cor', $input_cor)
             ->with('acabamentos', $acabamentos)
-            ->with('input_acabamento', $input_acabamento)
+            ->with('outro_acabamento', $outro_acabamento)
             ->with('provacor', $provacor)
             ->with('entrega', $entrega)
+            ->with('html',$html)
             ->with('rota', 'orcamento.online.imprimir');
     }
     /**

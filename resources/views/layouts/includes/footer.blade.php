@@ -1,6 +1,6 @@
 <!-- Footer ================================================================== -->
-<div class="container_footer ">
-    <div class="row">
+<div class="row">
+    <div class="container_footer">
         <div class="col-md-4">
             <ul class="list-unstyled text-left">
                 <li>
@@ -47,7 +47,7 @@
                 <li>
                     <img src="images/icons/ico-ecograph.png"  width="32">
                     <span>
-                        <a class="link-footer text-smallmedio" href="{!!url::to('missao.html')!!}" class="text-inverse">Institucional</a>
+                        <a class="link-footer text-smallmedio" href="{{ route('institucional') }}" class="text-inverse">Institucional</a>
                     </span>
                 </li>
                 <li>
@@ -56,11 +56,11 @@
                 </li>
                 <li>
                     <img src="images/icons/ico-termos.png"  width="32">
-                    <span><a class="link-footer text-smallmedio" href="">Termos de uso</a></span>
+                    <span><a class="link-footer text-smallmedio" href="{{ route('termos.uso') }}">Termos de uso</a></span>
                 </li>
                 <li>
                     <img src="images/icons/ico-privacity.png"  width="32">
-                    <span><a class="link-footer text-smallmedio" href="#">Política de privacidade</a></span>
+                    <span><a class="link-footer text-smallmedio" href="{{ route('politica.privacidade') }}">Política de privacidade</a></span>
                 </li>
             </ul>
         </div>

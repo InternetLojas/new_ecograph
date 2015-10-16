@@ -63,16 +63,34 @@ class HomeController extends Controller {
         ->with('rota', 'contato.html')
         ->with('layout', $layout);
     }
-
+    public function termos() {
+        $layout = $this->layout->classes('0');
+        return view('home.index')
+            ->with('title', STORE_NAME . ' Termos de Uso')
+            ->with('page', 'termos')
+            ->with('ativo', 'Termos de Uso')
+            ->with('layout', $layout);
+    }
+    public function politica() {
+        $layout = $this->layout->classes('0');
+        return view('home.index')
+            ->with('title', STORE_NAME . ' Política de Privacidade')
+            ->with('page', 'politica')
+            ->with('ativo', 'Política de Privacidade')
+            ->with('layout', $layout);
+    }
     /**
      * Mosta página entrega.
      *
      * @return View
      */
-    public function entrega() {
-
+    public function institucional() {
         $layout = $this->layout->classes('0');
-        return view('home.index')->with('title', STORE_NAME . ' Entrega')->with('page', 'entrega')->with('ativo', 'Entrega')->with('rota', '/entrega')->with('layout', $layout);
+        return view('home.index')
+            ->with('title', STORE_NAME . ' Institucional')
+            ->with('page', 'institucional')
+            ->with('ativo', 'Institucional')
+            ->with('layout', $layout);
     }
     /**
      * Mosta página como comprar.

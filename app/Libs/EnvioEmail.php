@@ -35,7 +35,45 @@ class EnvioEmail {
         }
         return $html;
     }
+    /**
+     * Controla o email para orçamento ONline
+     *
+     * @return json
+     */
+    public static function EnviarOrcamentoOnLine($produtos,$qtd,$cores,$formato_aberto,
+                                                 $formato_fechado,$acabamentos,$provacor,
+                                                 $entrega,$outra_cor,$outros_prod,$outro_acabamento) {
+        $customer = Customer::find(\Auth::user()->id);
 
+        $data = [
+            'produto' => $produtos,
+            'qtd' => $qtd[0],
+            'cores' => $cores,
+            'formato_aberto' => $formato_aberto,
+            'formato_fechado' => $formato_fechado,
+            'acabamentos' =>$acabamentos,
+            'provacor' => $provacor,
+            'entrega' => $entrega,
+            'outra_cor' =>$outra_cor,
+            'outros_prod' =>$outros_prod,
+            'outro_acabamento' =>$outro_acabamento
+        ];
+        //dd($data);
+        //$data['empty'] = "to vazio";
+
+        if (Mail::send('emails.orcamento_online', $data, function ($m) use ($customer) {
+            $m->to($customer->email,$customer->customers_firstname.' '.$customer->customers_lastname)
+                ->subject('Orçamento Online!')
+                ->from('newsite@ecograph.com.br', 'Gráfica Ecograph')
+                ->cc('suporte@internetlojas.com');
+        })
+        ){
+            $html = 'pass';
+        } else {
+            $html = 'fail';
+        }
+        return $html;
+    }
     /**
      * Controla o email para lembrar cliente que produto está disponível
      *

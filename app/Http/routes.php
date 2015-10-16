@@ -45,9 +45,17 @@ Route::group(['prefix' => '/'], function() {
         'as' => 'contato',
         'uses' => 'HomeController@Contato'
     ]);
-    Route::get('entrega.html', [
-        'as' => 'entrega',
-        'uses' => 'HomeController@Entrega'
+    Route::get('termos-uso.html', [
+        'as' => 'termos.uso',
+        'uses' => 'HomeController@Termos'
+    ]);
+    Route::get('politica-privacidade.html', [
+        'as' => 'politica.privacidade',
+        'uses' => 'HomeController@Politica'
+    ]);
+    Route::get('institucional.html', [
+        'as' => 'institucional',
+        'uses' => 'HomeController@Institucional'
     ]);
     //retorna a view de produtos
     Route::get('produtos.html', [
@@ -143,7 +151,7 @@ Route::group(['prefix' => 'clientes'], function() {
     ]);
     /**editar a conta**/
     Route::get('cadastro/edit/{id}', [
-        'as' => 'clientes.conta.edit',
+        'as' => 'clientes.edit',
         'uses' => 'CustomerController@ContaEdit'
     ]);
     Route::put('{id}/cadastro/update.html', [
@@ -186,6 +194,11 @@ Route::group(['prefix' => 'produtos'], function() {
     Route::get('detalhes/cartao-gratis/{pai}/{filho}/{nome_categoria}', [
         "as" => "produtos.detalhes.cartao.gratis",
         "uses" => "ProductController@DetalhesCartaoGratis"
+    ]);
+    //faz a validacao dos inputs para enviar para o carrinho***/
+    Route::post('pdf/validar', [
+        "as" => "pdf.validar",
+        "uses" => "ProductController@Validar"
     ]);
     Route::post('enviarpdf.html', [
         'as' => 'produtos.enviarpdf',
@@ -362,7 +375,7 @@ Route::group(['prefix' => 'diretoria',
     ]);
 
     /****controllers para CATEGORIES *****/
-    Route::get('categories.html', [
+    Route::get('categorias.html', [
         'as' => 'diretoria.categories',
         'uses' => 'AdminCategoriesController@index'
     ]);
@@ -385,7 +398,7 @@ Route::group(['prefix' => 'diretoria',
         //detalhes de uma categoria e seus produtos
         Route::get('{id}/detalhes.html',[
             'as' => 'categories.detalhes',
-            'uses' => 'AdminCategoriesController@detalhes'
+            'uses' => 'AdminCategoriesController@Detalhes'
         ]);
         //todos os atributos da categoria
         Route::get('{id}/atributos.html', [
@@ -426,6 +439,9 @@ Route::group(['prefix' => 'diretoria',
     });
     //listar individulamente os atributos
     Route::group(['prefix' => 'atributos'], function () {
+        /*
+  * Pacotes
+  */
         Route::get('pacotes.html', [
             'as' => 'atributos.pacotes',
             'uses' => 'AdminAttributesController@pacotes'
@@ -448,9 +464,13 @@ Route::group(['prefix' => 'diretoria',
             'uses' => 'AdminAttributesController@formatos'
         ]);
         Route::group(['prefix' => 'formatos'], function () {
-            Route::get('create.html', [
+            Route::get('create', [
                 'as' => 'formatos.create',
                 'uses' => 'AdminAttributesController@FormatosCreate'
+            ]);
+            Route::get('create/{id}', [
+                'as' => 'category.formatos.create',
+                'uses' => 'AdminAttributesController@CategoryFormatosCreate'
             ]);
             Route::post('novoformato', [
                 'as' => 'formatos.store',
@@ -469,9 +489,13 @@ Route::group(['prefix' => 'diretoria',
             'uses' => 'AdminAttributesController@papeis'
         ]);
         Route::group(['prefix' => 'papeis'], function () {
-            Route::get('create.html', [
+            Route::get('create', [
                 'as' => 'papeis.create',
                 'uses' => 'AdminAttributesController@PapeisCreate'
+            ]);
+            Route::get('create/{id}', [
+                'as' => 'category.papeis.create',
+                'uses' => 'AdminAttributesController@CategoryPapeisCreate'
             ]);
             Route::post('novopapel', [
                 'as' => 'papeis.store',
@@ -482,45 +506,60 @@ Route::group(['prefix' => 'diretoria',
                 'uses' => 'AdminAttributesController@WeightUpdate'
             ]);
         });
-        Route::get('cores.html', [
-            'as' => 'atributos.cores',
-            'uses' => 'AdminAttributesController@cores'
-        ]);
         /*
-         * Enobrecimento
-         */
-        Route::get('enobrecimentos.html', [
-            'as' => 'atributos.enobrecimentos',
-            'uses' => 'AdminAttributesController@enobrecimentos'
-        ]);
-        Route::group(['prefix' => 'enobrecimento'], function () {
-            Route::get('create.html', [
-                'as' => 'enobrecimentos.create',
-                'uses' => 'AdminAttributesController@EnobrecimentosCreate'
-            ]);
-            Route::post('novoenobrecimento', [
-                'as' => 'enobrecimentos.store',
-                'uses' => 'AdminAttributesController@EnobrecimentosStore'
-            ]);
-            /*Route::put('{id}/update.html', [
-                'as' => 'weight.update',
-                'uses' => 'AdminAttributesController@WeightUpdate'
-            ]);*/
-        });
-        Route::get('cores.html', [
-            'as' => 'atributos.cores',
-            'uses' => 'AdminAttributesController@cores'
-        ]);
+  * Cores
+  */
+
         Route::group(['prefix' => 'cores'], function () {
-            Route::get('create.html', [
+            Route::get('cores.html', [
+                'as' => 'atributos.cores',
+                'uses' => 'AdminAttributesController@cores'
+            ]);
+
+            Route::get('create', [
                 'as' => 'cores.create',
                 'uses' => 'AdminAttributesController@CoresCreate'
+            ]);
+            Route::get('create/{id}', [
+                'as' => 'category.cores.create',
+                'uses' => 'AdminAttributesController@CategoryCoresCreate'
             ]);
             Route::post('novacor', [
                 'as' => 'cores.store',
                 'uses' => 'AdminAttributesController@CoresStore'
             ]);
+
         });
+        /*
+         * Enobrecimento
+         */
+        Route::group(['prefix' => 'enobrecimentos'], function () {
+            Route::get('enobrecimentos.html', [
+                'as' => 'atributos.enobrecimentos',
+                'uses' => 'AdminAttributesController@Enobrecimentos'
+            ]);
+            Route::get('create', [
+                'as' => 'enobrecimentos.create',
+                'uses' => 'AdminAttributesController@EnobrecimentosCreate'
+            ]);
+            Route::get('create/{id}', [
+                'as' => 'category.enobrecimentos.create',
+                'uses' => 'AdminAttributesController@CategoryEnobrecimentosCreate'
+            ]);
+            Route::post('novoenobreciemento', [
+                'as' => 'enobrecimentos.store',
+                'uses' => 'AdminAttributesController@EnobrecimentosStore'
+            ]);
+
+        });
+
+        /*Route::group(['prefix' => 'cores'], function () {
+
+            Route::post('novacor', [
+                'as' => 'cores.store',
+                'uses' => 'AdminAttributesController@CoresStore'
+            ]);
+        });*/
         Route::get('acabamentos.html', [
             'as' => 'atributos.acabamentos',
             'uses' => 'AdminAttributesController@acabamentos'
@@ -529,6 +568,10 @@ Route::group(['prefix' => 'diretoria',
             Route::get('create.html', [
                 'as' => 'acabamentos.create',
                 'uses' => 'AdminAttributesController@AcabamentosCreate'
+            ]);
+            Route::get('create/{id}', [
+                'as' => 'category.acabamentos.create',
+                'uses' => 'AdminAttributesController@CategoryAcabamentosCreate'
             ]);
             Route::post('store', [
                 'as' => 'acabamentos.store',
@@ -542,15 +585,25 @@ Route::group(['prefix' => 'diretoria',
     });
 
     /****controllers para CLIENTES *****/
-    Route::get('clientes.html', [
-        'as' => 'diretoria.clientes',
+    /***listar todos os clientes***/
+    Route::get('clientes/listar.html', [
+        'as' => 'clientes.listar',
         'uses' => 'AdminClientesController@index'
+    ]);
+    /**editar a conta**/
+    Route::get('clientes/edit/{id}', [
+        'as' => 'clientes.conta.edit',
+        'uses' => 'AdminClientesController@ContaEdit'
     ]);
 
     /****controllers para Pedidos *****/
     Route::get('pedidos.html', [
         'as' => 'diretoria.pedidos',
         'uses' => 'AdminPedidosController@index'
+    ]);
+    Route::get('pedido/{id}/detalhe.html', [
+        'as' => 'diretoria.pedido.items',
+        'uses' => 'AdminPedidosController@Items'
     ]);
 
     /****controllers para Orçamentos *****/

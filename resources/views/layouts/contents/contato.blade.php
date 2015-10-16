@@ -140,7 +140,7 @@
 <!-- APRESENTAÇÃO-->
 <div class="clearfix"></div>
 <div class="col-md-12">
-    <section id="map" class="example" style="height:430px;float:none;margin-right:30px">
+    <section id="map" class="example" style="z-index:10;background:transparent;height:430px;float:none;margin: 10px auto">
         <p>Renderizando mapa...Aguarde!</p>
     </section>
 </div>
